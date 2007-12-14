@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<etlDefinition>
+	<attr name="version" type="java.lang.String" value="5.2" />
+	<attr name="displayName" type="java.lang.String" value="newuntitled" />
+	<sqlDefinition displayName="newuntitled" >
+		<attr name="version" type="java.lang.String" value="5.2" />
+		<attr name="executionStrategyCode" type="java.lang.Integer" value="0" />
+ 		<dbModel name="jdbc:axiondb:Default:D:/NetbeansProject/RelativePathTest1\nbproject\private\databases\Default [sa on Default schema]" id="sqlObject_0" type="source">
+			<attr name="refKey" type="java.lang.String" value="{f698c579-c509-4c9a-b1a3-6ce638d1ea3d}" />
+			<dbTable name="DELIMTARGET" id="sqlObject_0" displayName="DELIMTARGET">
+				<attr name="userDefinedSchemaName" type="java.lang.String" value="" />
+				<attr name="stagingTableName" type="java.lang.String" value="" />
+				<attr name="flatFileLocationRuntimeInputName" type="java.lang.String" value="FILE_LOC_S1_DELIMTARGET" />
+				<attr name="aliasName" type="java.lang.String" value="S1" />
+				<attr name="distinct" type="java.lang.Boolean" value="false" />
+				<attr name="userDefinedCatalogName" type="java.lang.String" value="" />
+				<attr name="extractionType" type="java.lang.String" value="conditional" />
+				<attr name="fullyQualifiedName" type="java.lang.Boolean" value="true" />
+				<attr name="tablePrefix" type="java.lang.String" value="" />
+				<attr name="batchSize" type="java.lang.Integer" value="5000" />
+				<attr name="deleteTemporaryTable" type="java.lang.Boolean" value="true" />
+				<attr name="temporaryTableName" type="java.lang.String" value="RAW_fe14ec_DELIMTA" />
+				<attr name="userDefinedTableName" type="java.lang.String" value="" />
+				<dbColumn id="sqlObject_2" displayName="" name="DATE1" type="12" scale="0" precision="60" ordinalPosition="2" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_3" displayName="" name="DATE2" type="12" scale="0" precision="60" ordinalPosition="3" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_4" displayName="" name="DATE3" type="12" scale="0" precision="60" ordinalPosition="4" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_5" displayName="" name="DATE4" type="12" scale="0" precision="60" ordinalPosition="5" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_6" displayName="" name="DATE5" type="12" scale="0" precision="60" ordinalPosition="6" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_1" displayName="" name="EMPID" type="12" scale="0" precision="60" ordinalPosition="1" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_7" displayName="" name="NUM" type="12" scale="0" precision="60" ordinalPosition="7" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<sqlCondition displayName="extractionCondition">
+ 					<guiInfo>
+					</guiInfo>
+				</sqlCondition>
+				<sqlCondition displayName="dataValidationCondition">
+ 					<guiInfo>
+					</guiInfo>
+				</sqlCondition>
+				<guiInfo>
+					<attr name="width" type="java.lang.Integer" value="100" />
+					<attr name="height" type="java.lang.Integer" value="169" />
+					<attr name="y" type="java.lang.Integer" value="82" />
+					<attr name="x" type="java.lang.Integer" value="80" />
+				</guiInfo>
+			</dbTable>
+	<connectiondef name="jdbc:axiondb:Default:D:/NetbeansProject/RelativePathTest1\nbproject\private\databases\Default [sa on Default schema]" description="Descriptive info here" driverName="org.axiondb.jdbc.AxionDriver" dbName="AXION" dbUrl="jdbc:axiondb:Default:\nbproject\private\databases\Default" userName="sa" password="02C820">
+	</connectiondef>
+		</dbModel>
+
+		<runtimeModel name="RuntimeDbModel" id="sqlObject_8" displayName="Runtime DbModel" type="runtime">
+			<runtimeOutput name="runtimeOutput" id="sqlObject_11">
+				<attr name="userDefinedCatalogName" type="java.lang.String" value="" />
+				<attr name="userDefinedSchemaName" type="java.lang.String" value="" />
+				<attr name="stagingTableName" type="java.lang.String" value="" />
+				<attr name="fullyQualifiedName" type="java.lang.Boolean" value="true" />
+				<attr name="aliasName" type="java.lang.String" value="" />
+				<attr name="tablePrefix" type="java.lang.String" value="" />
+				<attr name="batchSize" type="java.lang.Integer" value="-1" />
+				<attr name="statementType" type="java.lang.Integer" value="0" />
+				<attr name="createTargetTable" type="java.lang.Boolean" value="true" />
+				<attr name="userDefinedTableName" type="java.lang.String" value="" />
+				<dbColumn id="sqlObject_14" displayName="" name="ENDTIME" type="93" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<dbColumn id="sqlObject_13" displayName="" name="STARTTIME" type="93" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<dbColumn id="sqlObject_12" displayName="" name="STATUS" type="12" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<guiInfo>
+					<attr name="width" type="java.lang.Integer" value="121" />
+					<attr name="height" type="java.lang.Integer" value="85" />
+					<attr name="y" type="java.lang.Integer" value="50" />
+					<attr name="x" type="java.lang.Integer" value="400" />
+				</guiInfo>
+			</runtimeOutput>
+			<runtimeInput name="RuntimeInput" id="sqlObject_9">
+				<attr name="userDefinedCatalogName" type="java.lang.String" value="" />
+				<attr name="userDefinedSchemaName" type="java.lang.String" value="" />
+				<attr name="extractionType" type="java.lang.String" value="conditional" />
+				<attr name="stagingTableName" type="java.lang.String" value="" />
+				<attr name="fullyQualifiedName" type="java.lang.Boolean" value="true" />
+				<attr name="aliasName" type="java.lang.String" value="" />
+				<attr name="distinct" type="java.lang.Boolean" value="false" />
+				<attr name="tablePrefix" type="java.lang.String" value="" />
+				<attr name="batchSize" type="java.lang.Integer" value="5000" />
+				<attr name="temporaryTableName" type="java.lang.String" value="RAW_16b674a_Runtim" />
+				<attr name="deleteTemporaryTable" type="java.lang.Boolean" value="true" />
+				<attr name="userDefinedTableName" type="java.lang.String" value="" />
+				<dbColumn id="sqlObject_10" displayName="" name="FILE_LOC_S1_DELIMTARGET" defaultValue="D:\NetbeansProject\RelativePathTest1\data\DELIMtarget.txt" type="12" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+					<attr name="visible" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<guiInfo>
+					<attr name="width" type="java.lang.Integer" value="100" />
+					<attr name="height" type="java.lang.Integer" value="22" />
+					<attr name="y" type="java.lang.Integer" value="50" />
+					<attr name="x" type="java.lang.Integer" value="80" />
+				</guiInfo>
+			</runtimeInput>
+		</runtimeModel>
+	</sqlDefinition>
+</etlDefinition>
