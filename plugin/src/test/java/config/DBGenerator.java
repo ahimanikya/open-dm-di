@@ -31,6 +31,11 @@ public class DBGenerator {
             stmt = conn.createStatement();
             System.out.println("Creating SBYN_PATIENTVIEW Axion Test Table...");
             stmt.execute("create table if not exists SBYN_PATIENTVIEW ( " +
+                    " GID varchar(30)," +
+                    " SYSTEMCODE varchar(30)," +
+                    " LID varchar(25)," +
+                    " UPDATEDATE varchar(30)," +
+                    " USR varchar(30)," +
                     " PATIENTVIEWID varchar(20), " +
                     " SSN varchar(9), " +
                     " FIRSTNAME varchar(32), " +

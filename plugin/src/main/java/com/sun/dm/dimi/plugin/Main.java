@@ -58,7 +58,7 @@ public class Main {
         if (configset){
             
             // DB READER AND WRITER
-            DataObjectReader doReader = DataSourceReaderFactory.getNewDataObjectReader("SRINIDB", "D:/temp/mural/eViewDBsNew/patientviewdb" + howmany, createFilter(), true);            
+            DataObjectReader doReader = DataSourceReaderFactory.getNewDataObjectReader("SRINIDB", "D:/temp/mural/eViewDBsNew/patientviewdb" + howmany, null, true);            
             DOWriter doWriter = DataObjectWriterFactory.getNewDataObjectWriter("D:/temp/mural/eViewDBs/GoodFiles", "File_" + howmany  + ".txt", true);
             
             //FILE READER AND WRITER

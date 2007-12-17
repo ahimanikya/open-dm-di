@@ -72,7 +72,7 @@ public class MetaDataService {
         } else{
             //Create this list now and keep it safe for use by other calls
             if (objectname.equals(this.objDef.getName())){
-                // Its a parent
+                // Its a parent 
                 this.objFieldMap.put(objectname, this.objDef.getFields());
                 return this.objDef.getFields();
             } else{
