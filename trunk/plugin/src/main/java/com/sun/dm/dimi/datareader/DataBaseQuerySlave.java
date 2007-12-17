@@ -207,7 +207,7 @@ public class DataBaseQuerySlave extends Thread {
     private void initQueryManager() {
         sLog.fine("Initializing Query Manager ...");
         this.assDesc = new AssembleDescriptor();
-        ResultObjectAssembler roa = new ObjectNodeAssembler();
+        ResultObjectAssembler roa = new DataObjectNodeAssembler();
         this.assDesc.setAssembler(roa);
         this.queryManager = new QueryManagerImpl();
     }
@@ -222,30 +222,32 @@ public class DataBaseQuerySlave extends Thread {
             QMIterator iterator = this.queryManager.executeAssemble(this.conn, qObj);
             while (iterator.hasNext()) {
                 Object rootObj = iterator.next();
-                ObjectNode on = (ObjectNode) rootObj;
-                getDataObject(on);
+                //ObjectNode on = (ObjectNode) rootObj;
+                DataObjectNode don = (DataObjectNode) rootObj;
+                getDataObject(don);
             //createFlattenedHirarchy(on);
             }
         } catch (QMException ex) {
+            ex.printStackTrace();
             sLog.severe(LocalizedString.valueOf(sLoc.t("PLG007: Eview Query Manager Error during DB Query.", ex)));
-            sLog.warnNoloc("Check if plugin dependencies have been added into index-core runtime.");
+            sLog.warnNoloc("Following errors may have occured :\n" + ex.getMessage() + "\nOR\n" + "Check if plugin dependencies have been added into index-core runtime");
             this.isAbronmalHalt = true;
             stopSlaveThread();
         }
     }
 
     /**
-     * This Data Object Builder directly maps Object Node to Data Objects.
+     * This Data Object Builder directly maps Data Object Node to Data Objects.
      * No Validations have been implemented yet.
      */
-    private void getDataObject(ObjectNode objectNode) {
-        sLog.fine("DataBaseDataReader : Using ObjectNode to DataObject mapping method");
+    private void getDataObject(DataObjectNode dataObjectNode) {
+        sLog.fine("DataBaseDataReader : Using DataObjectNode to DataObject mapping method");
         DataObject newDataObjectHolder = new DataObject();
-
-        generateSystemFields(newDataObjectHolder);
+        //Inset Queried System fields to Data Object
+        insertSystemFields(newDataObjectHolder, dataObjectNode.getDefaultSystemFields());
         // Add Fields to the parent
-        copyFields(objectNode, newDataObjectHolder);
-
+        ObjectNode objectNode = dataObjectNode.getObjectNode();
+        copyFields(objectNode, newDataObjectHolder, dataObjectNode);
 
         //Analyze children
         ArrayList allChildren = objectNode.getAllChildrenFromHashMap();
@@ -255,11 +257,11 @@ public class DataBaseQuerySlave extends Thread {
                 if (this.childTypeMap.containsKey(childnode.pGetTag())) {
                     ChildType childtype = (ChildType) this.childTypeMap.get(childnode.pGetTag());
                     // Add New Data Object for the child instance
-                    childtype.addChild(copyFields(childnode, new DataObject()));
+                    childtype.addChild(copyFields(childnode, new DataObject(), null));
                 } else {
                     // ChildType is not available in the parent, create it
                     ChildType childtype = new ChildType();
-                    childtype.addChild(copyFields(childnode, new DataObject()));
+                    childtype.addChild(copyFields(childnode, new DataObject(), null));
                     this.childTypeMap.put(childnode.pGetTag(), childtype); // Add it to the map
                 }
             }
@@ -385,13 +387,10 @@ public class DataBaseQuerySlave extends Thread {
         return qob.getQueryObject();
     }
 
-    private void generateSystemFields(DataObject dataObject) {
-        int index = 0;
-        dataObject.add(index++, null);
-        dataObject.add(index++, null);
-        dataObject.add(index++, null);
-        dataObject.add(index++, null);
-        dataObject.add(index++, null);
+    private void insertSystemFields(DataObject dataObject, String[] systemFields) {
+        for (int i = 0; i < systemFields.length; i++) {
+            dataObject.add(i, systemFields[i]);
+        }
     }
 
     private QueryObject buildQueryObject(QueryObjectBuilder qob, String rootPKColumn, String[] rootPKvalues) {
@@ -408,12 +407,26 @@ public class DataBaseQuerySlave extends Thread {
      * @param objectnode
      * @param dataobject
      */
-    private DataObject copyFields(ObjectNode objectnode, DataObject dataobject) {
+    private DataObject copyFields(ObjectNode objectnode, DataObject dataobject, DataObjectNode donode) {
         ArrayList<Field> fields = mdservice.getFieldsList(objectnode.pGetTag());
-
         try {
             for (int i = 0; i < fields.size(); i++) {
-                ObjectField ofield = objectnode.getField(fields.get(i).getName());
+                /*
+                 * ObjectNode getField can process fields that are genuinely part of objectnode.
+                 * Using objectnode.getField() for the fields injected (if any) into parents externally
+                 * causes  an object exception. Thus, these fileds need to be filtered.
+                 */
+                ObjectField ofield = null;
+                if (donode != null) {
+                    if (!donode.isAttributeDefault(fields.get(i).getName())) {
+                        ofield = objectnode.getField(fields.get(i).getName());
+                    } else {
+                        continue;
+                    }
+                } else {
+                    ofield = objectnode.getField(fields.get(i).getName());
+                }
+
                 if (ofield != null) {
                     Object ofieldval = ofield.getValue();
                     if (ofieldval != null) {
@@ -421,8 +434,6 @@ public class DataBaseQuerySlave extends Thread {
                         dataobject.addFieldValue(ofieldval.toString());
                     }
                 } else {
-                    //String msg = sLoc.t("Unable to find  [" + fields.get(i).getName() +  "] in ObjectField for ObjectNode : " + objectnode.pGetTag() +
-                    //        ". Verify if DataBase Schema has column [" + fields.get(i).getName() + "] in the table : " + objectnode.pGetTag();
                     String msg = sLoc.t("Unable to find  [{0}] in ObjectField for ObjectNode {1}." +
                             " Verify if DataBase Schema has column [{0}] in the table {1}", fields.get(i).getName(), objectnode.pGetTag());
                     sLog.warn(LocalizedString.valueOf(msg));
@@ -433,7 +444,7 @@ public class DataBaseQuerySlave extends Thread {
             //logger.fine("Adding Auto Gen Field [Name: " + objectnode.pGetTag() + "Id" +  "] to Data Object. Value : " + (objectnode.getField(objectnode.pGetTag() + "Id")).getValue().toString());
             //dataobject.addFieldValue(((ObjectField)objectnode.getField(objectnode.pGetTag() + "Id")).getValue().toString());
         } catch (ObjectException ex) {
-            sLog.fine("Object Exception", ex);
+            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG034: Unable to process ObjectNode. Object Exception : " + ex.getMessage(), ex)));
         }
 
         return dataobject;

@@ -9,9 +9,11 @@
 
 package com.sun.dm.dimi.dataobject.metadata;
 
+import com.sun.dm.dimi.datareader.DefaultSystemFields;
 import com.sun.dm.dimi.util.Localizer;
 import com.sun.dm.dimi.util.LogUtil;
 import com.sun.dm.dimi.util.PluginConstants;
+import com.sun.mdm.index.dataobject.objectdef.Field;
 import com.sun.mdm.index.dataobject.objectdef.Lookup;
 import com.sun.mdm.index.dataobject.objectdef.ObjectDefinition;
 import com.sun.mdm.index.dataobject.objectdef.ObjectDefinitionBuilder;
@@ -87,6 +89,7 @@ public class MetaDataManager {
                 try {
                     bdis = afs.openBufferedDIS(configfile);
                     objDef = new ObjectDefinitionBuilder().parse(bdis);
+                    addExtraFieldsToParent(objDef);
                     lookup = Lookup.createLookup(objDef);
                     mdservice = new MetaDataService(lookup,objDef);
                 } catch (AxionException ex) {
@@ -106,4 +109,18 @@ public class MetaDataManager {
             
         }
     }
+    
+    private static void addExtraFieldsToParent(ObjectDefinition objDef){
+        String[] sysfields = DefaultSystemFields.getDefaultSystemFields();
+        for (int i=0; i < sysfields.length; i++){
+            objDef.addField(i, createExtraFieldObj(sysfields[i]));
+        }
+    }
+    
+    private static Field createExtraFieldObj(String name){
+        Field newfield = new Field();
+        newfield.setName(name);
+        return newfield;
+    }    
+    
 }
