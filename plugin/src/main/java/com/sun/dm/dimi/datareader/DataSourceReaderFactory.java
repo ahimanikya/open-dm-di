@@ -94,7 +94,7 @@ public class DataSourceReaderFactory {
                         PluginConstants.REJECT_FILE_DATASOURCE : PluginConstants.GOOD_FILE_DATASOURCE;
             }
         } catch(IOException e) {
-            sLog.info(LocalizedString.valueOf(sLoc.t("Invalid DataSource \n{0}", e)));
+            sLog.info(sLoc.x("Invalid DataSource \n{0}", e));
             throw e;
         } finally {
             bis.close();

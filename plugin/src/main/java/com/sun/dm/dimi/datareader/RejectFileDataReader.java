@@ -123,7 +123,7 @@ public class RejectFileDataReader extends BaseFileDataReader {
                 }
             }
         } catch (IOException ex) {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG020: Unable to read the Reject file \n{0}", ex)));
+            sLog.severe(sLoc.x("PLG020: Unable to read the Reject file \n{0}", ex));
         }
         return null;
     }

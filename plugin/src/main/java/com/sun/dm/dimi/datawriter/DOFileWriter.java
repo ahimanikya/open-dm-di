@@ -62,7 +62,7 @@ public class DOFileWriter extends DOBaseWriter implements DOWriter {
             //initReader();
         }
         catch (IOException ex) {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG021: Unable to write to file {0} \n{1}", outputFile.getAbsolutePath(),ex)));
+            sLog.severe(sLoc.x("PLG021: Unable to write to file {0} \n{1}", outputFile.getAbsolutePath(),ex));
         }
     }
     
@@ -83,7 +83,7 @@ public class DOFileWriter extends DOBaseWriter implements DOWriter {
             //this.bdOutputStream.newLine();
             //this.bdOutputStream.flush();
         } catch (IOException ex) {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG022: Error Writing Data Object \n{0}", ex)));
+            sLog.severe(sLoc.x("PLG022: Error Writing Data Object \n{0}", ex));
         }
     }
     
