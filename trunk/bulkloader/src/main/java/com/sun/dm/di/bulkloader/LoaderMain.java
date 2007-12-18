@@ -15,7 +15,6 @@ import com.sun.dm.di.bulkloader.util.BLTools;
 import com.sun.dm.di.bulkloader.util.Localizer;
 import com.sun.dm.di.bulkloader.util.LogUtil;
 import java.io.File;
-import net.java.hulp.i18n.LocalizedString;
 import net.java.hulp.i18n.Logger;
 
 /**
@@ -38,7 +37,7 @@ public class LoaderMain {
     public static void main(String[] args) {
 
         //System.out.println("Loader Start ...");
-        sLog.info(LocalizedString.valueOf(sLoc.t("LDR001: Loader Start ...")));
+        sLog.info(sLoc.x("LDR001: Loader Start ..."));
         /*
         // Set the System Variables (Source)
         System.setProperty("sourcedb.loc", "D:\\temp\\mural\\masterindextest");
