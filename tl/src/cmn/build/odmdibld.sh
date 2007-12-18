@@ -1116,7 +1116,7 @@ build_product()
     bldmsg "BUILDRESULTS_TYPE = ant_generic"
     build_product_errs=0
 
-    cd $SRCROOT/cvs_src
+    cd $SRCROOT
 
     MAVEN_GOALS="install"
     cmd="mvn $MAVEN_OPTIONS -DSRCROOT='$JV_SRCROOT' -Dmaven.repo.local='$ODMMI_SRCROOT/m2/repository' -Dmaven.test.skip=true -DBUILD_NUMBER=$BLDNUM $MAVEN_GOALS"
@@ -1166,7 +1166,7 @@ clean_build_tree()
         return 0
     fi
 
-    cd $SRCROOT/cvs_src
+    cd $SRCROOT
 
     bldmsg "BUILDRESULTS_TYPE = odmdi_javabuild"
 
