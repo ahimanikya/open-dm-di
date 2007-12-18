@@ -2,7 +2,7 @@
 # BOM to publish repackaged glassfish bundle with latest kenai kit
 #
 
-set SRC_DIR <SRCROOT>/cvs_src/plugin/target
+set SRC_DIR <SRCROOT>/plugin/target
 set DST_DIR .
 
 open-dimi-plugin-1.0.jar|0444|bin|<SRC_DIR>|open-dimi-plugin-1.0.jar|<DST_DIR>
