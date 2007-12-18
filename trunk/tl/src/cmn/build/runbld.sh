@@ -559,17 +559,6 @@ scm_update_tmp()
         return $status
     fi
 
-    bldmsg -p $p -mark "Running local cvs code update"
-    cd $SRCROOT
-    rm -rf cvs_src
-
-    cvs -d $ALASKA_CVSROOT co -d cvs_src capstool/projects/open-dm-di
-    status=$?
-    if [ $status -ne 0 ]; then
-        bldmsg -p $p -mark "cvs code update failed"
-        return $status
-    fi
-
     return $status
 }
 
