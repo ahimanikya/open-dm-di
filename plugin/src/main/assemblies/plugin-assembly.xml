@@ -8,7 +8,7 @@
     <fileSets>
         <fileSet>
             <directory>target</directory>
-            <outputDirectory>plugin</outputDirectory>
+            <outputDirectory>soa1/modules/ext/eview/plugin</outputDirectory>
             <includes>
                 <include>open-dimi-plugin*.jar</include>
             </includes>
@@ -16,7 +16,7 @@
     </fileSets>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>plugin/lib</outputDirectory>
+            <outputDirectory>soa1/modules/ext/eview/plugin/lib</outputDirectory>
             <unpack>false</unpack>
             <scope>runtime</scope>
         </dependencySet>
