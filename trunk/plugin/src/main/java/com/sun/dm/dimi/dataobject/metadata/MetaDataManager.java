@@ -93,19 +93,19 @@ public class MetaDataManager {
                     lookup = Lookup.createLookup(objDef);
                     mdservice = new MetaDataService(lookup,objDef);
                 } catch (AxionException ex) {
-                    sLog.severe(LocalizedString.valueOf(sLoc.t("PLG001: Error Reading eview config file {0}",ex.getMessage())));
+                    sLog.severe(sLoc.x("PLG001: Error Reading eview config file {0}",ex.getMessage()));
                 } finally {
                     try {
                         bdis.close();
                     } catch (IOException ex) {
-                        sLog.severe(LocalizedString.valueOf(sLoc.t("PLG002: Error Closing Axion BufferedDataInputStream \n{0}", ex)));
+                        sLog.severe(sLoc.x("PLG002: Error Closing Axion BufferedDataInputStream \n{0}", ex));
                     }
                 }
             } else{
-                sLog.severe(LocalizedString.valueOf(sLoc.t("PLG003: Unable to find file {0}",PluginConstants.EVIEW_CONFIG_FILE.getAbsolutePath())));
+                sLog.severe(sLoc.x("PLG003: Unable to find file {0}",PluginConstants.EVIEW_CONFIG_FILE.getAbsolutePath()));
             }
         }else{
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG004: EView Config File is not available. Set the file using DataSourceReaderFactory.setEViewConfigFilePath()")));
+            sLog.severe(sLoc.x("PLG004: EView Config File is not available. Set the file using DataSourceReaderFactory.setEViewConfigFilePath()"));
             
         }
     }

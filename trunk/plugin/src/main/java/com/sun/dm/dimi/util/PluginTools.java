@@ -40,10 +40,10 @@ public class PluginTools {
             if (dbdir.isDirectory()){
                 ret = true;
             } else{
-                logger.severe(LocalizedString.valueOf(sLoc.t("PLG026: Directory {0} is not valid", dirpath)));
+                logger.severe(sLoc.x("PLG026: Directory {0} is not valid", dirpath));
             }
         } else{
-            logger.severe(LocalizedString.valueOf(sLoc.t("PLG027: Directory {0} does not exist", dirpath)));
+            logger.severe(sLoc.x("PLG027: Directory {0} does not exist", dirpath));
         }
         return ret;
     }
@@ -60,15 +60,15 @@ public class PluginTools {
                     }
                     ret = true;
                 } catch ( ParserException ex) {
-                    throw new ParserException(sLoc.t("PLG028: Error in Parsing File {0}", filepath + PluginConstants.fs + filename, ex));
+                    throw new ParserException("PLG028: Error in Parsing File [" + filepath + PluginConstants.fs + filename  + "]" +  ex.getMessage());
                 } catch (FileNotFoundException ex) {
-                    throw new FileNotFoundException(sLoc.t("PLG029: File {0} not found in dir {1} \n {2}", filename, filepath, ex));
+                    throw new FileNotFoundException(sLoc.x("PLG029: File {0} not found in dir {1} \n {2}", filename, filepath, ex).toString());
                 }
             } else{
-                throw new FileNotFoundException(sLoc.t("PLG030: File {0} not found", filename));
+                throw new FileNotFoundException(sLoc.x("PLG030: File {0} not found", filename).toString());
             }
         } else{
-            throw new FileNotFoundException(sLoc.t("PLG031: File {0} not found in dir {1}", filename, filepath));
+            throw new FileNotFoundException(sLoc.x("PLG031: File {0} not found in dir {1}", filename, filepath).toString());
         }
         return ret;
     }

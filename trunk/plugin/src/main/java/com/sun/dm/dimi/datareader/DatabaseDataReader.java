@@ -117,7 +117,7 @@ public class DatabaseDataReader extends BaseDBDataReader {
         this(specialMode);
         if (validateDBPath(dbDir)) {
             if (validateDBName(dbDir, dbName)) {
-                sLog.info(LocalizedString.valueOf(sLoc.t("PLG009: Database {0} Exists", dbName)));
+                sLog.info(sLoc.x("PLG009: Database {0} Exists", dbName));
                 String uri = PluginConstants.URI_PRIFIX + PluginConstants.PS + dbName + PluginConstants.PS + dbDir;
                 if (checkConnection(uri)) {
                     this.mDbUri = uri;
@@ -154,7 +154,7 @@ public class DatabaseDataReader extends BaseDBDataReader {
                 conntest = true;
             }
         } catch (SQLException ex) {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG008: Unable to connect to Database. Check your exact URI: {0} \n{1}", dburi, ex)));
+            sLog.severe(sLoc.x("PLG008: Unable to connect to Database. Check your exact URI: {0} \n{1}", dburi, ex));
         }
         return conntest;
     }
@@ -191,15 +191,15 @@ public class DatabaseDataReader extends BaseDBDataReader {
                                 // Shut down master and slave gracefully
                                 this.qslave.stopSlaveThread();
                                 dos = null;
-                                sLog.severe(LocalizedString.valueOf(sLoc.t("PLG011: DataBase did not respond to Query in [{0}] sec. Plugin will Exit.\n" +
-                                        "Change Configuration parameters and re-try", ((int) (PluginConstants.master_retry * PluginConstants.master_retry_freq)) / 1000)));
+                                sLog.severe(sLoc.x("PLG011: DataBase did not respond to Query in [{0}] sec. Plugin will Exit.\n" +
+                                        "Change Configuration parameters and re-try", ((int) (PluginConstants.master_retry * PluginConstants.master_retry_freq)) / 1000));
                                 System.exit(0);
                             }
                         }
                     } else {
                         dos = null;
                         if (!qslave.getAbnormalHaltStatus()) {
-                            sLog.info(LocalizedString.valueOf(sLoc.t("PLG012: All Data Objects fetched successfully. Master Process will end")));
+                            sLog.info(sLoc.x("PLG012: All Data Objects fetched successfully. Master Process will end"));
                         }
                         break;
                     }
@@ -208,10 +208,10 @@ public class DatabaseDataReader extends BaseDBDataReader {
         } else {
             // Data Has been processed
             if (!qslave.getAbnormalHaltStatus()) {
-             sLog.info(LocalizedString.valueOf(sLoc.t("PLG012: All Data Objects fetched successfully. Master Process will end")));   
+             sLog.info(sLoc.x("PLG012: All Data Objects fetched successfully. Master Process will end"));   
             }
             else{
-                sLog.info(LocalizedString.valueOf(sLoc.t("PLG032: Unable to fetch Data Objects.Master Process will end")));   
+                sLog.info(sLoc.x("PLG032: Unable to fetch Data Objects.Master Process will end"));   
             }
             dos = null;
         }
@@ -240,7 +240,7 @@ public class DatabaseDataReader extends BaseDBDataReader {
                 sLog.severe(LocalizedString.valueOf("PLG014: DataBase file [" + dbName + ".VER] does not exist in dir : " + dbDir));
             }
         } else {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG015: DataBase File [{0}] does not exist", dbfile)));
+            sLog.severe(sLoc.x("PLG015: DataBase File [{0}] does not exist", dbfile));
         }
         return ret;
     }
@@ -258,7 +258,7 @@ public class DatabaseDataReader extends BaseDBDataReader {
                 sLog.severe(LocalizedString.valueOf("PLG016: DataBase Directory is not a dir : " + dbDir));
             }
         } else {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG017: DataBase Directory {0} does not exist", dbDir)));
+            sLog.severe(sLoc.x("PLG017: DataBase Directory {0} does not exist", dbDir));
         }
         return ret;
     }
@@ -312,7 +312,7 @@ public class DatabaseDataReader extends BaseDBDataReader {
                     }
                 }
                 if (!foundflag) {
-                    sLog.info(LocalizedString.valueOf(sLoc.t("PLG018: \nDropping field [ {0}] from the Database Query as it does not comply with the eViewDefinition. Pls correct the error\n", qualifiedFieldUser)));
+                    sLog.info(sLoc.x("PLG018: \nDropping field [ {0}] from the Database Query as it does not comply with the eViewDefinition. Pls correct the error\n", qualifiedFieldUser));
                 }
             }
         }
@@ -357,7 +357,7 @@ public class DatabaseDataReader extends BaseDBDataReader {
                 if (children[i].indexOf(".VER") != -1) {
                     //AXIONDB
                     DBNAME = children[i].substring(0, children[i].indexOf(".VER"));
-                    sLog.info(LocalizedString.valueOf(sLoc.t("PLG009: Database {0} Exists", DBNAME)));
+                    sLog.info(sLoc.x("PLG009: Database {0} Exists", DBNAME));
                     uri = PluginConstants.URI_PRIFIX + PluginConstants.PS + DBNAME + PluginConstants.PS + dbDir;
                     sLog.fine("Axion DB URI IS : " + uri);
                     return uri;

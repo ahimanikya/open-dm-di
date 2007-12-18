@@ -112,7 +112,7 @@ public class GoodFileDataReader extends BaseFileDataReader {
             }
         }
         catch (IOException ex) {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG019: Unable to read the Good file \n{0}", ex)));
+            sLog.severe(sLoc.x("PLG019: Unable to read the Good file \n{0}", ex));
         }
         return null;
     }    

@@ -149,7 +149,7 @@ public class QueryObjectBuilder {
             }
             
         } catch (SQLException ex) {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG024: Failed to create SQL Statement \n{0}",ex)));
+            sLog.severe(sLoc.x("PLG024: Failed to create SQL Statement \n{0}",ex));
         }
         sLog.fine("Conditions :: \n" + PluginTools.printlist(conditionsHolder));
     }
@@ -169,7 +169,7 @@ public class QueryObjectBuilder {
         if (!available) {
             selectables.add(field);
         } else{
-            sLog.warn(LocalizedString.valueOf(sLoc.t("PLG023: Field {0 }Already Available. Dropping from selectables list", field)));
+            sLog.warn(sLoc.x("PLG023: Field {0 }Already Available. Dropping from selectables list", field));
         }
     }
     
@@ -286,7 +286,7 @@ public class QueryObjectBuilder {
             }
             
             if (fieldmatch == null){
-                sLog.severe(LocalizedString.valueOf(sLoc.t("PLG025: Field [{0}] is not modelled in eview object def file for the table {1}", field, normTableName)));
+                sLog.severe(sLoc.x("PLG025: Field [{0}] is not modelled in eview object def file for the table {1}", field, normTableName));
             }
         }
         return fieldmatch;

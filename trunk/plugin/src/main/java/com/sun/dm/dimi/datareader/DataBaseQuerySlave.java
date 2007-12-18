@@ -98,7 +98,7 @@ public class DataBaseQuerySlave extends Thread {
      */
     @Override
     public void run() {
-        sLog.info(LocalizedString.valueOf(sLoc.t("PLG010: Query Manager Slave : Starting Process to fetch data ...")));
+        sLog.info(sLoc.x("PLG010: Query Manager Slave : Starting Process to fetch data ..."));
         isSlaveRunning = true;
         sLog.fine(" is Slave Running : " + isSlaveRunning);
         isThreadSleeping = false;
@@ -173,10 +173,10 @@ public class DataBaseQuerySlave extends Thread {
             //queryDB(queryObject);
              */
             if (!isAbronmalHalt) {
-                sLog.info(LocalizedString.valueOf(sLoc.t("PLG005: Query Manager Slave : ALL DATA FETCHED SUCCESSFULLY. Slave Process will end.")));
+                sLog.info(sLoc.x("PLG005: Query Manager Slave : ALL DATA FETCHED SUCCESSFULLY. Slave Process will end."));
             }
         } catch (SQLException ex) {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG006: Failed to Execute Query", ex)));
+            sLog.severe(sLoc.x("PLG006: Failed to Execute Query", ex));
         } finally {
             this.isSlaveRunning = false; // All the data has been retrieved
             this.dbreader.wakeUpMaster(); // Finally process all the pending data
@@ -229,7 +229,7 @@ public class DataBaseQuerySlave extends Thread {
             }
         } catch (QMException ex) {
             ex.printStackTrace();
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG007: Eview Query Manager Error during DB Query.", ex)));
+            sLog.severe(sLoc.x("PLG007: Eview Query Manager Error during DB Query.", ex));
             sLog.warnNoloc("Following errors may have occured :\n" + ex.getMessage() + "\nOR\n" + "Check if plugin dependencies have been added into index-core runtime");
             this.isAbronmalHalt = true;
             stopSlaveThread();
@@ -347,11 +347,11 @@ public class DataBaseQuerySlave extends Thread {
 
     public void stopSlaveThread() {
         try {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG033: DataBase Query Process will STOP")));
+            sLog.severe(sLoc.x("PLG033: DataBase Query Process will STOP"));
             this.conn.close();
             isSlaveRunning = false;
         } catch (SQLException ex) {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("Failed To Close DB Connection \n{0}", ex)));
+            sLog.severe(sLoc.x("Failed To Close DB Connection \n{0}", ex));
         }
     }
 
@@ -434,9 +434,9 @@ public class DataBaseQuerySlave extends Thread {
                         dataobject.addFieldValue(ofieldval.toString());
                     }
                 } else {
-                    String msg = sLoc.t("Unable to find  [{0}] in ObjectField for ObjectNode {1}." +
+                    LocalizedString msg = sLoc.x("Unable to find  [{0}] in ObjectField for ObjectNode {1}." +
                             " Verify if DataBase Schema has column [{0}] in the table {1}", fields.get(i).getName(), objectnode.pGetTag());
-                    sLog.warn(LocalizedString.valueOf(msg));
+                    sLog.warn(msg);
                 }
             }
 
@@ -444,7 +444,7 @@ public class DataBaseQuerySlave extends Thread {
             //logger.fine("Adding Auto Gen Field [Name: " + objectnode.pGetTag() + "Id" +  "] to Data Object. Value : " + (objectnode.getField(objectnode.pGetTag() + "Id")).getValue().toString());
             //dataobject.addFieldValue(((ObjectField)objectnode.getField(objectnode.pGetTag() + "Id")).getValue().toString());
         } catch (ObjectException ex) {
-            sLog.severe(LocalizedString.valueOf(sLoc.t("PLG034: Unable to process ObjectNode. Object Exception : " + ex.getMessage(), ex)));
+            sLog.severe(sLoc.x("PLG034: Unable to process ObjectNode. Object Exception : " + ex.getMessage(), ex));
         }
 
         return dataobject;
