@@ -105,6 +105,21 @@
                             <version>1.0</version>
                             <file>${basedir}/external/org-netbeans-modules-etl-editor.jar</file>
                         </configuration>
+                    </execution>
+                    <execution>
+                        <id>install-org-netbeans-modules-db</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <generatePom>true</generatePom>
+                            <packaging>jar</packaging>
+                            <groupId>org-netbeans-modules-db</groupId>
+                            <artifactId>org-netbeans-modules-db</artifactId>
+                            <version>1.0</version>
+                            <file>${basedir}/external/org-netbeans-modules-db.jar</file>
+                        </configuration>
                     </execution>                    
                 </executions>
             </plugin>            
@@ -270,6 +285,21 @@
                                     <version>1.0</version>
                                     <file>${basedir}/external/org-netbeans-modules-etl-editor.jar</file>
                                 </configuration>
+                            </execution>
+                            <execution>
+                                <id>install-org-netbeans-modules-db</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>install-file</goal>
+                                </goals>
+                                <configuration>
+                                    <generatePom>true</generatePom>
+                                    <packaging>jar</packaging>
+                                    <groupId>org-netbeans-modules-db</groupId>
+                                    <artifactId>org-netbeans-modules-db</artifactId>
+                                    <version>1.0</version>
+                                    <file>${basedir}/external/org-netbeans-modules-db.jar</file>
+                                </configuration>
                             </execution>                            
                         </executions>
                     </plugin>
@@ -371,12 +401,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>etl-editor</groupId>
-            <artifactId>etl-editor</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>etl-engine</groupId>
             <artifactId>etl-engine</artifactId>
             <version>1.0</version>
@@ -405,17 +429,29 @@
             <artifactId>i18n</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>mural</groupId>
             <artifactId>ETLEngineInvoker</artifactId>
             <version>1.0</version>
             <scope>runtime</scope>
-        </dependency>
+        </dependency>        
         <dependency>
             <groupId>oracle.jdbc</groupId>
             <artifactId>ojdbc14</artifactId>
             <version>10.1.0.2.0</version>
+            <scope>runtime</scope>
+        </dependency>        
+        <dependency>
+            <groupId>etl-editor</groupId>
+            <artifactId>etl-editor</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>        
+        <dependency>
+            <groupId>org-netbeans-modules-db</groupId>
+            <artifactId>org-netbeans-modules-db</artifactId>
+            <version>1.0</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
