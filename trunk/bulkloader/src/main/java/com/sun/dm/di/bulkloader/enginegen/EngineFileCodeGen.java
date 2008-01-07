@@ -22,7 +22,6 @@ import org.netbeans.modules.etl.codegen.DBConnectionDefinitionTemplate;
 import org.netbeans.modules.etl.codegen.ETLCodegenUtil;
 import org.netbeans.modules.etl.codegen.ETLProcessFlowGenerator;
 import org.netbeans.modules.etl.codegen.ETLProcessFlowGeneratorFactory;
-import org.netbeans.modules.etl.codegen.impl.InternalDBMetadata;
 import org.netbeans.modules.etl.model.ETLDefinition;
 import org.netbeans.modules.etl.utils.ETLDeploymentConstants;
 import org.netbeans.modules.sql.framework.common.jdbc.SQLDBConnectionDefinition;
@@ -73,8 +72,8 @@ class EngineFileCodeGen {
             SQLDefinition sqlDefinition = etldef.getSQLDefinition();
 
             populateConnectionDefinitions(sqlDefinition);
-            sqlDefinition.overrideCatalogNamesForOtd(otdCatalogOverrideMapMap);
-            sqlDefinition.overrideSchemaNamesForOtd(otdSchemaOverrideMapMap);
+            sqlDefinition.overrideCatalogNamesForDb(otdCatalogOverrideMapMap);
+            sqlDefinition.overrideSchemaNamesForDb(otdSchemaOverrideMapMap);
 
             ETLProcessFlowGenerator flowGen = ETLProcessFlowGeneratorFactory.getCollabFlowGenerator(sqlDefinition, true);
             flowGen.setWorkingFolder(ETLDeploymentConstants.PARAM_APP_DATAROOT);

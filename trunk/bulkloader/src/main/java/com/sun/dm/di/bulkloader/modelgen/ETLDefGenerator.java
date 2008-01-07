@@ -17,7 +17,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,16 +33,11 @@ import org.netbeans.modules.etl.codegen.impl.InternalDBMetadata;
 import org.netbeans.modules.etl.model.ETLDefinition;
 import org.netbeans.modules.etl.model.impl.ETLDefinitionImpl;
 import org.netbeans.modules.etl.utils.ETLDeploymentConstants;
-
-import org.netbeans.modules.jdbc.builder.DBMetaData;
-import org.netbeans.modules.jdbc.builder.ForeignKeyColumn;
-import org.netbeans.modules.jdbc.builder.KeyColumn;
-import org.netbeans.modules.jdbc.builder.Table;
-import org.netbeans.modules.jdbc.builder.TableColumn;
-import org.netbeans.modules.model.database.DBConnectionDefinition;
-
-
 import org.netbeans.modules.sql.framework.common.jdbc.SQLDBConnectionDefinition;
+import org.netbeans.modules.sql.framework.model.DBColumn;
+import org.netbeans.modules.sql.framework.model.DBConnectionDefinition;
+import org.netbeans.modules.sql.framework.model.DBMetaDataFactory;
+import org.netbeans.modules.sql.framework.model.ForeignKey;
 import org.netbeans.modules.sql.framework.model.SQLConstants;
 import org.netbeans.modules.sql.framework.model.SQLDBModel;
 import org.netbeans.modules.sql.framework.model.SQLDBTable;
@@ -59,12 +53,11 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * This class generated eTL definition file from the databse connection/metadata
  * @author Manish
  */
 public class ETLDefGenerator {
 
-    //private static ETLDefGenerator etlgenetator = null;
     private ETLDefinition etldef = null;
     //Engine File Generator
     private HashMap connDefs = new HashMap();
@@ -83,17 +76,17 @@ public class ETLDefGenerator {
 
     public ETLDefGenerator(String displayName) {
         etldef = new ETLDefinitionImpl(displayName);
-
     }
 
     public void addDBModel(Connection conn, String user_table_name, int type, String login, String pw) {
         SQLDBModel model = null;
         try {
-            DBMetaData meta = new DBMetaData();
+            DBMetaDataFactory meta = new DBMetaDataFactory();
             meta.connectDB(conn);
             DatabaseMetaData dbmeta = conn.getMetaData();
             DBConnectionDefinition def = null;
 
+            //Creating Connection Definitions for eTL definition file
             switch (type) {
                 case BLConstants.SOURCE_TABLE_TYPE:
                     model = SQLModelObjectFactory.getInstance().createDBModel(SQLConstants.SOURCE_DBMODEL);
@@ -110,64 +103,32 @@ public class ETLDefGenerator {
                     def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_ORACLE_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
                     break;
             }
-            //DBConnectionDefinition def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), dbmeta.getDriverName(), "MYURL1", "sa", "sa", "eTL Loader Generated Artifact");
-            //model.setModelName(dbmeta.getURL());
-            //model.setModelName("MYURL2");
             model.setConnectionDefinition(def);
 
+            
             SQLDBTable ffTable = getTable(meta, "", "", user_table_name, type);
-            Table t = getTable(type, meta, ffTable);
+            PrimaryKeyImpl pks = meta.getPrimaryKeys(ffTable.getCatalog(), ffTable.getSchema(), ffTable.getName());
+            Map<String, ForeignKey> fksmap = meta.getForeignKeys(ffTable);
+            meta.populateColumns(ffTable);
+            List<DBColumn> cols = ffTable.getColumnList();
+            DBColumn tc = null;
 
-            meta.checkForeignKeys(t);
-            meta.checkPrimaryKeys(t);
-
-            TableColumn[] cols = t.getColumns();
-            TableColumn tc = null;
-            List pks = t.getPrimaryKeyColumnList();
-            List pkCols = new ArrayList();
-            Iterator it = pks.iterator();
-            while (it.hasNext()) {
-                KeyColumn kc = (KeyColumn) it.next();
-                pkCols.add(kc.getColumnName());
+            // Setting Primary Keys for Tables in eTL definition file
+            switch (type) {
+                case BLConstants.SOURCE_TABLE_TYPE:
+                    ((SourceTableImpl) ffTable).setPrimaryKey(pks);
+                    break;
+                case BLConstants.TARGET_TABLE_TYPE:
+                    ((TargetTableImpl) ffTable).setPrimaryKey(pks);
+                    break;
             }
-            if (pks.size() != 0) {
-                PrimaryKeyImpl pkImpl = new PrimaryKeyImpl(((KeyColumn) t.getPrimaryKeyColumnList().get(0)).getName(), pkCols, true);
 
-                switch (type) {
-                    case BLConstants.SOURCE_TABLE_TYPE:
-                        ((SourceTableImpl) ffTable).setPrimaryKey(pkImpl);
-                        break;
-                    case BLConstants.TARGET_TABLE_TYPE:
-                        ((TargetTableImpl) ffTable).setPrimaryKey(pkImpl);
-                        break;
-                }
-
-            }
-            List fkList = t.getForeignKeyColumnList();
-            it = fkList.iterator();
+            // Setting Foreign Keys for Tables in eTL definition file
+            Iterator it = fksmap.keySet().iterator();
             while (it.hasNext()) {
-                ForeignKeyColumn fkCol = (ForeignKeyColumn) it.next();
-                ForeignKeyImpl fkImpl = new ForeignKeyImpl((SQLDBTable) ffTable, fkCol.getName(), fkCol.getImportKeyName(),
-                        fkCol.getImportTableName(), fkCol.getImportSchemaName(), fkCol.getImportCatalogName(), fkCol.getUpdateRule(),
-                        fkCol.getDeleteRule(), fkCol.getDeferrability());
-                List fkColumns = new ArrayList();
-                fkColumns.add(fkCol.getColumnName());
-                String cat = fkCol.getImportCatalogName();
-                if (cat == null) {
-                    cat = "";
-                }
-                String sch = fkCol.getImportSchemaName();
-                if (sch == null) {
-                    sch = "";
-                }
-                pks = meta.getPrimaryKeys(cat, sch, fkCol.getImportTableName());
-                List pkColumns = new ArrayList();
-                Iterator pksIt = pks.iterator();
-                while (pksIt.hasNext()) {
-                    KeyColumn kc = (KeyColumn) pksIt.next();
-                    pkColumns.add(kc.getColumnName());
-                }
-                fkImpl.setColumnNames(fkColumns, pkColumns);
+                ForeignKey fk = (ForeignKey) fksmap.get(it.next());
+                ForeignKeyImpl fkImpl = new ForeignKeyImpl(fk);
+                fkImpl.setColumnNames(fk.getColumnNames(), fk.getPKColumnNames());
 
                 switch (type) {
                     case BLConstants.SOURCE_TABLE_TYPE:
@@ -177,23 +138,24 @@ public class ETLDefGenerator {
                         ((TargetTableImpl) ffTable).addForeignKey(fkImpl);
                         break;
                 }
-
             }
-            for (int j = 0; j < cols.length; j++) {
-                tc = cols[j];
 
+            // Adding DataBase Table Columns in eTL definition file
+            for (int j = 0; j < cols.size(); j++) {
+                tc = cols.get(j);
                 switch (type) {
                     case BLConstants.SOURCE_TABLE_TYPE:
-                        SourceColumnImpl ffSourceColumn = new SourceColumnImpl(tc.getName(), tc.getSqlTypeCode(), tc.getNumericScale(), tc.getNumericPrecision(), tc.getIsPrimaryKey(), tc.getIsForeignKey(), false, tc.getIsNullable());
+                        SourceColumnImpl ffSourceColumn = new SourceColumnImpl(tc);
                         ((SourceTableImpl) ffTable).addColumn(ffSourceColumn);
                         break;
                     case BLConstants.TARGET_TABLE_TYPE:
-                        TargetColumnImpl ffTargetColumn = new TargetColumnImpl(tc.getName(), tc.getSqlTypeCode(), tc.getNumericScale(), tc.getNumericPrecision(), tc.getIsPrimaryKey(), tc.getIsForeignKey(), false, tc.getIsNullable());
+                        TargetColumnImpl ffTargetColumn = new TargetColumnImpl(tc);
                         ((TargetTableImpl) ffTable).addColumn(ffTargetColumn);
                         break;
                 }
             }
 
+            // Setting table properties for tables in eTL definition file
             switch (type) {
                 case BLConstants.SOURCE_TABLE_TYPE:
                     ((SourceTableImpl) ffTable).setEditable(true);
@@ -209,7 +171,7 @@ public class ETLDefGenerator {
                     break;
             }
 
-            // Add Model to ETL Definition
+            // Add Table Model to ETL Definition
             etldef.addObject(model);
 
             // Write Default Model to Package
@@ -246,6 +208,9 @@ public class ETLDefGenerator {
         return f;
     }
 
+    /**
+     * Utility Method to print generated eTL Definition 
+     */
     public void printETLDefinition() {
         try {
             System.out.println(etldef.toXMLString(null));
@@ -254,26 +219,15 @@ public class ETLDefGenerator {
         }
     }
 
+    /**
+     * Get the generated eTL Definition Object
+     * @return ETLDefinition
+     */
     public ETLDefinition getETLDefinition() {
         return etldef;
     }
 
     /*
-    public String generateETLEnfineFile() {
-    ETLScriptBuilderModel sbmodel = new ETLScriptBuilderModel();
-    try {
-    sbmodel.setSqlDefinition(etldef.getSQLDefinition());
-    //sbmodel.getEngine().createStartETLTaskNode();
-    sbmodel.getEngine().createEndETLTaskNode();
-    sbmodel.getEngine().createETLTaskNode("INIT");
-    //sbmodel.getEngine().getEndETLTaskNode().
-    sbmodel.applyConnectionDefinitions();
-    } catch (BaseException ex) {
-    Logger.getLogger("global").log(Level.SEVERE, null, ex);
-    }
-    return sbmodel.getEngine().toXMLString();
-    }
-     */
     public String generateETLEnfineFile(File etlDefFile, File buildDir) {
         ETLEngine engine = null;
 
@@ -290,8 +244,8 @@ public class ETLDefGenerator {
             SQLDefinition sqlDefinition = def.getSQLDefinition();
 
             populateConnectionDefinitions(sqlDefinition);
-            sqlDefinition.overrideCatalogNamesForOtd(otdCatalogOverrideMapMap);
-            sqlDefinition.overrideSchemaNamesForOtd(otdSchemaOverrideMapMap);
+            sqlDefinition.overrideCatalogNamesForDb(otdCatalogOverrideMapMap);
+            sqlDefinition.overrideSchemaNamesForDb(otdSchemaOverrideMapMap);
 
             ETLProcessFlowGenerator flowGen = ETLProcessFlowGeneratorFactory.getCollabFlowGenerator(sqlDefinition, true);
             flowGen.setWorkingFolder(ETLDeploymentConstants.PARAM_APP_DATAROOT);
@@ -324,7 +278,8 @@ public class ETLDefGenerator {
         System.out.println("Successfully Generated eTL Model File : " + etlDefFile.getName());
         return engine.toXMLString();
     }
-
+    */
+    
     public void writeModelToPackage(String etlModelName) {
         System.out.println("Writing [ " + etlModelName + " ] Model to Package ...");
         FileWriter fwriter = null;
@@ -364,11 +319,13 @@ public class ETLDefGenerator {
             }
         }
     }
-
+    
+    
     public void writeModelToPackage() {
         writeModelToPackage(BLConstants.DEFAULT_MODEL_NAME);
     }
-
+    
+    
     public void setSourceFileDBName(String sourcefilename) {
         this.sourcefilename = sourcefilename;
     }
@@ -399,15 +356,12 @@ public class ETLDefGenerator {
             initMetaData(iterator, "target");
         }
 
-        //System.out.println(connDefs);
-        //System.out.println(otdNamePoolNameMap);
-        //System.out.println(internalDBConfigParams);
-
         connDefs.size();
         otdNamePoolNameMap.size();
     }
 
     /**
+     * Initialize table metadata
      * @param iterator
      * @param string
      */
@@ -464,49 +418,31 @@ public class ETLDefGenerator {
     private void setConnectionParams(SQLDBConnectionDefinition conndef) {
         String metadataDir = ETLCodegenUtil.getEngineInstanceWorkingFolder();
         Map connectionParams = new HashMap();
-        connectionParams.put(this.KEY_DATABASE_NAME, collabName);
+        connectionParams.put(KEY_DATABASE_NAME, collabName);
         connectionParams.put(DBConnectionDefinitionTemplate.KEY_METADATA_DIR, metadataDir);
 
         conndef.setConnectionURL(StringUtil.replace(conndef.getConnectionURL(), connectionParams));
     }
 
-    private SQLDBTable getTable(DBMetaData dbMeta, String schemaName, String catalogName, String tableName, int type) throws Exception {
+    private SQLDBTable getTable(DBMetaDataFactory dbMeta, String schemaName, String catalogName, String tableName, int type) throws Exception {
         String[][] tableList = dbMeta.getTablesOnly(catalogName, schemaName, "", false);
         SQLDBTable aTable = null;
         String[] currTable = null;
         if (tableList != null) {
             for (int i = 0; i < tableList.length; i++) {
                 currTable = tableList[i];
-                if (currTable[DBMetaData.NAME].equals(tableName)) {
+                if (currTable[DBMetaDataFactory.NAME].equals(tableName)) {
                     switch (type) {
                         case BLConstants.SOURCE_TABLE_TYPE:
-                            aTable = new SourceTableImpl(currTable[DBMetaData.NAME].trim(), currTable[DBMetaData.SCHEMA], currTable[DBMetaData.CATALOG]);
+                            aTable = new SourceTableImpl(currTable[DBMetaDataFactory.NAME].trim(), currTable[DBMetaDataFactory.SCHEMA], currTable[DBMetaDataFactory.CATALOG]);
                             break;
                         case BLConstants.TARGET_TABLE_TYPE:
-                            aTable = new TargetTableImpl(currTable[DBMetaData.NAME].trim(), currTable[DBMetaData.SCHEMA], currTable[DBMetaData.CATALOG]);
+                            aTable = new TargetTableImpl(currTable[DBMetaDataFactory.NAME].trim(), currTable[DBMetaDataFactory.SCHEMA], currTable[DBMetaDataFactory.CATALOG]);
                             break;
                     }
                 }
             }
         }
         return aTable;
-    }
-
-    private Table getTable(int type, DBMetaData meta, SQLDBTable ffTable) {
-        Table t = null;
-        try {
-            switch (type) {
-                case BLConstants.SOURCE_TABLE_TYPE:
-                    t = meta.getTableMetaData(((SourceTableImpl) ffTable).getCatalog(), ((SourceTableImpl) ffTable).getSchema(), ((SourceTableImpl) ffTable).getName(), "TABLE");
-                    break;
-                case BLConstants.TARGET_TABLE_TYPE:
-                    t = meta.getTableMetaData(((TargetTableImpl) ffTable).getCatalog(), ((TargetTableImpl) ffTable).getSchema(), ((TargetTableImpl) ffTable).getName(), "TABLE");
-                    break;
-                default:
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return t;
     }
 }
