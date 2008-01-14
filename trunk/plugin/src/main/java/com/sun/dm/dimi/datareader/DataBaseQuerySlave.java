@@ -22,7 +22,6 @@ import com.sun.mdm.index.objects.ObjectField;
 import com.sun.mdm.index.objects.ObjectNode;
 import com.sun.mdm.index.objects.exception.ObjectException;
 import com.sun.mdm.index.query.AssembleDescriptor;
-import com.sun.mdm.index.query.ObjectNodeAssembler;
 import com.sun.mdm.index.query.QMException;
 import com.sun.mdm.index.query.QMIterator;
 import com.sun.mdm.index.query.QueryManager;
@@ -120,19 +119,22 @@ public class DataBaseQuerySlave extends Thread {
             ResultSet rootpks = null;
             if (countRootPKs.next()) {
                 if (Integer.parseInt(countRootPKs.getString(1)) > 0) {
+                    // Start Building Query Here
                     qob = createQueryObjectBuilder();
                     rootpks = stmt.executeQuery("select " + rootpkcolumn + " from " + PluginConstants.QueryManagerTablePrefix + mdservice.getHirarchicalRootName().toUpperCase());
-                }
-            }
-
-            // Start Building Query Here
-            while (isSlaveRunning) {
-                // Execute Query with a single primary key at a time and create joins with it - refactor later (this performs the best at the moment)
-                if (rootpks.next()) {
-                    QueryObject queryObject = buildQueryObject(qob, null, rootpks.getString(1));
-                    queryDB(queryObject);
-                } else {
-                    sLog.fine(LocalizedString.valueOf("Data Reader Thread Stopped."));
+                    while (isSlaveRunning) {
+                        // Execute Query with a single primary key at a time and create joins with it - refactor later (this performs the best at the moment)
+                        if (rootpks.next()) {
+                            QueryObject queryObject = buildQueryObject(qob, null, rootpks.getString(1));
+                            queryDB(queryObject);
+                        } else {
+                            sLog.fine(LocalizedString.valueOf("Data Reader Thread Stopped."));
+                            stopSlaveThread();
+                        }
+                    }
+                }else {
+                    sLog.warnNoloc("No Primary Data Available in Parent Table to process.");
+                    isAbronmalHalt = true;
                     stopSlaveThread();
                 }
             }
@@ -271,16 +273,17 @@ public class DataBaseQuerySlave extends Thread {
             while (i.hasNext()) {
                 newDataObjectHolder.addChildType((ChildType) this.childTypeMap.get(i.next()));
             }
-
-            // Check if data object list is below threashold, in this case, keep adding to this list or else add and sleep
-            if (doLinkedList.size() < PluginConstants.available_do) {
-                addDataObjectToList(newDataObjectHolder);
-            } else {
-                dbreader.wakeUpMaster();
-                addDataObjectToList(newDataObjectHolder);
-                goSleep(PluginConstants.slave_retry_freq);
-            }
         }
+
+        // Check if data object list is below threashold, in this case, keep adding to this list or else add and sleep
+        if (doLinkedList.size() < PluginConstants.available_do) {
+            addDataObjectToList(newDataObjectHolder);
+        } else {
+            dbreader.wakeUpMaster();
+            addDataObjectToList(newDataObjectHolder);
+            goSleep(PluginConstants.slave_retry_freq);
+        }
+
     }
 
     /**
