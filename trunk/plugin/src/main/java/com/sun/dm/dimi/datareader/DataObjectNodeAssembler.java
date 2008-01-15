@@ -4,6 +4,8 @@
  */
 package com.sun.dm.dimi.datareader;
 
+import com.sun.dm.dimi.util.Localizer;
+import com.sun.dm.dimi.util.LogUtil;
 import com.sun.mdm.index.objects.ObjectField;
 import com.sun.mdm.index.objects.ObjectNode;
 import com.sun.mdm.index.objects.factory.SimpleFactory;
@@ -11,6 +13,7 @@ import com.sun.mdm.index.query.AttributesData;
 import com.sun.mdm.index.query.ResultObjectAssembler;
 import com.sun.mdm.index.query.VOAException;
 import java.util.ArrayList;
+import net.java.hulp.i18n.Logger;
 
 /**
  *
@@ -19,6 +22,10 @@ import java.util.ArrayList;
 public class DataObjectNodeAssembler implements ResultObjectAssembler {
     
     DefaultSystemFields systemfields = null;
+    
+    //logger
+    private static Logger sLog = LogUtil.getLogger(DataBaseQuerySlave.class.getName());
+    private static Localizer sLoc = Localizer.get();
     
     public DataObjectNodeAssembler() {
         systemfields = new DefaultSystemFields();
@@ -43,7 +50,13 @@ public class DataObjectNodeAssembler implements ResultObjectAssembler {
 
                 if (index > -1){
                     //Check if Default System Fields need to be inserted.
-                    don.setSystemFieldValue(index, attrsData.get(i).toString());
+                    if (attrsData.get(i) != null){
+                        don.setSystemFieldValue(index, attrsData.get(i).toString());
+                    }
+                    else{
+                        sLog.fine("Attribute [" + attributeNames[i].toUpperCase()  + "] is null");
+                        don.setSystemFieldValue(index, null);
+                    }
                 }
                 else {
                     /*
@@ -98,6 +111,7 @@ public class DataObjectNodeAssembler implements ResultObjectAssembler {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new VOAException("PLG516: Could not create root:{0} : " + e.getMessage());
         }
         don.setObjectNode(objectNode);
