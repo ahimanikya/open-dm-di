@@ -40,8 +40,6 @@ public class DatabaseDataReader extends BaseDBDataReader {
     Connection conn = null;
     private ArrayList filteredSelects = null;
     private DataBaseQuerySlave qslave = null;
-    //Constatnts
-    private String DATA_SOURCE_TYPE = "AXIONDB";
     //Thread status
     private boolean isMasterSleeping = false;
     private Thread mainthread = Thread.currentThread();
@@ -342,8 +340,8 @@ public class DatabaseDataReader extends BaseDBDataReader {
      * Return the type of Database source
      * @return String - Data Type Source
      */
-    public String getDataSourceType() {
-        return this.DATA_SOURCE_TYPE;
+    public int getDataSourceType() {
+        return PluginConstants.JDBC_DATASOURCE;
     }
 
     private String buildURI(String dbDir) {

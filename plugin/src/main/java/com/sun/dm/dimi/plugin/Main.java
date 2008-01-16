@@ -11,13 +11,13 @@ package com.sun.dm.dimi.plugin;
 
 import com.sun.mdm.index.dataobject.InvalidRecordFormat;
 import com.sun.dm.dimi.datareader.DataSourceReaderFactory;
+import com.sun.dm.dimi.datareader.GlobalDataObjectReader;
 import com.sun.dm.dimi.datawriter.DOWriter;
 import com.sun.dm.dimi.datawriter.DataObjectWriterFactory;
 import com.sun.dm.dimi.qmquery.SelectableFilter;
 import com.sun.dm.dimi.util.Localizer;
 import com.sun.dm.dimi.util.LogUtil;
 import com.sun.mdm.index.dataobject.DataObject;
-import com.sun.mdm.index.dataobject.DataObjectReader;
 import com.sun.mdm.index.parser.ParserException;
 import java.io.FileNotFoundException;
 import net.java.hulp.i18n.Logger;
@@ -56,15 +56,15 @@ public class Main {
         boolean configset = DataSourceReaderFactory.setEViewConfigFilePath("D:/temp/mural/forMANISH", "objectdef.xml");
 
         if (configset){
-            
             // DB READER AND WRITER
-            DataObjectReader doReader = DataSourceReaderFactory.getNewDataObjectReader("SRINIDB", "D:/temp/mural/eViewDBsNew/patientviewdb" + howmany, null, true);            
-            DOWriter doWriter = DataObjectWriterFactory.getNewDataObjectWriter("D:/temp/mural/eViewDBs/GoodFiles", "File_" + howmany  + ".txt", true);
+            GlobalDataObjectReader doReader = DataSourceReaderFactory.getNewDataObjectReader("PERSONNULSTAGING", "D:/kishor_new/PersonStgForNullTest", null, true);
+            DOWriter doWriter = DataObjectWriterFactory.getNewDataObjectWriter("D:/kishor_new", "File1_" + howmany  + ".txt", true);
             
             //FILE READER AND WRITER
-            //DataObjectReader doReader = DataSourceReaderFactory.getNewDataObjectReader("D:/temp/eviewconfig", "DoGoodfile11.txt", true, true);
-            //DOWriter doWriter = DataObjectWriterFactory.getNewDataObjectWriter("D:/temp/eViewDBs/GoodFiles", "File_" + howmany  + ".txt", true);
+            //GlobalDataObjectReader doReader = DataSourceReaderFactory.getNewDataObjectReader("C:/Documents and Settings/Manish/Desktop/terry", "good.txt", true, true);
+            //DOWriter doWriter = DataObjectWriterFactory.getNewDataObjectWriter("C:/Documents and Settings/Manish/Desktop/terry/manishgen", "File_dump1.txt", true);
             
+            System.out.println("Source Data Type is :: " + doReader.getDataSourceType());
             int count = 0;
             
             try {
@@ -75,7 +75,7 @@ public class Main {
                     if (count%5000 == 0){
                         System.out.println("Fetching Data Object  << << << " + count);
                     }
-                    //System.out.println("MANISH DO :: \n" + dobj.toString());
+                    System.out.println("MANISH DO :: \n" + dobj.toString());
                     doWriter.write(dobj);
                 }
             } catch (InvalidRecordFormat ex) {
