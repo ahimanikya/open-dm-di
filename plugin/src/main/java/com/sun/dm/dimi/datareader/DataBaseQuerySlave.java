@@ -431,11 +431,11 @@ public class DataBaseQuerySlave extends Thread {
                 }
 
                 if (ofield != null) {
-                    Object ofieldval = ofield.getValue();
-                    if (ofieldval != null) {
-                        sLog.fine("Adding Field to Data Object [ " + fields.get(i).getName() + "  ] Value : " + ofieldval.toString());
-                        dataobject.addFieldValue(ofieldval.toString());
-                    }
+                    String ofieldval = (String)ofield.getValue();
+                    //if (ofieldval != null) {
+                        sLog.fine("Adding Field to Data Object [ " + fields.get(i).getName() + "  ] Value : " + ofieldval);
+                        dataobject.addFieldValue(ofieldval);
+                    //}
                 } else {
                     LocalizedString msg = sLoc.x("Unable to find  [{0}] in ObjectField for ObjectNode {1}." +
                             " Verify if DataBase Schema has column [{0}] in the table {1}", fields.get(i).getName(), objectnode.pGetTag());
