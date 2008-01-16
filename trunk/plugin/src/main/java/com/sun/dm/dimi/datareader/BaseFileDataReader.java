@@ -10,10 +10,10 @@
 package com.sun.dm.dimi.datareader;
 
 import com.sun.dm.dimi.dataobject.metadata.MetaDataManager;
+import com.sun.dm.dimi.util.Localizer;
 import com.sun.dm.dimi.util.LogUtil;
 import com.sun.dm.dimi.util.PluginConstants;
 import com.sun.dm.dimi.util.PluginTools;
-import com.sun.mdm.index.dataobject.DataObjectReader;
 import com.sun.mdm.index.parser.ParserException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +28,7 @@ import org.axiondb.io.*;
  * @Company:      Sun Microsystems
  * @author        Manish Bharani
  */
-public abstract class BaseFileDataReader extends BaseDBDataReader implements DataObjectReader{
+public abstract class BaseFileDataReader extends BaseDBDataReader implements GlobalDataObjectReader{
     
     File mFileObj = null;
     BufferedDataInputStream bdInputStream = null;
@@ -36,6 +36,7 @@ public abstract class BaseFileDataReader extends BaseDBDataReader implements Dat
     
     //logger
     private static Logger sLog = LogUtil.getLogger(BaseFileDataReader.class.getName());
+    Localizer sLoc = Localizer.get();
     
     /**
      * Constructor for the BaseDataReader
@@ -77,10 +78,8 @@ public abstract class BaseFileDataReader extends BaseDBDataReader implements Dat
             AxionFileSystem axionFileSys = new AxionFileSystem();
             this.bdInputStream = axionFileSys.openBufferedDIS(this.mFileObj);
         } catch (AxionException ex) {
-            ex.printStackTrace();
+            sLog.severe(sLoc.x("Axion Exception : " + ex.getMessage()));
         }
     }
-    
-    public abstract String getDataSourceType();
         
 }

@@ -13,7 +13,6 @@ import com.sun.dm.dimi.util.DBDelimiters;
 import com.sun.dm.dimi.util.LogUtil;
 import com.sun.mdm.index.dataobject.ChildType;
 import com.sun.mdm.index.dataobject.DataObject;
-import com.sun.mdm.index.dataobject.DataObjectReader;
 import com.sun.mdm.index.dataobject.InvalidRecordFormat;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -24,7 +23,7 @@ import net.java.hulp.i18n.Logger;
  *
  * @author Manish
  */
-public abstract class BaseDBDataReader implements DataObjectReader {
+public abstract class BaseDBDataReader implements GlobalDataObjectReader {
     
     List<DataObject> doLinkedList = Collections.synchronizedList(new LinkedList());
     private boolean specialMode = false;
@@ -286,9 +285,6 @@ public abstract class BaseDBDataReader implements DataObjectReader {
         }
         
         child.addFieldValue(sb.toString());
-    }    
-    
-    
-    public abstract String getDataSourceType();    
+    }
     
 }

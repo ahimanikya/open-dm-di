@@ -6,7 +6,6 @@
 package unit;
 
 import com.sun.dm.dimi.datareader.*;
-import com.sun.mdm.index.dataobject.DataObjectReader;
 import com.sun.mdm.index.dataobject.InvalidRecordFormat;
 import com.sun.mdm.index.parser.ParserException;
 import config.DBGenerator;
@@ -68,8 +67,7 @@ public class DataSourceReaderFactoryTest extends TestCase {
         String filename = TestConfig.GOODFILEDBNAME;
         boolean isGoodFile = true;
         boolean specialMode = true;
-        DataObjectReader result = DataSourceReaderFactory.getNewDataObjectReader(filepath, filename, isGoodFile, specialMode);
-        
+        GlobalDataObjectReader result = DataSourceReaderFactory.getNewDataObjectReader(filepath, filename, isGoodFile, specialMode);
         assertNotNull(result);
     }
     

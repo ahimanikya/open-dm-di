@@ -15,7 +15,6 @@ import com.sun.dm.dimi.util.Localizer;
 import com.sun.dm.dimi.util.PluginConstants;
 import com.sun.dm.dimi.util.PluginTools;
 import com.sun.dm.dimi.util.LogUtil;
-import com.sun.mdm.index.dataobject.DataObjectReader;
 import com.sun.mdm.index.parser.ParserException;
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,14 +32,10 @@ import net.java.hulp.i18n.Logger;
  * @author        Manish Bharani
  */
 public class DataSourceReaderFactory {
-    private static DataObjectReader doReader = null;
+    private static GlobalDataObjectReader doReader = null;
     private static String configpath = null;
     
-   
-    
-    /**
-     * logger
-     */
+    //logger
     private static Logger sLog = LogUtil.getLogger(DataSourceReaderFactory.class.getName());
     private static Localizer sLoc = Localizer.get();
     
@@ -52,26 +47,31 @@ public class DataSourceReaderFactory {
     
     /**
      * Static method to provide hook for a file reader
-     * @param filepath - directory where the file to be read can be found
-     * @param filename - name of the file to be read
+     * @param fileObj 
      * @param isGoodFile - user specifies if the good file is what needs to be read
      * @param specialMode - parse records in normal mode or special mode
-     * @return DataSourceReader - interface instance
+     * @return GlobalDataObjectReader - interface instance
      */
-    /*
-    public static DataObjectReader getNewDataSourceReader(String filepath, String filename, boolean isGoodFile, boolean specialMode) {
+    public static GlobalDataObjectReader getNewDataObjectReader(File fileObj, boolean isGoodFile, boolean specialMode){
         if (isGoodFile){
-            logger.info("Creating a Good File Reader ..");
-            doReader = new GoodFileDataReader(filepath, filename, specialMode);
+            sLog.fine("Creating a Good File Reader ..");
+            doReader = new GoodFileDataReader(fileObj, specialMode);
         } else {
-            logger.info("Creating a Reject File Reader ..");
-            doReader = new RejectFileDataReader(filepath, filename, specialMode);
+            sLog.fine("Creating a Reject File Reader ..");
+            doReader = new RejectFileDataReader(fileObj, specialMode);
         }
         return doReader;
-    }
-    */
+    }    
     
-    public static DataObjectReader getNewDataObjectReader(String filepath, String filename, boolean isGoodFile, boolean specialMode) throws ParserException, FileNotFoundException{
+    /**
+     * Static method to provide hook for a file reader
+     * @param filepath
+     * @param filename
+     * @param isGoodFile - user specifies if the good file is what needs to be read
+     * @param specialMode - parse records in normal mode or special mode
+     * @return GlobalDataObjectReader - interface instance
+     */    
+    public static GlobalDataObjectReader getNewDataObjectReader(String filepath, String filename, boolean isGoodFile, boolean specialMode) throws ParserException, FileNotFoundException{
         if (isGoodFile){
             sLog.fine("Creating a Good File Reader ..");
             doReader = new GoodFileDataReader(filepath, filename, specialMode);
@@ -80,6 +80,59 @@ public class DataSourceReaderFactory {
             doReader = new RejectFileDataReader(filepath, filename, specialMode);
         }
         return doReader;
+    }
+    
+    /**
+     * Static method to provide hook for a database reader
+     * @param databaseUri - Uri of DB being connected
+     * @param filter - Any filters of DB columns
+     * @param specialMode - parse records in normal mode or special mode
+     * @return GlobalDataObjectReader - interface instance
+     */    
+    public static GlobalDataObjectReader getNewDataObjectReader(String databaseUri, SelectableFilter filter, boolean specialMode) {
+        sLog.fine("Creating Axion DB reader ..");
+        doReader = new DatabaseDataReader(databaseUri,filter,specialMode);
+        return doReader;
+    }
+    
+    /**
+     * Static method to provide hook for a database reader
+     * @param dbname 
+     * @param dbdir 
+     * @param filter - Object for overriding selectables from the database (null if not required)
+     * @param specialMode 
+     * @return DataSourceReader - interface instance
+     */
+    public static GlobalDataObjectReader getNewDataObjectReader(String dbname, String dbdir, SelectableFilter filter, boolean specialMode) {
+        sLog.fine("Creating Axion DB reader ..");
+        doReader = new DatabaseDataReader(dbname, dbdir, filter, specialMode);
+        return doReader;
+    }
+    
+    /**
+     * This method is used by cleanser/profiles to ascertain type of reader to use for the given data source pool
+     * @param dataSourceURI
+     * @param specialMode
+     * @return GlobalDataObjectReader
+     * @throws java.io.IOException
+     */
+    public static GlobalDataObjectReader getDataSourceReader(String dataSourceURI, boolean specialMode) throws IOException {
+        GlobalDataObjectReader dsReader = null;
+        int datasourceType = getDataSourceType(dataSourceURI);
+        if(datasourceType==PluginConstants.JDBC_DATASOURCE) {
+            dsReader = getNewDataObjectReader(dataSourceURI, null, specialMode);
+        } else if(datasourceType == PluginConstants.REJECT_FILE_DATASOURCE) {
+            dsReader = getNewDataObjectReader(new File(dataSourceURI), false, specialMode);
+        } else if(datasourceType == PluginConstants.GOOD_FILE_DATASOURCE) {
+            dsReader = getNewDataObjectReader(new File(dataSourceURI), true, specialMode);
+        }
+        return dsReader;
+    }
+    
+    private static int getDataSourceType(String dataSourceLoc) throws IOException {
+        File f = new File(dataSourceLoc);
+        int dataSourceType = (f.isDirectory()) ? PluginConstants.JDBC_DATASOURCE : getFileSourceType(dataSourceLoc);
+        return dataSourceType;
     }    
     
     private static int getFileSourceType(String fileURI) throws IOException {
@@ -100,104 +153,6 @@ public class DataSourceReaderFactory {
             bis.close();
         }
         return fileType;
-        
-    }
-    
-    public static int getDataSourceType(String dataSourceLoc) throws IOException {
-        File f = new File(dataSourceLoc);
-        int dataSourceType = (f.isDirectory()) ? PluginConstants.JDBC_DATASOURCE : getFileSourceType(dataSourceLoc);
-        return dataSourceType;
-    }
-    
-    public static DataObjectReader getDataSourceReader(String dataSourceURI, boolean specialMode) throws IOException {
-        DataObjectReader dsReader = null;
-        int datasourceType = getDataSourceType(dataSourceURI);
-        if(datasourceType==PluginConstants.JDBC_DATASOURCE) {
-            dsReader = getNewDataObjectReader(dataSourceURI, null, specialMode);
-        } else if(datasourceType == PluginConstants.REJECT_FILE_DATASOURCE) {
-            dsReader = getNewDataObjectReader(new File(dataSourceURI), false, specialMode);
-        } else if(datasourceType == PluginConstants.GOOD_FILE_DATASOURCE) {
-            dsReader = getNewDataObjectReader(new File(dataSourceURI), true, specialMode);
-        }
-        return dsReader;
-    }
-    
-    private static String generateAxionURI(String dataSourceURI) {
-        String axionURI = null;
-        if( dataSourceURI != null && !"".equalsIgnoreCase(dataSourceURI) && dataSourceURI.indexOf("jdbc") == -1 ) {
-            File f = new File(dataSourceURI);
-            axionURI = "jdbc:axiondb:" + f.getName() + ":" + dataSourceURI;
-        }
-        return axionURI;
-    }
-    /**
-     * Static method to provide hook for a file reader
-     * @param fileObj 
-     * @param isGoodFile - user specifies if the good file is what needs to be read
-     * @param specialMode - parse records in normal mode or special mode
-     * @return DataSourceReader - interface instance
-     */
-    public static DataObjectReader getNewDataObjectReader(File fileObj, boolean isGoodFile, boolean specialMode){
-        if (isGoodFile){
-            sLog.fine("Creating a Good File Reader ..");
-            doReader = new GoodFileDataReader(fileObj, specialMode);
-        } else {
-            sLog.fine("Creating a Reject File Reader ..");
-            doReader = new RejectFileDataReader(fileObj, specialMode);
-        }
-        
-        return doReader;
-    }
-    
-    /**
-     * Static method to provide hook for a database reader
-     * @param databaseUri - uri of the database location
-     * @param filter - Object for overriding selectables from the database (null if not required)
-     * @param specialMode - parse records in normal mode or special mode
-     * @return DataSourceReader - interface instance
-     */
-    /*
-    public static DataObjectReader getNewDataSourceReader(String databaseUri, SelectableFilter filter, boolean specialMode) {
-        logger.info("Creating Axion DB reader ..");
-        doReader = new DatabaseDataReader(databaseUri,filter,specialMode);
-        return doReader;
-    }
-    */
-    
-    public static DataObjectReader getNewDataObjectReader(String databaseUri, SelectableFilter filter, boolean specialMode) {
-        sLog.fine("Creating Axion DB reader ..");
-        doReader = new DatabaseDataReader(databaseUri,filter,specialMode);
-        return doReader;
-    }    
-    
-    /**
-     * Static method to provide hook for a database reader
-     * @param dbname 
-     * @param dbdir 
-     * @param filter - Object for overriding selectables from the database (null if not required)
-     * @param specialMode 
-     * @return DataSourceReader - interface instance
-     */
-    /*
-    public static DataObjectReader getNewDataSourceReader(String dbname, String dbdir, SelectableFilter filter, boolean specialMode) {
-        logger.info("Creating Axion DB reader ..");
-        doReader = new DatabaseDataReader(dbname, dbdir, filter, specialMode);
-        return doReader;
-    }
-    */
-    
-    /**
-     * Static method to provide hook for a database reader
-     * @param dbname 
-     * @param dbdir 
-     * @param filter - Object for overriding selectables from the database (null if not required)
-     * @param specialMode 
-     * @return DataSourceReader - interface instance
-     */
-    public static DataObjectReader getNewDataObjectReader(String dbname, String dbdir, SelectableFilter filter, boolean specialMode) {
-        sLog.fine("Creating Axion DB reader ..");
-        doReader = new DatabaseDataReader(dbname, dbdir, filter, specialMode);
-        return doReader;
     }    
     
     /**
@@ -217,7 +172,7 @@ public class DataSourceReaderFactory {
     }
     
     /**
-     * Sets eViewConfig File Object (objectmap.xml conventionally)
+     * Sets eViewConfig File Object Path (object.xml conventionally)
      * @param configfilepath 
      * @return boolean
      */
@@ -229,11 +184,13 @@ public class DataSourceReaderFactory {
         return false;
     }    
     
-
+    /**
+     * Gets eViewConfig File Object absolute path (object.xml conventionally)
+     * @return String - abs path for object.xml
+     */
     public static String getEViewConfigFilePath() {
         return PluginConstants.EVIEW_CONFIG_FILE.getAbsolutePath();
     }
-    
     
     public static void main(String[] args) throws IOException {
         String dataSource = "jdbc:axion:testdb:C:\temp\testdb";

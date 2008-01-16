@@ -23,9 +23,15 @@ public class PluginConstants {
     public static final String fs = System.getProperty("file.separator"); //File Separator
     public static File EVIEW_CONFIG_FILE = null;
     
+    //Data Source Types
     public static final int JDBC_DATASOURCE = 0;
     public static final int GOOD_FILE_DATASOURCE = 1;
     public static final int REJECT_FILE_DATASOURCE = 2;
+    public static final int RAW_FILE_DATASOURCE = 3;
+    
+    //Standardization and Phonetization patterns
+    public static final String STAN_PATTERN = "_Std";
+    public static final String PHON_PATTERN = "_Phon";
     
     //Axion Database Constants
     public static final String AXION_KEY_TABLE = "AXION_KEYS";
