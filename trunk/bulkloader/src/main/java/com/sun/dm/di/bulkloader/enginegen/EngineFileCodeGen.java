@@ -9,6 +9,8 @@ import com.sun.etl.engine.ETLEngine;
 import com.sun.sql.framework.exception.BaseException;
 import com.sun.sql.framework.utils.StringUtil;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,6 +25,7 @@ import org.netbeans.modules.etl.codegen.ETLCodegenUtil;
 import org.netbeans.modules.etl.codegen.ETLProcessFlowGenerator;
 import org.netbeans.modules.etl.codegen.ETLProcessFlowGeneratorFactory;
 import org.netbeans.modules.etl.model.ETLDefinition;
+import org.netbeans.modules.etl.model.impl.ETLDefinitionImpl;
 import org.netbeans.modules.etl.utils.ETLDeploymentConstants;
 import org.netbeans.modules.sql.framework.common.jdbc.SQLDBConnectionDefinition;
 import org.netbeans.modules.sql.framework.model.SQLDBModel;
@@ -36,12 +39,10 @@ import org.xml.sax.SAXException;
  */
 class EngineFileCodeGen {
 
+    private String etldefstr = null;
     private ETLDefinition etldef = null;
-    private static ETLDefGenerator etlgenetator = null;
-    //Engine File Generator
     private HashMap connDefs = new HashMap();
     private Map otdNamePoolNameMap = new HashMap();
-    private DBConnectionDefinitionTemplate connectionDefnTemplate;
     private Map internalDBConfigParams = new HashMap();
     private static final String KEY_DATABASE_NAME = "DatabaseName";
     private String collabName;
@@ -53,18 +54,42 @@ class EngineFileCodeGen {
     }
 
     protected EngineFileCodeGen(ETLDefinition etldef) {
-        this.etldef = etldef;
+        try {
+            this.etldefstr = etldef.toXMLString(null);
+            this.etldef = etldef;
+        } catch (BaseException ex) {
+            Logger.getLogger(EngineFileCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+    
+    protected EngineFileCodeGen(File etldef) {
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(etldef);
+            int x = fis.available();
+            byte[] b = new byte[x];
+            fis.read(b);
+            this.etldefstr = new String(b);
+        } catch (IOException ex) {
+            Logger.getLogger(EngineFileCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fis.close();
+            } catch (IOException ex) {
+                Logger.getLogger(EngineFileCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        this.etldef = new ETLDefinitionImpl();
+    }
+
+    
     protected String genEnginecode() {
         ETLEngine engine = null;
 
         try {
             DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
-            String eTLDefStr = this.etldef.toXMLString(null);
-            String purgedEtlDefStr = eTLDefStr.substring(eTLDefStr.indexOf("<etlDefinition>"));
-            ByteArrayInputStream bais = new ByteArrayInputStream(eTLDefStr.getBytes("UTF-8"));
-            //BufferedInputStream bis = new BufferedInputStream();
+            ByteArrayInputStream bais = new ByteArrayInputStream(this.etldefstr.getBytes("UTF-8"));
             Element root = f.newDocumentBuilder().parse(bais).getDocumentElement();
 
             etldef.parseXML(root);
@@ -112,7 +137,6 @@ class EngineFileCodeGen {
         Iterator iterator = srcDbmodels.iterator();
         while (iterator.hasNext()) {
             initMetaData(iterator, "source");
-
         }
 
         List trgDbmodels = def.getTargetDatabaseModels();
@@ -120,10 +144,6 @@ class EngineFileCodeGen {
         while (iterator.hasNext()) {
             initMetaData(iterator, "target");
         }
-
-        //System.out.println(connDefs);
-        //System.out.println(otdNamePoolNameMap);
-        //System.out.println(internalDBConfigParams);
 
         connDefs.size();
         otdNamePoolNameMap.size();
@@ -140,8 +160,6 @@ class EngineFileCodeGen {
         SQLDBConnectionDefinition originalConndef = (SQLDBConnectionDefinition) element.getConnectionDefinition();
 
         if (originalConndef.getDriverClass().equals("org.axiondb.jdbc.AxionDriver")) {
-            //SQLDBConnectionDefinition conndefTemplate = this.connectionDefnTemplate.getDBConnectionDefinition("STCDBADAPTER");
-            //SQLDBConnectionDefinition conndef = (SQLDBConnectionDefinition) conndefTemplate.cloneObject();
             SQLDBConnectionDefinition conndef = originalConndef;
             setConnectionParams(conndef);
 

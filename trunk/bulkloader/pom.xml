@@ -21,11 +21,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib</classpathPrefix>
-                            <mainClass>com.sun.dm.di.bulkloader.LoaderMain</mainClass>
-                        </manifest>
                     </archive>
                 </configuration>
             </plugin>
@@ -120,7 +115,7 @@
                             <version>1.0</version>
                             <file>${basedir}/external/org-netbeans-modules-db.jar</file>
                         </configuration>
-                    </execution>                    
+                    </execution>
                 </executions>
             </plugin>            
             <plugin>
@@ -185,11 +180,6 @@
                         <artifactId>maven-jar-plugin</artifactId>
                         <configuration>
                             <archive>
-                                <manifest>
-                                    <addClasspath>true</addClasspath>
-                                    <classpathPrefix>lib</classpathPrefix>
-                                    <mainClass>com.sun.dm.di.bulkloader.LoaderMain</mainClass>
-                                </manifest>
                             </archive>
                         </configuration>
                     </plugin>
@@ -300,7 +290,7 @@
                                     <version>1.0</version>
                                     <file>${basedir}/external/org-netbeans-modules-db.jar</file>
                                 </configuration>
-                            </execution>                            
+                            </execution>
                         </executions>
                     </plugin>
                     <plugin>
@@ -452,7 +442,7 @@
             <groupId>org-netbeans-modules-db</groupId>
             <artifactId>org-netbeans-modules-db</artifactId>
             <version>1.0</version>
-            <scope>runtime</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
