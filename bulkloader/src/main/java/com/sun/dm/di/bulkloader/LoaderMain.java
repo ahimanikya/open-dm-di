@@ -36,7 +36,6 @@ public class LoaderMain {
      */
     public static void main(String[] args) {
 
-        //System.out.println("Loader Start ...");
         sLog.info(sLoc.x("LDR001: Loader Start ..."));
         /*
         // Set the System Variables (Source)
@@ -64,8 +63,8 @@ public class LoaderMain {
 
                 if (cc_source != null) {
                     // Generate ETL Engine File
-                    ETLEngineFileGenerator efgen = new ETLEngineFileGenerator();
-                    efgen.generateETLEngineFile(etldefgen);
+                    ETLEngineFileGenerator defgen = new ETLEngineFileGenerator();
+                    defgen.generateETLEngineFile(etldefgen);
                 } else {
                     System.out.println("Source connection is null. Engine file gen aborted");
                 }
