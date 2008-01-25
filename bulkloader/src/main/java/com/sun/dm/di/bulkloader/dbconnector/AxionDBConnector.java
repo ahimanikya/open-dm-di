@@ -59,9 +59,9 @@ public class AxionDBConnector extends DBConnector {
 
             while (rset.next()) {
                 TableMetaDataObject tableMD = new TableMetaDataObject();
-                tableMD.setColumnName(rset.getString(4));
-                tableMD.setColumnLength(Integer.parseInt(rset.getString(5)));
-                tableMD.setColumnDataType(rset.getString(6));
+                tableMD.setColumnName(rset.getString(4)); //Set Col Name
+                tableMD.setColumnDataType(rset.getString(6)); //Set Col DataType
+                tableMD.setColumnLength(Integer.parseInt(rset.getString(7))); //Set Col Length
                 mdlist.add(tableMD);
             }
         } catch (SQLException ex) {
