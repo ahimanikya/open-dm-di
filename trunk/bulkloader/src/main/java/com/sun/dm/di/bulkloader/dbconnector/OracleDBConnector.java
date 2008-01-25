@@ -59,11 +59,11 @@ public class OracleDBConnector extends DBConnector {
         return connection;
     }
 
-    public ArrayList getTableMetaDataObjectList() {
+    public ArrayList getTableMetaDataObjectList(String schema, String catalog) {
         ArrayList<TableMetaDataObject> mdlist = new ArrayList();
         try {
             DatabaseMetaData dbmd = connection.getMetaData();
-            ResultSet rset = dbmd.getColumns(null, null, targetTableQName, null);
+            ResultSet rset = dbmd.getColumns(catalog, schema, targetTableQName, "%");
 
             while (rset.next()) {
                 TableMetaDataObject tableMD = new TableMetaDataObject();
