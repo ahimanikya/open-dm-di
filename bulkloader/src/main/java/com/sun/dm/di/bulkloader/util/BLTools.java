@@ -15,8 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import net.java.hulp.i18n.Logger;
 
 /**
  *
@@ -24,7 +23,9 @@ import java.util.logging.Logger;
  */
 public class BLTools {
 
-    private static Logger logger = Logger.getLogger(BLTools.class.getName());
+    //logger
+    private static Logger sLog = LogUtil.getLogger(BLTools.class.getName());
+    private static Localizer sLoc = Localizer.get();
 
     public BLTools() {
     }
@@ -36,13 +37,13 @@ public class BLTools {
                 if (dbdir.isDirectory()) {
                     return true;
                 } else {
-                    logger.severe("Directory is not a valid dir : " + dirpath);
+                    sLog.severe(sLoc.x("LDR400: Directory is not a valid dir : {0}", dirpath));
                 }
             } else {
-                logger.severe("Directory does not exist : " + dirpath);
+                sLog.severe(sLoc.x("LDR401: Directory does not exist : {0}", dirpath));
             }
         } else {
-            System.out.println("Path to Package is null");
+            sLog.severe(sLoc.x("LDR402: Path to Package is null"));
             return false;
         }
         return false;
@@ -55,14 +56,14 @@ public class BLTools {
                 if (dbfile.isFile()) {
                     return true;
                 } else {
-                    logger.severe("File does not exist : " + filename);
+                    sLog.severe(sLoc.x("LDR403: File does not exist : {0}", filename));
                 }
             } else {
-                logger.severe("File [ " + filename + " ] does not exist in dir : " + filepath);
+                sLog.severe(sLoc.x("LDR404: File [ {0} ] does not exist in dir", filepath));
             }
         }
         else{
-            System.out.println("File is Null");
+            sLog.severe(sLoc.x("LDR405: File is Null"));
             return false;
         }
         return false;
@@ -78,10 +79,10 @@ public class BLTools {
             if (dbfile.isFile()) {
                 ret = true;
             } else {
-                logger.severe("DataBase file [" + dbName + ".VER] does not exist in dir : " + dbDir);
+                sLog.severe(sLoc.x("LDR406: DataBase file [ {0}.VER ] does not exist in dir : {1}",dbName,dbDir));
             }
         } else {
-            logger.severe("DataBase File does not exist : " + dbfile);
+            sLog.severe(sLoc.x("LDR407: DataBase File does not exist: {0}", dbfile));
         }
         return ret;
     }
@@ -101,7 +102,7 @@ public class BLTools {
     }
 
     public static boolean validatePath(String filepath, String filename) {
-        //System.out.println("Validating File Path [" + filepath + "] for file : " + filename);
+        sLog.fine("Validating File Path [" + filepath + "] for file : " + filename);
         if (validateDir(filepath)) {
             if (validateFile(filepath, filename)) {
                 return true;
@@ -122,21 +123,20 @@ public class BLTools {
 
             newsourcedir = new File(BLConstants.toplevelrt + BLConstants.fs + newdirname);
             newsourcedir.mkdirs();
-            //System.out.println("Created Dir : " + newsourcedir.getAbsolutePath());
+            sLog.infoNoloc("Created Dir : " + newsourcedir.getAbsolutePath());
 
             //Move Source File to This
             copy(new File(sourceFileLoc, filename), new File(newsourcedir.getAbsolutePath(), filename));
 
-
         } catch (Exception ex) {
-            Logger.getLogger(BLTools.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("[copySrcDBFileToClassPath] Exception", ex);
         }
 
         return newsourcedir.getAbsolutePath();
     }
 
     private static void copy(File source, File dest) throws IOException {
-        //System.out.println("Copying file [" + source.getAbsolutePath() + "] to [" + dest.getAbsolutePath() + "]");
+        sLog.infoNoloc("Copying file [" + source.getAbsolutePath() + "] to [" + dest.getAbsolutePath() + "]");
         FileChannel in = null, out = null;
         try {
             in = new FileInputStream(source).getChannel();
@@ -168,12 +168,12 @@ public class BLTools {
             fr = new FileWriter(myfile);
             fr.write(fileContents);
         } catch (IOException ex) {
-            System.out.println("IO Exception");
+            sLog.errorNoloc("[writeIntoFile] IOException", ex);
         } finally {
             try {
                 fr.close();
             } catch (IOException ex) {
-                System.out.println("IO Exception");
+                sLog.errorNoloc("[writeIntoFile] IOException", ex);
             }
         }
     }

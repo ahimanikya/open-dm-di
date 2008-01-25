@@ -5,6 +5,7 @@
 package com.sun.dm.di.bulkloader.util;
 
 import java.io.File;
+import net.java.hulp.i18n.Logger;
 
 /**
  *
@@ -13,9 +14,12 @@ import java.io.File;
 public class CreateTriggers {
 
     String dumppath = null;
+    //logger
+    private static Logger sLog = LogUtil.getLogger(CreateTriggers.class.getName());
+    private static Localizer sLoc = Localizer.get();    
 
     public CreateTriggers() {
-        System.out.println("Creating eTL Invoker Triggers ...");
+        sLog.info(sLoc.x("LDR421: Creating eTL Invoker Triggers ..."));
         dumppath = BLConstants.getCWD() + BLConstants.fs + BLConstants.toplevelpkg;
     }
 

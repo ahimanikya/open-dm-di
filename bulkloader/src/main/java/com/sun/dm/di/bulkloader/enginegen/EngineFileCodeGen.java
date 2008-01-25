@@ -4,7 +4,10 @@
  */
 package com.sun.dm.di.bulkloader.enginegen;
 
+import com.sun.dm.di.bulkloader.dbconnector.ConnectionFactory;
 import com.sun.dm.di.bulkloader.modelgen.ETLDefGenerator;
+import com.sun.dm.di.bulkloader.util.Localizer;
+import com.sun.dm.di.bulkloader.util.LogUtil;
 import com.sun.etl.engine.ETLEngine;
 import com.sun.sql.framework.exception.BaseException;
 import com.sun.sql.framework.utils.StringUtil;
@@ -16,10 +19,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import net.java.hulp.i18n.Logger;
 import org.netbeans.modules.etl.codegen.DBConnectionDefinitionTemplate;
 import org.netbeans.modules.etl.codegen.ETLCodegenUtil;
 import org.netbeans.modules.etl.codegen.ETLProcessFlowGenerator;
@@ -48,6 +50,9 @@ class EngineFileCodeGen {
     private String collabName;
     Map otdCatalogOverrideMapMap = new HashMap();
     Map otdSchemaOverrideMapMap = new HashMap();
+    //logger
+    private static Logger sLog = LogUtil.getLogger(EngineFileCodeGen.class.getName());
+    private static Localizer sLoc = Localizer.get();    
 
     protected EngineFileCodeGen() {
 
@@ -58,7 +63,7 @@ class EngineFileCodeGen {
             this.etldefstr = etldef.toXMLString(null);
             this.etldef = etldef;
         } catch (BaseException ex) {
-            Logger.getLogger(EngineFileCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("Error while converting etl model to xml string (Base Exception)", ex);
         }
     }
 
@@ -72,12 +77,12 @@ class EngineFileCodeGen {
             fis.read(b);
             this.etldefstr = new String(b);
         } catch (IOException ex) {
-            Logger.getLogger(EngineFileCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("Error while reading etl model file", ex);
         } finally {
             try {
                 fis.close();
             } catch (IOException ex) {
-                Logger.getLogger(EngineFileCodeGen.class.getName()).log(Level.SEVERE, null, ex);
+                sLog.errorNoloc("Error while reading etl model file", ex);
             }
         }
         this.etldef = new ETLDefinitionImpl();
@@ -120,15 +125,15 @@ class EngineFileCodeGen {
             sqlDefinition.clearOverride(true, true);
 
         } catch (BaseException ex) {
-            Logger.getLogger("global").log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("Base Exception", ex);
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger("global").log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("ParserConfigurationException", ex);
         } catch (SAXException ex) {
-            Logger.getLogger("global").log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("SAXException", ex);
         } catch (IOException ex) {
-            Logger.getLogger("global").log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("IOException", ex);
         }
-        System.out.println("Successfully Generated eTL Engine File from Model : " + etldef.getDisplayName());
+        sLog.info(sLoc.x("LDR211: Successfully Generated eTL Engine File from Model : {0}", etldef.getDisplayName()));
         return engine.toXMLString();
     }
 

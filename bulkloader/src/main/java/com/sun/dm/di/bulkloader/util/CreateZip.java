@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
+import net.java.hulp.i18n.Logger;
 
 /**
  *
@@ -27,6 +28,9 @@ public class CreateZip {
     String zipoutdir = null; // Zip Output Dir
     ZipOutputStream zout = null; // Zip Output Stream
     String[] filesToMove = {"lib", BLConstants.toplevelrt};
+    //logger
+    private static Logger sLog = LogUtil.getLogger(CreateZip.class.getName());
+    private static Localizer sLoc = Localizer.get();    
 
     public CreateZip() {
         try {
@@ -34,11 +38,12 @@ public class CreateZip {
             String cwd = BLConstants.getCWD();
 
             zipoutdir = (new File(cwd)).getParent();
-            System.out.println("Zip output dir :: " + zipoutdir);
+            sLog.info(sLoc.x("LDR430: Zip output dir :: {0}", zipoutdir));
             zout = new ZipOutputStream(new FileOutputStream(zipoutdir + BLConstants.fs + BLConstants.zipname));
 
         } catch (FileNotFoundException ex) {
-            System.out.println("Zip file not found : " + zipoutdir + BLConstants.fs + BLConstants.zipname);
+            sLog.errorNoloc("[CreateZip] FileNotFoundException", ex);
+            //System.out.println("Zip file not found : " + zipoutdir + BLConstants.fs + BLConstants.zipname);
         }
     }
 
@@ -75,7 +80,7 @@ public class CreateZip {
     }
 
     private void zipDir(String dir2zip) {
-        System.out.println("Zipping Dir : " + dir2zip);
+        sLog.info(sLoc.x("LDR431: Zipping Dir: {0}", dir2zip));
         try {
             //create a new File object based on the directory we have to zip File    
             File zipDir = new File(dir2zip);
@@ -94,8 +99,7 @@ public class CreateZip {
                     //loop again 
                     continue;
                 }
-
-                System.out.println("   Include File >> " + dirList[i]);
+                sLog.fine("   Include File >> " + dirList[i]);
 
                 //if we reached here, the File object f was not a directory 
                 //create a FileInputStream on top of f 
@@ -114,7 +118,7 @@ public class CreateZip {
                 zout.closeEntry();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            sLog.errorNoloc("[zipDir] Exception", e);
         }
     }
 
@@ -122,9 +126,9 @@ public class CreateZip {
         try {
             zout.close();
         } catch (ZipException zex) {
-            System.out.println(zex.getMessage());
+            sLog.errorNoloc("[closeZipOutStream] ZipException", zex);
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            sLog.errorNoloc("[closeZipOutStream] IOException", ex);
         }
     }
 
@@ -132,9 +136,6 @@ public class CreateZip {
         // Create a Top Level Package for zip file
         File toppkg = new File(cwd + BLConstants.fs + BLConstants.toplevelpkg);
         toppkg.mkdir();
-
-        //Move relevent files/dir into this package before zipping
-        //String[] filesToMove = {"BulkLoader-1.0.jar"};
 
         for (int i = 0; i < filesToMove.length; i++) {
 
@@ -149,10 +150,10 @@ public class CreateZip {
                     copyFile(src, destdir);   
                 }
             } catch (IOException ex) {
-                System.out.println("Failed to move file to zip package");
+                sLog.errorNoloc("[createZipPackage] Failed to move file to zip package", ex);
             }
         }
-
+        
         zipDir(toppkg.getName());
 
         //Close Zip out Stream

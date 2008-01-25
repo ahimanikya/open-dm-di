@@ -10,12 +10,15 @@ package com.sun.dm.di.bulkloader.dbconnector;
 
 import com.sun.dm.di.bulkloader.modelgen.ETLDefGenerator;
 import com.sun.dm.di.bulkloader.util.BLConstants;
+import com.sun.dm.di.bulkloader.util.Localizer;
+import com.sun.dm.di.bulkloader.util.LogUtil;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import net.java.hulp.i18n.Logger;
 
 /**
  *
@@ -25,6 +28,9 @@ public abstract class DBConnector implements DBConnection {
 
     Connection connection = null;
     ETLDefGenerator etldef = null;
+    //logger
+    private static Logger sLog = LogUtil.getLogger(DBConnector.class.getName());
+    private static Localizer sLoc = Localizer.get();    
 
     public DBConnector() {
     }
@@ -34,10 +40,10 @@ public abstract class DBConnector implements DBConnection {
         try {
             this.connection = DriverManager.getConnection(connuri);
             if (this.connection != null) {
-                System.out.println("Connection established with File DB : " + connuri);
+                sLog.info(sLoc.x("LDR140: Connection established with File DB : {0}", connuri));
             }
         } catch (SQLException ex) {
-            System.out.println("Cannot connect to Database [" + connuri + "]. Reason : " + ex.getMessage());
+            sLog.severe(sLoc.x("LDR141: Cannot connect to Database [ {0} ]. Reason : {1}", connuri, ex.getMessage()));
             System.exit(0);
         }
         return this.connection;
@@ -48,10 +54,10 @@ public abstract class DBConnector implements DBConnection {
         try {
             this.connection = DriverManager.getConnection(connuri, login, pw);
             if (this.connection != null) {
-                System.out.println("Connection established with [ " + host + ":" + port + " ]");
+                sLog.info(sLoc.x("LDR142: Connection established with [ Host: {0}, Port: {1}], Uri :{3}", host, port, connuri));
             }
         } catch (SQLException ex) {
-            System.out.println("Cannot connect to host [" + host + "] : " + ex.getMessage());
+            sLog.severe(sLoc.x("LDR143: Cannot connect to host [ {0} ]. Reason : {1}", host, ex.getMessage()));
             System.exit(0);
         }
 
@@ -74,7 +80,7 @@ public abstract class DBConnector implements DBConnection {
     }
 
     protected boolean checkIfTableExistsInDB(String schema, String catalog, String targetTableQName) {
-        //System.out.println("Check If Target Table is Available in Target Schema");
+        sLog.fine("Check If Target Table is Available in Target Schema ...");
         ArrayList tablenamelist = new ArrayList();
         if (this.connection != null) {
 
@@ -83,7 +89,7 @@ public abstract class DBConnector implements DBConnection {
             try {
                 dbproductname = this.connection.getMetaData().getDatabaseProductName();
             } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+                sLog.severe(sLoc.x("LDR144:Error while connecting to DB : {0}", ex.getMessage()));
             }
 
             try {
@@ -102,21 +108,21 @@ public abstract class DBConnector implements DBConnection {
                 }
 
             } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+                sLog.severe(sLoc.x("LDR145: Error while retriving DB metadata : {0}", ex.getMessage()));
             }
 
             if (tablenamelist.size() == 1) {
-                System.out.println("Table [ " + targetTableQName + " ] found in the Target DB");
+                sLog.info(sLoc.x("LDR146: Table [ {0} ] found in the Target DB", targetTableQName));
                 return true;
             } else if (tablenamelist.size() == 0) {
-                System.out.println("Table [ " + targetTableQName + " ] missing in Target Database. Create Target Table and proceed.");
+                sLog.info(sLoc.x("LDR147: Table [  {0}  ] missing in Target Database. Create Target Table and proceed.", targetTableQName));
                 return false;
             } else if (tablenamelist.size() > 1) {
-                System.out.println("More Than One Table with Name [ " + targetTableQName + " ] available in Target. Count " + tablenamelist.size());
+                sLog.info(sLoc.x("LDR148: More Than One Table with Name [ {0} ] available in Target. Count : {1}", targetTableQName, tablenamelist.size()));
                 return false;
             }
         } else {
-            System.out.println("Connection to Target DB is null");
+            sLog.warnNoloc("Connection to Target DB is null");
         }
         return false;
     }

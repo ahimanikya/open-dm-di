@@ -11,6 +11,8 @@ package com.sun.dm.di.bulkloader.modelgen;
 import com.sun.sql.framework.exception.BaseException;
 import com.sun.sql.framework.utils.StringUtil;
 import com.sun.dm.di.bulkloader.util.BLConstants;
+import com.sun.dm.di.bulkloader.util.Localizer;
+import com.sun.dm.di.bulkloader.util.LogUtil;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
@@ -21,10 +23,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import net.java.hulp.i18n.Logger;
 import org.netbeans.modules.etl.codegen.DBConnectionDefinitionTemplate;
 import org.netbeans.modules.etl.codegen.ETLCodegenUtil;
 import org.netbeans.modules.etl.codegen.impl.InternalDBMetadata;
@@ -68,12 +69,20 @@ public class ETLDefGenerator {
     Map otdSchemaOverrideMapMap = new HashMap();
     String sourcefilename = null;
     String packagename = null;
+    //logger
+    private static Logger sLog = LogUtil.getLogger(ETLDefGenerator.class.getName());
+    private static Localizer sLoc = Localizer.get();    
 
     public ETLDefGenerator() {
+        etldef = new ETLDefinitionImpl();
     }
 
-    public ETLDefGenerator(String displayName) {
+    public ETLDefGenerator(String displayName, Integer strategy) {
+        sLog.info(sLoc.x("LDR310: Initializing eTL Definition File Generator .."));
         etldef = new ETLDefinitionImpl(displayName);
+        etldef.setExecutionStrategyCode(strategy);
+        //etldef.getSQLDefinition().setDbInstanceName("TESTDB");
+        //etldef.getSQLDefinition().setWorkingFolder("D:/temp/LDR2");
         this.automapper = new AutoMapper(etldef);
     }
 
@@ -91,7 +100,7 @@ public class ETLDefGenerator {
                     model = SQLModelObjectFactory.getInstance().createDBModel(SQLConstants.SOURCE_DBMODEL);
                     //Assuming Source is always Axion DB
                     String utn = user_table_name.toUpperCase();
-                    String s_url = "jdbc:axiondb:" + utn + ":" + "." + BLConstants.fs + BLConstants.EXTDB_PREFIX + utn;
+                    String s_url = "jdbc:axiondb:" + utn + ":" + "." + BLConstants.fs + BLConstants.toplevelrt + BLConstants.fs + utn + BLConstants.fs + BLConstants.EXTDB_PREFIX + utn;
                     model.setModelName(s_url);
                     def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_AXION_DRIVER, s_url, login, pw, "Bulk Loader Source Model");
                     break;
@@ -103,7 +112,6 @@ public class ETLDefGenerator {
                     break;
             }
             model.setConnectionDefinition(def);
-
 
             SQLDBTable ffTable = getTable(meta, "", "", user_table_name, type);
             PrimaryKeyImpl pks = meta.getPrimaryKeys(ffTable.getCatalog(), ffTable.getSchema(), ffTable.getName());
@@ -180,7 +188,7 @@ public class ETLDefGenerator {
             }
 
         } catch (Exception ex) {
-            Logger.getLogger("global").log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("[addDBModel] Exception", ex);
         }
     }
 
@@ -190,9 +198,9 @@ public class ETLDefGenerator {
      */
     public void printETLDefinition() {
         try {
-            System.out.println(etldef.toXMLString(null));
+            sLog.infoNoloc("ETL Def file : \n" + etldef.toXMLString(null));
         } catch (BaseException ex) {
-            System.out.println("Error printing ETLDefinitionFile");
+            sLog.errorNoloc("[printETLDefinition] Error printing ETLDefinitionFile", ex);
         }
     }
 
@@ -209,7 +217,7 @@ public class ETLDefGenerator {
      * @param etlModelName
      */
     public void writeModelToPackage(String etlModelName) {
-        System.out.println("Writing [ " + etlModelName + " ] Model to Package ...");
+        sLog.info(sLoc.x("LDR311: Writing [ {0} ] Model to Package ...", etlModelName));
         FileWriter fwriter = null;
         try {
             String etl_def_name = null;
@@ -228,24 +236,24 @@ public class ETLDefGenerator {
                 sourcepackage = this.sourcefilename.toUpperCase();
             }
             setSourcePackage(sourcepackage);
-            System.out.println("ETL Def File will be generated into : " + sourcepackage);
+            sLog.info(sLoc.x("LDR312: ETL Def File will be generated into : {0}", sourcepackage));
 
 
             File dumpfile = new File(BLConstants.artiTop + sourcepackage + BLConstants.fs + etl_def_name);
             fwriter = new FileWriter(dumpfile);
             String etldefWithRef = automapper.insertColumnRefToSrc(etldef.toXMLString(null));
-            loadback(etldefWithRef);
+            setETLDefinitionFile(etldefWithRef);
             fwriter.write(etldefWithRef);
 
         } catch (BaseException ex) {
-            Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("[writeModelToPackage] BaseException", ex);
         } catch (IOException ex) {
-            Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("[writeModelToPackage] IOException", ex);
         } finally {
             try {
                 fwriter.close();
             } catch (IOException ex) {
-                Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
+                sLog.errorNoloc("[writeModelToPackage] IOException", ex);
             }
         }
     }
@@ -254,7 +262,7 @@ public class ETLDefGenerator {
      * Load Back Modified eTL def file into local variable
      * @param etldefWithRef
      */
-    private void loadback(String etldefWithRef) {
+    public void setETLDefinitionFile(String etldefWithRef) {
         ByteArrayInputStream bais = null;
         try {
             DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
@@ -262,18 +270,18 @@ public class ETLDefGenerator {
             Element root = f.newDocumentBuilder().parse(bais).getDocumentElement();
             this.etldef.parseXML(root);
         } catch (BaseException ex) {
-            Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("[setETLDefinitionFile] BaseException", ex);
         } catch (SAXException ex) {
-            Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("[setETLDefinitionFile] SAXException", ex);
         } catch (IOException ex) {
-            Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("[setETLDefinitionFile] IOException", ex);
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("[setETLDefinitionFile] ParserConfigurationException", ex);
         } finally {
             try {
                 bais.close();
             } catch (IOException ex) {
-                Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
+                sLog.errorNoloc("[setETLDefinitionFile] IOException", ex);
             }
         }
     }

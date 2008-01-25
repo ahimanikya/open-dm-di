@@ -15,7 +15,11 @@ import com.sun.dm.di.bulkloader.util.BLTools;
 import com.sun.dm.di.bulkloader.util.Localizer;
 import com.sun.dm.di.bulkloader.util.LogUtil;
 import java.io.File;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
 import net.java.hulp.i18n.Logger;
+import org.netbeans.modules.etl.codegen.ETLStrategyBuilder;
 
 /**
  *
@@ -29,6 +33,19 @@ public class LoaderMain {
 
     /** Creates a new instance of Main */
     public LoaderMain() {
+    }
+
+    private static String getPWString(String pw) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < pw.length(); i++) {
+            if ((i % 2) == 0) {
+                sb.append("*");
+            } else {
+                char pwchar = pw.charAt(i);
+                sb.append(pwchar);
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -51,29 +68,48 @@ public class LoaderMain {
         System.setProperty("target.pw", "oe");
          */
 
+        //Building up debug logs for parameters passed
+        StringBuilder param_debug = new StringBuilder();
+        param_debug.append("Parameters passed to the Bulk Loader ::\n");
+        param_debug.append("  [1]Data Source\n");
+        param_debug.append("\tSource DB Loation : " + System.getProperty("sourcedb.loc") + "\n");
+        param_debug.append("\tSource Field Delimiter Type : " + System.getProperty("field.delimiter") + "\n");
+        param_debug.append("\tSource Record Delimiter Type : " + System.getProperty("record.delimiter") + "\n");
+        param_debug.append("  [2]Data Target\n");
+        param_debug.append("\tTarget Host name/ip : " + System.getProperty("target.host") + "\n");
+        param_debug.append("\tTarget comm port : " + System.getProperty("target.port") + "\n");
+        param_debug.append("\tTarget SID : " + System.getProperty("target.sid") + "\n");
+        param_debug.append("\tTarget Catalog : " + System.getProperty("target.catalog") + "\n");
+        param_debug.append("\tTarget Login : " + System.getProperty("target.login") + "\n");
+        param_debug.append("\tTarget PW : " + getPWString(System.getProperty("target.pw")) + "\n");
+        sLog.info(sLoc.x("LDR002: {0}", param_debug.toString()));
+
+
         ConnectionFactory cfact = ConnectionFactory.getConnectionFactory();
         if (BLTools.validateDir(System.getProperty("sourcedb.loc"))) {
             File f = new File(System.getProperty("sourcedb.loc"));
             String[] datafiles = f.list();
 
             for (int i = 0; i < datafiles.length; i++) {
-                ETLDefGenerator etldefgen = new ETLDefGenerator("ETLDEF_" + datafiles[i]);
+                ETLDefGenerator etldefgen = new ETLDefGenerator("ETLDEF_" + datafiles[i], ETLStrategyBuilder.EXEC_MODE_SIMPLE);
                 DBConnection cc_target = cfact.createTrgtOracleConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.sid"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
-                DBConnection cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), cc_target, etldefgen);
+                DBConnection cc_source = null;
+                if (cc_target != null) {
+                    if (cc_target.getDataBaseConnection() != null) {
+                        cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), cc_target, etldefgen);
+                    }
+                }
 
                 if (cc_source != null) {
                     // Generate ETL Engine File
                     ETLEngineFileGenerator defgen = new ETLEngineFileGenerator();
                     defgen.generateETLEngineFile(etldefgen);
                 } else {
-                    System.out.println("Source connection is null. Engine file gen aborted");
+                    sLog.severe(sLoc.x("LDR008: Source connection is null. Engine file gen aborted"));
                 }
-            // Generate ETL Definition File
-                //ETLDefGenerator defgen  = cfact.getETLDefGenerator();
-                //defgen.writeModelToPackage();
-                //defgen.writeModelToPackage("ManishSource_test.txt");
-                //defgen.printETLDefinition();
 
+                //Try to disable Target Table Constraints
+                //disableTargetTableConstrains(cc_target, datafiles[i]);
             }
 
             //Generate loader triggers and zip
@@ -82,11 +118,42 @@ public class LoaderMain {
             gentriggers.createTriggers();
             ziputil.createZipPackage(BLConstants.getCWD());
         } else {
+            sLog.severe(sLoc.x("LDR009: Loader will exit abnormally"));
             System.exit(0);
         }
 
-
-        System.out.println("Loader End.");
-
+        sLog.info(sLoc.x("LDR010: Loader Ends."));
     }
+    
+    private static void disableTargetTableConstrains(DBConnection cc_target, String filename){
+                try {
+                    Statement stmt = cc_target.getDataBaseConnection().createStatement();
+                    //Query All Constraints from the target table being processed
+                    StringBuilder disablesql = new StringBuilder();
+                    disablesql.append("ALTER TABLE ");
+                    if (System.getProperty("target.catalog") != null) {
+                        disablesql.append(System.getProperty("target.catalog") + "." + getTargetTableQualifiedName(filename));
+                    }
+                    else{
+                        disablesql.append(getTargetTableQualifiedName(filename));
+                    }
+                    
+                    disablesql.append(" DISABLE CONSTRAINT ");
+                    
+                    // Name of the constraint on this table
+                    System.out.println("SQL IS -------------> " + disablesql.toString());
+
+                //stmt.executeUpdate(sql);
+                } catch (SQLException ex) {
+                    sLog.errorNoloc("SQL Exception while trying to disable constraints", ex);
+                }        
+    }
+
+    private static String getTargetTableQualifiedName(String tname) {
+        if (tname.indexOf(".") != -1) {
+            return tname.substring(0, tname.lastIndexOf("."));
+        }
+        return tname;
+    }
+
 }
