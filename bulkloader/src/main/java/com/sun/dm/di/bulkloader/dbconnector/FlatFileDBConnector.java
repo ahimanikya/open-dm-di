@@ -27,7 +27,7 @@ public class FlatFileDBConnector extends DBConnector {
     String sourceTableQName = null;
     //logger
     private static Logger sLog = LogUtil.getLogger(FlatFileDBConnector.class.getName());
-    private static Localizer sLoc = Localizer.get();    
+    private static Localizer sLoc = Localizer.get();
 
     public FlatFileDBConnector() {
         try {
@@ -39,13 +39,13 @@ public class FlatFileDBConnector extends DBConnector {
         }
     }
 
-    public FlatFileDBConnector(ETLDefGenerator etldefgen, String fileloc, String filename, String fld_delimiter, String rec_delimiter, DBConnection target_inf, int type) {
+    public FlatFileDBConnector(ETLDefGenerator etldefgen, String fileloc, String filename, String fld_delimiter, String rec_delimiter, String schema, String catalog, DBConnection target_inf, int type) {
         this();
         etldef = etldefgen;
         etldef.setSourceFileDBName(filename); //Set the source file db name
         sourceTableQName = getSourceTableQualifiedName(filename);
         ConnectToDB(fileloc, sourceTableQName);
-        createExternalFlatFileTable(fileloc, filename, fld_delimiter, rec_delimiter, target_inf);
+        createExternalFlatFileTable(fileloc, filename, fld_delimiter, rec_delimiter, schema, catalog, target_inf);
         addDBModelToETLDef(sourceTableQName, type);
     }
 
@@ -53,20 +53,24 @@ public class FlatFileDBConnector extends DBConnector {
         return connection;
     }
 
-    public ArrayList getTableMetaDataObjectList() {
+    public ArrayList getTableMetaDataObjectList(String schema, String catalog) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private boolean createExternalFlatFileTable(String fileloc, String filename, String fld_delimiter, String rec_delimiter, DBConnection target_inf) {
+    private boolean createExternalFlatFileTable(String fileloc, String filename, String fld_delimiter, String rec_delimiter, String schema, String catalog, DBConnection target_inf) {
         boolean status = false;
         try {
             StringBuilder sb = new StringBuilder();
             sb.append("CREATE EXTERNAL TABLE IF NOT EXISTS ");
             sb.append(filename.substring(0, filename.indexOf(".")) + " (");
-            ArrayList mdlist = target_inf.getTableMetaDataObjectList();
+            ArrayList mdlist = target_inf.getTableMetaDataObjectList(schema, catalog);
             for (int i = 0; i < mdlist.size(); i++) {
                 TableMetaDataObject mdobj = (TableMetaDataObject) mdlist.get(i);
-                sb.append(mdobj.getColumnName() + " " + mdobj.getColumnDataType() + "(" + mdobj.getColumnLength() + ")");
+                if (mdobj.getColumnDataType().equals("VARCHAR2")) {
+                    sb.append(mdobj.getColumnName() + " " + mdobj.getColumnDataType() + "(" + mdobj.getColumnLength() + ")");
+                } else {
+                    sb.append(mdobj.getColumnName() + " " + mdobj.getColumnDataType());
+                }
                 if (i + 1 < mdlist.size()) {
                     sb.append(", ");
                 }
@@ -78,7 +82,7 @@ public class FlatFileDBConnector extends DBConnector {
             sb.append(" FIELDDELIMITER=\'" + fld_delimiter + "\')");
 
             sLog.info(sLoc.x("LDR152: Creating external table : {0}", sb.toString()));
-            
+
             Statement stmt = connection.createStatement();
             status = stmt.execute(sb.toString());
         } catch (SQLException ex) {

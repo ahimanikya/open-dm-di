@@ -17,7 +17,6 @@ import com.sun.dm.di.bulkloader.util.LogUtil;
 import java.io.File;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
 import net.java.hulp.i18n.Logger;
 import org.netbeans.modules.etl.codegen.ETLStrategyBuilder;
 
@@ -71,14 +70,15 @@ public class LoaderMain {
         //Building up debug logs for parameters passed
         StringBuilder param_debug = new StringBuilder();
         param_debug.append("Parameters passed to the Bulk Loader ::\n");
-        param_debug.append("  [1]Data Source\n");
+        param_debug.append("  [1] Data Source\n");
         param_debug.append("\tSource DB Loation : " + System.getProperty("sourcedb.loc") + "\n");
         param_debug.append("\tSource Field Delimiter Type : " + System.getProperty("field.delimiter") + "\n");
         param_debug.append("\tSource Record Delimiter Type : " + System.getProperty("record.delimiter") + "\n");
-        param_debug.append("  [2]Data Target\n");
+        param_debug.append("  [2] Data Target\n");
         param_debug.append("\tTarget Host name/ip : " + System.getProperty("target.host") + "\n");
         param_debug.append("\tTarget comm port : " + System.getProperty("target.port") + "\n");
         param_debug.append("\tTarget SID : " + System.getProperty("target.sid") + "\n");
+        param_debug.append("\tTarget Schema : " + System.getProperty("target.schema") + "\n");
         param_debug.append("\tTarget Catalog : " + System.getProperty("target.catalog") + "\n");
         param_debug.append("\tTarget Login : " + System.getProperty("target.login") + "\n");
         param_debug.append("\tTarget PW : " + getPWString(System.getProperty("target.pw")) + "\n");
@@ -96,7 +96,7 @@ public class LoaderMain {
                 DBConnection cc_source = null;
                 if (cc_target != null) {
                     if (cc_target.getDataBaseConnection() != null) {
-                        cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), cc_target, etldefgen);
+                        cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), System.getProperty("target.schema"),System.getProperty("target.catalog"), cc_target, etldefgen);
                     }
                 }
 

@@ -54,7 +54,7 @@ public abstract class DBConnector implements DBConnection {
         try {
             this.connection = DriverManager.getConnection(connuri, login, pw);
             if (this.connection != null) {
-                sLog.info(sLoc.x("LDR142: Connection established with [ Host: {0}, Port: {1}], Uri :{3}", host, port, connuri));
+                sLog.info(sLoc.x("LDR142: Connection established with [ Host: {0}, Port: {1}], Uri :{2}", host, port, connuri));
             }
         } catch (SQLException ex) {
             sLog.severe(sLoc.x("LDR143: Cannot connect to host [ {0} ]. Reason : {1}", host, ex.getMessage()));
@@ -68,6 +68,10 @@ public abstract class DBConnector implements DBConnection {
         // Add this connection to ETLDefinition Generator
         if (checkIfTableExistsInDB(schema, catalog, targetTableQName)) {
             etldef.addDBModel(this.connection, targetTableQName, dbtype, login, pw);
+        }
+        else{
+            sLog.infoNoloc("System will exit. Pls correct the problem and rerun the script");
+            System.exit(0);
         }
     }
 
@@ -97,10 +101,10 @@ public abstract class DBConnector implements DBConnection {
                 ResultSet rset = null;
                 if (dbproductname.equalsIgnoreCase(BLConstants.ORACLE_PRODUCT_NAME)) {
                     String[] names = {"TABLE"};
-                    rset = dbmd.getTables(schema, catalog, "%" + targetTableQName, names);
+                    rset = dbmd.getTables(catalog, schema, "%" + targetTableQName, names);
                 } else if (dbproductname.equalsIgnoreCase(BLConstants.AXION_PRODUCT_NAME)) {
                     String[] names = {"TABLE", "DELIMITED TEXT TABLE"};
-                    rset = dbmd.getTables(schema, catalog, "%" + targetTableQName, names);
+                    rset = dbmd.getTables(catalog, schema, "%" + targetTableQName, names);
                 }
 
                 while (rset.next()) {
