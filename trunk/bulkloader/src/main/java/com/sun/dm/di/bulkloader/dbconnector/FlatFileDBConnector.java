@@ -10,10 +10,13 @@ package com.sun.dm.di.bulkloader.dbconnector;
 
 import com.sun.dm.di.bulkloader.modelgen.ETLDefGenerator;
 import com.sun.dm.di.bulkloader.util.BLConstants;
+import com.sun.dm.di.bulkloader.util.Localizer;
+import com.sun.dm.di.bulkloader.util.LogUtil;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import net.java.hulp.i18n.Logger;
 
 /**
  *
@@ -22,13 +25,16 @@ import java.util.ArrayList;
 public class FlatFileDBConnector extends DBConnector {
 
     String sourceTableQName = null;
+    //logger
+    private static Logger sLog = LogUtil.getLogger(FlatFileDBConnector.class.getName());
+    private static Localizer sLoc = Localizer.get();    
 
     public FlatFileDBConnector() {
         try {
-            System.out.println("Initializing FlatFile DB Connector");
+            sLog.info(sLoc.x("LDR150: Initializing FlatFile DB Connector ..."));
             Class.forName(BLConstants.DB_AXION_DRIVER);
         } catch (ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
+            sLog.severe(sLoc.x("LDR151 : Axion Driver Class Not Found : {0}", ex.getMessage()));
             System.exit(0);
         }
     }
@@ -71,10 +77,12 @@ public class FlatFileDBConnector extends DBConnector {
             }
             sb.append(" FIELDDELIMITER=\'" + fld_delimiter + "\')");
 
+            sLog.info(sLoc.x("LDR152: Creating external table : {0}", sb.toString()));
+            
             Statement stmt = connection.createStatement();
             status = stmt.execute(sb.toString());
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            sLog.severe(sLoc.x("LDR153 : Error Executing SQL : {0}", ex.getMessage()));
         }
         return status;
     }
@@ -85,41 +93,4 @@ public class FlatFileDBConnector extends DBConnector {
         }
         return sname;
     }
-    /*
-    private void selectdata(String filename){
-    try{
-    Statement stmt = conn.createStatement();
-    ResultSet rset = stmt.executeQuery("select * from " + filename.substring(0, filename.indexOf(".")));
-    while(rset.next()) {
-    System.out.print(rset.getString(1));
-    System.out.print("\t");
-    System.out.print(rset.getString(2));
-    System.out.print("\t");
-    System.out.print(rset.getString(3));
-    System.out.print("\t");
-    System.out.print("\n");
-    }
-    System.out.print("\n-----------------\n");
-    }catch (SQLException ex) {
-    System.out.println(ex);
-    }
-    }
-    private void selectMetaData(String filename){
-    try{
-    DatabaseMetaData dbmd = conn.getMetaData();
-    ResultSet rset = dbmd.getColumns(conn.getCatalog(), null, filename.substring(0, filename.indexOf(".")), null);
-    while(rset.next()) {
-    System.out.print(rset.getString(4));
-    System.out.print("\t");
-    System.out.print(rset.getString(5));
-    System.out.print("\t");
-    System.out.print(rset.getString(6));
-    System.out.print("\t");
-    System.out.print("\n");
-    }
-    }catch (SQLException ex) {
-    System.out.println(ex);
-    }
-    }
-     */
 }

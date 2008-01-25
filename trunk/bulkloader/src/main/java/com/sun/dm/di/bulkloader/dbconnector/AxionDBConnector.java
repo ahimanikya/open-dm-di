@@ -10,14 +10,14 @@ package com.sun.dm.di.bulkloader.dbconnector;
 
 import com.sun.dm.di.bulkloader.modelgen.ETLDefGenerator;
 import com.sun.dm.di.bulkloader.util.BLConstants;
+import com.sun.dm.di.bulkloader.util.Localizer;
+import com.sun.dm.di.bulkloader.util.LogUtil;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import net.java.hulp.i18n.Logger;
 /**
  *
  * @author Manish
@@ -25,13 +25,16 @@ import java.util.logging.Logger;
 public class AxionDBConnector extends DBConnector {
 
     String targetTableQName = null;
+    //logger
+    private static Logger sLog = LogUtil.getLogger(AxionDBConnector.class.getName());
+    private static Localizer sLoc = Localizer.get();
 
     public AxionDBConnector() {
         try {
-            System.out.println("Initializing Axion DB Connector ...");
+            sLog.info(sLoc.x("LDR101: Initializing Axion DB Connector ..."));
             Class.forName(BLConstants.DB_AXION_DRIVER);
         } catch (ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
+            sLog.severe(sLoc.x("LDR102: Unable to Locate Axion Driver : {0}", ex.getMessage()));
             System.exit(0);
         }
     }
@@ -52,7 +55,6 @@ public class AxionDBConnector extends DBConnector {
         ArrayList<TableMetaDataObject> mdlist = new ArrayList();
         try {
             DatabaseMetaData dbmd = connection.getMetaData();
-            //String targetTableName = (String) getAllUserTablesList(null, null).get(0);
             ResultSet rset = dbmd.getColumns(null, null, targetTableQName, null);
 
             while (rset.next()) {

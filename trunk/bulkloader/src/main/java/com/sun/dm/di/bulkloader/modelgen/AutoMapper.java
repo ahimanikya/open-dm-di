@@ -4,14 +4,14 @@
  */
 package com.sun.dm.di.bulkloader.modelgen;
 
+import com.sun.dm.di.bulkloader.util.Localizer;
+import com.sun.dm.di.bulkloader.util.LogUtil;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,6 +21,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import net.java.hulp.i18n.Logger;
 import org.netbeans.modules.etl.model.ETLDefinition;
 import org.netbeans.modules.sql.framework.model.DBColumn;
 import org.netbeans.modules.sql.framework.model.impl.SourceColumnImpl;
@@ -43,6 +44,9 @@ public class AutoMapper {
     HashMap<DBColumn, DBColumn> SrcTrgtMap = new HashMap();
     DocumentBuilder builder = null;
     Document etlmodelroot = null;
+    //logger
+    private static Logger sLog = LogUtil.getLogger(AutoMapper.class.getName());
+    private static Localizer sLoc = Localizer.get();
 
     protected AutoMapper() {
         initdomparser();
@@ -54,7 +58,7 @@ public class AutoMapper {
     }
 
     protected void autoMapSourceToTarget() {
-        System.out.println("Mapping Source columns to target ...");
+        sLog.info(sLoc.x("LDR300: Mapping Source columns to Target DB columns ..."));
         List<DBColumn> dbcolS = etldef.getSQLDefinition().getSourceColumns();
         List<DBColumn> dbcolT = etldef.getSQLDefinition().getTargetColumns();
         // Iterate Source Columns
@@ -66,12 +70,29 @@ public class AutoMapper {
             Iterator<DBColumn> itrgt = dbcolT.iterator();
             while (itrgt.hasNext()) {
                 DBColumn trgtcolm = itrgt.next();
-                if ((srccolm.compareTo(trgtcolm)) == 0) {
+                //if ((srccolm.compareTo(trgtcolm)) == 0) {
+                if (compareColumns(srccolm, trgtcolm)){
                     SrcTrgtMap.put(srccolm, trgtcolm);
                     break;
                 }
             }
         }
+    }
+
+    /**
+     * This Method compares columns from Source and Target Tables.
+     * @param srccolm - Source Table column
+     * @param trgtcolm - Target Table Column
+     * @return
+     */
+    private boolean compareColumns(DBColumn srccolm, DBColumn trgtcolm) {
+        if (srccolm.getName().equalsIgnoreCase(trgtcolm.getName())){
+            if (srccolm.getJdbcType() == trgtcolm.getJdbcType()){
+                sLog.infoNoloc("Source Col : " + srccolm.getName() + " matches with trgt col : " + trgtcolm.getName());
+                return true;
+            }
+        }
+        return false;
     }
 
     protected String insertColumnRefToSrc(String etldef) {
@@ -95,9 +116,9 @@ public class AutoMapper {
                 break;
             }
         } catch (SAXException ex) {
-            Logger.getLogger(AutoMapper.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("[insertColumnRefToSrc]SAXException", ex);
         } catch (IOException ex) {
-            Logger.getLogger(AutoMapper.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("[insertColumnRefToSrc]IOException", ex);
         }
         // Return the DOM Structute as XML String
         return DomToString();
@@ -135,8 +156,9 @@ public class AutoMapper {
             DOMSource source = new DOMSource(etlmodelroot);
             trans.transform(source, result);
         } catch (TransformerException ex) {
-            ex.printStackTrace();
+            sLog.errorNoloc("[DomToString]TransformerException", ex);
         }
+        sLog.fine("ETL Model String : " + sw.toString());
         return sw.toString();
     }
 
@@ -145,7 +167,7 @@ public class AutoMapper {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             builder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(AutoMapper.class.getName()).log(Level.SEVERE, null, ex);
+            sLog.errorNoloc("[initdomparser]ParserConfigurationException", ex);
         }
     }
 }
