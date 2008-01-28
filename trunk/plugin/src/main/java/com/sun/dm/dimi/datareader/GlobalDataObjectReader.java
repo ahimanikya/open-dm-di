@@ -13,6 +13,7 @@ import com.sun.mdm.index.dataobject.DataObjectReader;
  */
 public interface GlobalDataObjectReader extends DataObjectReader {
     
+    public void submitObjectForFinalization(Object genObj);
     public int getDataSourceType();
 
 }

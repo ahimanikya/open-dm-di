@@ -53,11 +53,11 @@ public class Main {
     
     public static void main(String[] args) throws InterruptedException, ParserException, FileNotFoundException{
         String howmany = "10K";
-        boolean configset = DataSourceReaderFactory.setEViewConfigFilePath("D:/temp/mural/forMANISH", "objectdef.xml");
+        boolean configset = DataSourceReaderFactory.setEViewConfigFilePath("D:/kishor_s1", "object.xml");
 
         if (configset){
             // DB READER AND WRITER
-            GlobalDataObjectReader doReader = DataSourceReaderFactory.getNewDataObjectReader("PERSONNULSTAGING", "D:/kishor_new/PersonStgForNullTest", null, true);
+            GlobalDataObjectReader doReader = DataSourceReaderFactory.getNewDataObjectReader("PERSONPHONETEST", "D:/kishor_s1/PersonPh0124", null, true);
             DOWriter doWriter = DataObjectWriterFactory.getNewDataObjectWriter("D:/kishor_new", "File1_" + howmany  + ".txt", true);
             
             //FILE READER AND WRITER
@@ -72,11 +72,12 @@ public class Main {
                     DataObject dobj = doReader.readDataObject();
                     if (dobj == null) break;
                     ++count;
-                    if (count%5000 == 0){
-                        System.out.println("Fetching Data Object  << << << " + count);
+                    if (count%1 == 0){
+                        //System.out.println("Fetching Data Object  << << << " + count);
+                        //System.out.println("MANISH DO :: \n" + dobj.toString());
                     }
-                    System.out.println("MANISH DO :: \n" + dobj.toString());
                     doWriter.write(dobj);
+                    doReader.submitObjectForFinalization(dobj);
                 }
             } catch (InvalidRecordFormat ex) {
                 
