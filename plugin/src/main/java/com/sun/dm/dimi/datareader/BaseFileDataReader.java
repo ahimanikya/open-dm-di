@@ -28,7 +28,7 @@ import org.axiondb.io.*;
  * @Company:      Sun Microsystems
  * @author        Manish Bharani
  */
-public abstract class BaseFileDataReader extends BaseDBDataReader implements GlobalDataObjectReader{
+public abstract class BaseFileDataReader extends BaseDBDataReader{
     
     File mFileObj = null;
     BufferedDataInputStream bdInputStream = null;

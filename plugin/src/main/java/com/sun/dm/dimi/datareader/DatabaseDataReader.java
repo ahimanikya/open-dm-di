@@ -97,7 +97,7 @@ public class DatabaseDataReader extends BaseDBDataReader {
 
                     // Tempory check to ensure slave started running
                     if (!this.qslave.isSlaveRunning()) {
-                        sleep(1000); //Assuming 1 sec is good enough for the slave to start , else increase this.
+                        sleep(PluginConstants.slave_init_time); //Assuming x sec is good enough for the slave to start , else increase this.
                     }
                 }
             }
@@ -132,7 +132,7 @@ public class DatabaseDataReader extends BaseDBDataReader {
 
                     // Tempory check to ensure slave started running
                     if (!this.qslave.isSlaveRunning()) {
-                        sleep(1000); //Assuming 1 sec is good enough for the slave to start , else increase this.
+                        sleep(PluginConstants.slave_init_time); //Assuming x sec is good enough for the slave to start , else increase this.
                     }
                 }
             }
@@ -153,6 +153,7 @@ public class DatabaseDataReader extends BaseDBDataReader {
             }
         } catch (SQLException ex) {
             sLog.severe(sLoc.x("PLG008: Unable to connect to Database. Check your exact URI: {0} \n{1}", dburi, ex));
+            stopObjectFinalizer();
         }
         return conntest;
     }
@@ -317,7 +318,6 @@ public class DatabaseDataReader extends BaseDBDataReader {
     }
 
     private void sleep(long time) {
-
         try {
             sLog.fine(" Master Thread will sleep [" + time / 1000 + "] seconds till interrupted ...");
             this.isMasterSleeping = true;

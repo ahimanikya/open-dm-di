@@ -83,6 +83,8 @@ public class GoodFileDataReader extends BaseFileDataReader {
                 }
             }
             return dObj;
+        } else {
+            stopObjectFinalizer();
         }
         return null;
     }

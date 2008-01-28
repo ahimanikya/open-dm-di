@@ -132,7 +132,7 @@ public class DataBaseQuerySlave extends Thread {
                             stopSlaveThread();
                         }
                     }
-                }else {
+                } else {
                     sLog.warnNoloc("No Primary Data Available in Parent Table to process.");
                     isAbronmalHalt = true;
                     stopSlaveThread();
@@ -230,7 +230,6 @@ public class DataBaseQuerySlave extends Thread {
             //createFlattenedHirarchy(on);
             }
         } catch (QMException ex) {
-            ex.printStackTrace();
             sLog.severe(sLoc.x("PLG007: Eview Query Manager Error during DB Query.", ex));
             sLog.warnNoloc("Following errors may have occured :\n" + ex.getMessage() + "\nOR\n" + "Check if plugin dependencies have been added into index-core runtime");
             this.isAbronmalHalt = true;
@@ -277,19 +276,21 @@ public class DataBaseQuerySlave extends Thread {
 
         // Check if data object list is below threashold, in this case, keep adding to this list or else add and sleep
         if (doLinkedList.size() < PluginConstants.available_do) {
-            addDataObjectToList(newDataObjectHolder);
+            addDataObjectToList(newDataObjectHolder, dataObjectNode);
         } else {
             dbreader.wakeUpMaster();
-            addDataObjectToList(newDataObjectHolder);
+            addDataObjectToList(newDataObjectHolder, dataObjectNode);
             goSleep(PluginConstants.slave_retry_freq);
         }
 
     }
 
     /**
-     * Adds a generated DataObject To List
+     * Add the generated Data Object to the list and Addrs DataObjectNode to the finalization list
+     * @param dobj - Data Object Generated
+     * @param dataObjectNode - DataObject Node generated out of Object Node
      */
-    private void addDataObjectToList(DataObject dobj) {
+    private void addDataObjectToList(DataObject dobj, DataObjectNode dataObjectNode) {
         /*
         System.out.println("     DataObj Generated On Demand from DB ... DOs available for processing : " + doLinkedList.size());
         ++count;
@@ -297,8 +298,12 @@ public class DataBaseQuerySlave extends Thread {
         System.out.println("     Generating New DataObject  >> >> >> " + count + " ,  Available In Queue to Consume : " + doLinkedList.size());
         }
          */
+        // Add Data Object to List
         doLinkedList.add(dobj);
+        //Clear Temporary Structures
         this.childTypeMap.clear(); //Clean up map for reuse
+        //FInalize Data Object Node
+        this.dbreader.submitObjectForFinalization(dataObjectNode);
 
     }
 
@@ -353,6 +358,8 @@ public class DataBaseQuerySlave extends Thread {
             sLog.severe(sLoc.x("PLG033: DataBase Query Process will STOP"));
             this.conn.close();
             isSlaveRunning = false;
+            //Stop Object Finalise Thread
+            this.dbreader.stopObjectFinalizer();
         } catch (SQLException ex) {
             sLog.severe(sLoc.x("Failed To Close DB Connection \n{0}", ex));
         }
@@ -431,11 +438,9 @@ public class DataBaseQuerySlave extends Thread {
                 }
 
                 if (ofield != null) {
-                    String ofieldval = (String)ofield.getValue();
-                    //if (ofieldval != null) {
-                        sLog.fine("Adding Field to Data Object [ " + fields.get(i).getName() + "  ] Value : " + ofieldval);
-                        dataobject.addFieldValue(ofieldval);
-                    //}
+                    String ofieldval = (String) ofield.getValue();
+                    sLog.fine("Adding Field to Data Object [ " + fields.get(i).getName() + "  ] Value : " + ofieldval);
+                    dataobject.addFieldValue(ofieldval);
                 } else {
                     LocalizedString msg = sLoc.x("Unable to find  [{0}] in ObjectField for ObjectNode {1}." +
                             " Verify if DataBase Schema has column [{0}] in the table {1}", fields.get(i).getName(), objectnode.pGetTag());
@@ -444,8 +449,8 @@ public class DataBaseQuerySlave extends Thread {
             }
 
         //Add Auto Generated Colum in the end of Data Object as this column is not generated with objectdef.xml (MetaData Base)
-            //logger.fine("Adding Auto Gen Field [Name: " + objectnode.pGetTag() + "Id" +  "] to Data Object. Value : " + (objectnode.getField(objectnode.pGetTag() + "Id")).getValue().toString());
-            //dataobject.addFieldValue(((ObjectField)objectnode.getField(objectnode.pGetTag() + "Id")).getValue().toString());
+        //logger.fine("Adding Auto Gen Field [Name: " + objectnode.pGetTag() + "Id" +  "] to Data Object. Value : " + (objectnode.getField(objectnode.pGetTag() + "Id")).getValue().toString());
+        //dataobject.addFieldValue(((ObjectField)objectnode.getField(objectnode.pGetTag() + "Id")).getValue().toString());
         } catch (ObjectException ex) {
             sLog.severe(sLoc.x("PLG034: Unable to process ObjectNode. Object Exception : " + ex.getMessage(), ex));
         }
@@ -462,11 +467,12 @@ public class DataBaseQuerySlave extends Thread {
      * get consumed by Data Analysis and Bulk Loader.
      * @param ObjectNode - Hirarchical object created by query manager for each resultset row.
      */
-    private void createFlattenedHirarchy(ObjectNode objectNode) {
+    private void createFlattenedHirarchy(DataObjectNode dataObjectNode) {
         try {
             sLog.fine("DataBaseDatareader : Using ObjectNode Normalization method");
+            ObjectNode objectNode = dataObjectNode.getObjectNode();
             appendFields(objectNode);
-            java.util.ArrayList allChildren = objectNode.getAllChildrenFromHashMap();
+            ArrayList allChildren = objectNode.getAllChildrenFromHashMap();
             if (allChildren != null) {
                 for (int i = 0; i < allChildren.size(); i++) {
                     ObjectNode childnode = (ObjectNode) allChildren.get(i);
@@ -495,10 +501,10 @@ public class DataBaseQuerySlave extends Thread {
             // Check if data object list is below threashold, in this case, keep adding to this list or else add and sleep
             DataObject dobj = this.dbreader.newDataObject(dataObjStrBldr.toString());
             if (doLinkedList.size() < PluginConstants.available_do) {
-                addDataObjectToList(dobj);
+                addDataObjectToList(dobj, dataObjectNode);
             } else {
                 dbreader.wakeUpMaster();
-                addDataObjectToList(dobj);
+                addDataObjectToList(dobj, dataObjectNode);
                 goSleep(PluginConstants.slave_retry_freq);
             }
 

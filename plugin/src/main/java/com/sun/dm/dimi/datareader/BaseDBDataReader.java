@@ -25,23 +25,32 @@ import net.java.hulp.i18n.Logger;
  */
 public abstract class BaseDBDataReader implements GlobalDataObjectReader {
     
+    //List of Data Object Created
     List<DataObject> doLinkedList = Collections.synchronizedList(new LinkedList());
+    // List of data objects and object nodes available for finalization
+    List<Object> usedObjectsList = Collections.synchronizedList(new LinkedList());
+    // Object Finalizer Slave Thread
+    ObjectFinalizerSlave objfin = null;    
     private boolean specialMode = false;
     //Logger
     private static Logger sLog = LogUtil.getLogger(BaseDBDataReader.class.getName());
-    
+   
     
     /**
      * BaseDBDataReader Constructor
      */
     public BaseDBDataReader() {
-    }
+            // Create Finalizer Instance
+            objfin = new ObjectFinalizerSlave(this);
+            objfin.start();
+    }    
     
     /**
      * BaseDBDataReader Constructor
      * @param specialmode 
      */
     public BaseDBDataReader(boolean specialmode){
+        this();
         specialMode = specialmode;
     }
         
@@ -286,5 +295,17 @@ public abstract class BaseDBDataReader implements GlobalDataObjectReader {
         
         child.addFieldValue(sb.toString());
     }
+    
+    /**
+     * This method takes care of finalizing data objectnode created by Query Manager.
+     * @param dataObjectNode
+     */
+    public void submitObjectForFinalization(Object candidateObject) {
+        usedObjectsList.add(candidateObject);
+    }
+    
+    protected void stopObjectFinalizer(){
+        this.objfin.stopObjectFinalizer();
+    }    
     
 }

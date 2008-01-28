@@ -78,6 +78,8 @@ public class RejectFileDataReader extends BaseFileDataReader {
                 dObj.add(0, null);
             }
             return dObj;
+        } else {
+            stopObjectFinalizer();
         }
         return null;
     }

@@ -55,12 +55,15 @@ public class PluginConstants {
     
     
     //Threads
+    public static final long slave_init_time = 1000;//Slave Init time
     public static final long slave_retry_freq = 200; // 0.2 SEC
     public static final int available_do = 15000;
     // Sets 1 Min of Timeout before (4 X 15)
     public static final long master_retry_freq = 4000; //  4 SEC between each retry
     public static final int master_retry = 15;    
-    
+
+    //Object Finalizer
+    public static final long nodata_sleep = 1000; // 1 sec    
     
     public PluginConstants() {
     }
