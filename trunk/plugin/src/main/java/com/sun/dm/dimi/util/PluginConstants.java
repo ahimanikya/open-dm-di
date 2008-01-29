@@ -28,6 +28,7 @@ public class PluginConstants {
     public static final int GOOD_FILE_DATASOURCE = 1;
     public static final int REJECT_FILE_DATASOURCE = 2;
     public static final int RAW_FILE_DATASOURCE = 3;
+    public static final int PLUGGABLE_READER_DATASOURCE = 4;
     
     //Standardization and Phonetization patterns
     public static final String STAN_PATTERN = "_Std";

@@ -34,7 +34,8 @@ import org.axiondb.io.BufferedDataInputStream;
  */
 public class GoodFileDataReader extends BaseFileDataReader {
 
-    int filedbtype = -1;
+    //int filedbtype = -1;
+    int filedbtype = PluginConstants.GOOD_FILE_DATASOURCE;
     //logger
     private static Logger sLog = LogUtil.getLogger(GoodFileDataReader.class.getName());
     Localizer sLoc = Localizer.get();
@@ -53,7 +54,7 @@ public class GoodFileDataReader extends BaseFileDataReader {
      */
     public GoodFileDataReader(String filepath, String filename, boolean specialMode) throws ParserException, FileNotFoundException {
         super(filepath, filename, specialMode);
-        filedbtype = executeRawFileCheck();
+        //filedbtype = executeRawFileCheck();
     }
 
     /**
@@ -63,7 +64,7 @@ public class GoodFileDataReader extends BaseFileDataReader {
      */
     public GoodFileDataReader(File fileObj, boolean specialMode) {
         super(fileObj, specialMode);
-        filedbtype = executeRawFileCheck();
+        //filedbtype = executeRawFileCheck();
     }
 
     /**
@@ -76,12 +77,14 @@ public class GoodFileDataReader extends BaseFileDataReader {
 
         if (recordStr != null) {
             DataObject dObj = newDataObject(recordStr);
+            /*
             if (this.filedbtype == PluginConstants.RAW_FILE_DATASOURCE) {
                 // Inject System fields into DO
                 for (int i = 0; i < DefaultSystemFields.getDefaultSystemFields().length; i++) {
                     dObj.add(0, null);
                 }
             }
+            */
             return dObj;
         } else {
             stopObjectFinalizer();
@@ -134,6 +137,7 @@ public class GoodFileDataReader extends BaseFileDataReader {
      * Good file will have the systems fileds already generated and available for reading.
      * object.xml field could is used to create this difference.
      */
+    /*
     private int executeRawFileCheck() {
         sLog.infoNoloc("Check to differentiate between raw file and good file reading ...");
         int metaFieldCountRoot = 0;
@@ -224,4 +228,5 @@ public class GoodFileDataReader extends BaseFileDataReader {
         }
         return -1;
     }
+    */
 }
