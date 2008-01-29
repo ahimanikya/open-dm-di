@@ -30,7 +30,6 @@ import net.java.hulp.i18n.Logger;
 public class RejectFileDataReader extends BaseFileDataReader {
 
     //CONSTANTS
-    private String DATA_SOURCE_TYPE = "REJECTFILE";
     private static final String ERROR_FIELD_BEGIN_CHAR = "{";
     /**
      * logger
