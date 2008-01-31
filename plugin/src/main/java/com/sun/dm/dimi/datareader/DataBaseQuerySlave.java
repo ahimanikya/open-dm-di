@@ -438,7 +438,10 @@ public class DataBaseQuerySlave extends Thread {
                 }
 
                 if (ofield != null) {
-                    String ofieldval = (String) ofield.getValue();
+                    String ofieldval = null;
+                    if (ofield.getValue() != null) {
+                        ofieldval = ofield.getValue().toString();
+                    }
                     sLog.fine("Adding Field to Data Object [ " + fields.get(i).getName() + "  ] Value : " + ofieldval);
                     dataobject.addFieldValue(ofieldval);
                 } else {
