@@ -81,6 +81,9 @@ public class AutoMapper {
 
     /**
      * This Method compares columns from Source and Target Tables.
+     * Columns are compared for 
+     * 1. Column Name
+     * 2. Column JDBC Type
      * @param srccolm - Source Table column
      * @param trgtcolm - Target Table Column
      * @return
@@ -88,7 +91,7 @@ public class AutoMapper {
     private boolean compareColumns(DBColumn srccolm, DBColumn trgtcolm) {
         if (srccolm.getName().equalsIgnoreCase(trgtcolm.getName())){
             if (srccolm.getJdbcType() == trgtcolm.getJdbcType()){
-                sLog.infoNoloc("Source Col : " + srccolm.getName() + " matches with trgt col : " + trgtcolm.getName());
+                sLog.fine("Source Col : " + srccolm.getName() + " matches with trgt col : " + trgtcolm.getName());
                 return true;
             }
         }
