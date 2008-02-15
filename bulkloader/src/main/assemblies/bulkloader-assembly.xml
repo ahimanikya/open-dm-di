@@ -8,7 +8,7 @@
     <fileSets>
         <fileSet>
             <directory>target</directory>
-            <outputDirectory>soa1/modules/ext/eview/bulkloader</outputDirectory>
+            <outputDirectory>soa2/modules/ext/eview/bulkloader</outputDirectory>
             <includes>
                 <include>bulkloader*.jar</include>
                 <include>*.bat</include>
@@ -17,7 +17,7 @@
     </fileSets>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>soa1/modules/ext/eview/bulkloader/lib</outputDirectory>
+            <outputDirectory>soa2/modules/ext/eview/bulkloader/lib</outputDirectory>
             <unpack>false</unpack>
             <scope>runtime</scope>
         </dependencySet>
