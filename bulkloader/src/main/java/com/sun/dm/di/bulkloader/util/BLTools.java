@@ -123,7 +123,7 @@ public class BLTools {
 
             newsourcedir = new File(BLConstants.toplevelrt + BLConstants.fs + newdirname);
             newsourcedir.mkdirs();
-            sLog.infoNoloc("Created Dir : " + newsourcedir.getAbsolutePath());
+            sLog.fine("Created Dir : " + newsourcedir.getAbsolutePath());
 
             //Move Source File to This
             copy(new File(sourceFileLoc, filename), new File(newsourcedir.getAbsolutePath(), filename));
@@ -136,7 +136,7 @@ public class BLTools {
     }
 
     private static void copy(File source, File dest) throws IOException {
-        sLog.infoNoloc("Copying file [" + source.getAbsolutePath() + "] to [" + dest.getAbsolutePath() + "]");
+        sLog.fine("Copying file [" + source.getAbsolutePath() + "] to [" + dest.getAbsolutePath() + "]");
         FileChannel in = null, out = null;
         try {
             in = new FileInputStream(source).getChannel();

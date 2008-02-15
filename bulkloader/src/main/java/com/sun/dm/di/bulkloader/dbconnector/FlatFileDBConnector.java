@@ -66,10 +66,30 @@ public class FlatFileDBConnector extends DBConnector {
             ArrayList mdlist = target_inf.getTableMetaDataObjectList(schema, catalog);
             for (int i = 0; i < mdlist.size(); i++) {
                 TableMetaDataObject mdobj = (TableMetaDataObject) mdlist.get(i);
-                if (mdobj.getColumnDataType().equals("VARCHAR2")) {
-                    sb.append(mdobj.getColumnName() + " " + mdobj.getColumnDataType() + "(" + mdobj.getColumnLength() + ")");
+                String colname = mdobj.getColumnName();
+                String coltype = mdobj.getColumnDataType();
+                int collen = mdobj.getColumnLength();
+                
+                //Handling special cases
+                //1. Column with type and name TIMESTAMP
+                if (colname.equalsIgnoreCase("TIMESTAMP")){
+                    colname = "IGNORED_TIMESTAMP";
+                    coltype = "VARCHAR2";
+                    collen = 32;
+                    sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
+                }
+                //2. BLOB type columns
+                if (coltype.equalsIgnoreCase("BLOB")){
+                    colname = "IGNORED_" + colname;
+                    coltype = "VARCHAR2";
+                    collen = 32;
+                    sLog.warn(sLoc.x("LDR155 : Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                } 
+                
+                if (coltype.equals("VARCHAR2")) {
+                    sb.append(colname + " " + coltype + "(" + collen + ")");
                 } else {
-                    sb.append(mdobj.getColumnName() + " " + mdobj.getColumnDataType());
+                    sb.append(colname + " " + coltype);
                 }
                 if (i + 1 < mdlist.size()) {
                     sb.append(", ");
@@ -81,7 +101,7 @@ public class FlatFileDBConnector extends DBConnector {
             }
             sb.append(" FIELDDELIMITER=\'" + fld_delimiter + "\')");
 
-            sLog.info(sLoc.x("LDR152: Creating external table : {0}", sb.toString()));
+            sLog.fine("LDR152: Creating external table :" + sb.toString());
 
             Statement stmt = connection.createStatement();
             status = stmt.execute(sb.toString());

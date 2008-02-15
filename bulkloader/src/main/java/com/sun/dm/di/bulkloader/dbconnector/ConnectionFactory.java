@@ -51,7 +51,7 @@ public class ConnectionFactory {
         if (BLTools.validatePath(filelocation, filename)) {
             String newfileloc = BLTools.copySrcDBFileToClassPath(filelocation, filename);
             dbconnection = new FlatFileDBConnector(etldefgen, newfileloc, filename, field_delimiter, record_delimiter, schema, catalog, target_inf, BLConstants.SOURCE_TABLE_TYPE);
-            sLog.infoNoloc("Adding New Source Conn for file [" + filename + "]");
+            sLog.fine("Adding New Source Conn for file [" + filename + "]");
             sourceconns.put(filename, dbconnection);
         }
         return dbconnection;
@@ -76,11 +76,11 @@ public class ConnectionFactory {
         DBConnection dbconnection = null;
         if (targetconns.containsKey(host + "_" + port)) {
             dbconnection = (DBConnection) targetconns.get(host + "_" + port);
-            sLog.infoNoloc("Connection Already Exists to [" + host + ":" + port + "]");
+            sLog.fine("Connection Already Exists to [" + host + ":" + port + "]");
             dbconnection.addDBModelToDEF(etldefgen, dbconnection.getDataBaseConnection(), schema, catalog, BLConstants.TARGET_TABLE_TYPE, login, pw, tablename);
         } else {
             dbconnection = new OracleDBConnector(etldefgen, host, port, sid, schema, catalog, login, pw, tablename, BLConstants.TARGET_TABLE_TYPE);
-            sLog.infoNoloc("Adding New Oracle Target Conn for host [" + host + ":" + port + "]");
+            sLog.fine("Adding New Oracle Target Conn for host [" + host + ":" + port + "]");
             targetconns.put(host + "_" + port, dbconnection);
         }
         return dbconnection;

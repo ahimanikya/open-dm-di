@@ -80,7 +80,7 @@ public class CreateZip {
     }
 
     private void zipDir(String dir2zip) {
-        sLog.info(sLoc.x("LDR431: Zipping Dir: {0}", dir2zip));
+        sLog.fine("Zipping Dir: " + dir2zip);
         try {
             //create a new File object based on the directory we have to zip File    
             File zipDir = new File(dir2zip);
