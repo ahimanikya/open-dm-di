@@ -93,6 +93,11 @@ public class LoaderMain {
             for (int i = 0; i < datafiles.length; i++) {
                 ETLDefGenerator etldefgen = new ETLDefGenerator("ETLDEF_" + datafiles[i], ETLStrategyBuilder.EXEC_MODE_SIMPLE);
                 DBConnection cc_target = cfact.createTrgtOracleConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.sid"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
+                
+                if (BLConstants.getTrgtConnInfo() == null){
+                   BLConstants.setTrgtConnInfo(cc_target.getDBConnectionURI());
+                }
+                
                 DBConnection cc_source = null;
                 if (cc_target != null) {
                     if (cc_target.getDataBaseConnection() != null) {

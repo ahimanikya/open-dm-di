@@ -22,5 +22,6 @@ public interface DBConnection {
     public abstract Connection getDataBaseConnection();
     public abstract ArrayList getTableMetaDataObjectList(String schema, String catalog);
     public abstract void addDBModelToDEF(ETLDefGenerator etldefgen, Connection conn, String schema, String catalog, int dbtype, String login, String pw, String targetTableQName);
+    public abstract String getDBConnectionURI();
 
 }

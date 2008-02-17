@@ -58,6 +58,18 @@ public class BLConstants {
     
     public static final String artiTop = getCWD() + fs + toplevelrt + fs;
     
+    
+    //Target DB Connection Information
+    public static void setTrgtConnInfo(String trgtConnStr){
+        trgtconn = trgtConnStr;
+    }
+    
+    public static String getTrgtConnInfo(){
+        return trgtconn;
+    }
+    
+    private static String trgtconn = null;
+    
     public BLConstants() {
     }
 
