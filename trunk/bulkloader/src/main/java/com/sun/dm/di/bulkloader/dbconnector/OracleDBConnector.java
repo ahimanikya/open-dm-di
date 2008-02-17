@@ -77,5 +77,9 @@ public class OracleDBConnector extends DBConnector {
         }
         return mdlist;
     }
+
+    public String getDBConnectionURI() {
+        return super.connuristr;
+    }
     
 }

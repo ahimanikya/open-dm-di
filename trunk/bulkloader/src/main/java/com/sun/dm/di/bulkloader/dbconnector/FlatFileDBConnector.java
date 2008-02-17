@@ -69,23 +69,23 @@ public class FlatFileDBConnector extends DBConnector {
                 String colname = mdobj.getColumnName();
                 String coltype = mdobj.getColumnDataType();
                 int collen = mdobj.getColumnLength();
-                
+
                 //Handling special cases
                 //1. Column with type and name TIMESTAMP
-                if (colname.equalsIgnoreCase("TIMESTAMP")){
+                if (colname.equalsIgnoreCase("TIMESTAMP")) {
                     colname = "IGNORED_TIMESTAMP";
                     coltype = "VARCHAR2";
                     collen = 32;
                     sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
                 }
                 //2. BLOB type columns
-                if (coltype.equalsIgnoreCase("BLOB")){
+                if (coltype.equalsIgnoreCase("BLOB")) {
                     colname = "IGNORED_" + colname;
                     coltype = "VARCHAR2";
                     collen = 32;
                     sLog.warn(sLoc.x("LDR155 : Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
-                } 
-                
+                }
+
                 if (coltype.equals("VARCHAR2")) {
                     sb.append(colname + " " + coltype + "(" + collen + ")");
                 } else {
@@ -116,5 +116,9 @@ public class FlatFileDBConnector extends DBConnector {
             return sname.substring(0, sname.lastIndexOf("."));
         }
         return sname;
+    }
+
+    public String getDBConnectionURI() {
+        return super.connuristr;
     }
 }

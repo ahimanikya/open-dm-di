@@ -69,4 +69,8 @@ public class AxionDBConnector extends DBConnector {
         }
         return mdlist;
     }
+
+    public String getDBConnectionURI() {
+        return super.connuristr;
+    }
 }

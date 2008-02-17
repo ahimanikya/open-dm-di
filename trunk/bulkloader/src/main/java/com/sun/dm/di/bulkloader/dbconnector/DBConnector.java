@@ -27,6 +27,7 @@ import net.java.hulp.i18n.Logger;
 public abstract class DBConnector implements DBConnection {
 
     Connection connection = null;
+    String connuristr = null;
     ETLDefGenerator etldef = null;
     //logger
     private static Logger sLog = LogUtil.getLogger(DBConnector.class.getName());
@@ -37,6 +38,7 @@ public abstract class DBConnector implements DBConnection {
 
     public Connection ConnectToDB(String dburi, String dbname) {
         String connuri = BLConstants.URI_AXION_PRIFIX + dbname + BLConstants.PS + dburi;
+        connuristr = connuri;
         try {
             this.connection = DriverManager.getConnection(connuri);
             if (this.connection != null) {
@@ -51,6 +53,7 @@ public abstract class DBConnector implements DBConnection {
 
     public Connection ConnectToDB(String host, int port, String sid, String login, String pw) {
         String connuri = BLConstants.URI_ORACLE_PRIFIX + "thin" + BLConstants.PS + "@" + host + BLConstants.PS + port + BLConstants.PS + sid;
+        connuristr = connuri;
         try {
             this.connection = DriverManager.getConnection(connuri, login, pw);
             if (this.connection != null) {
