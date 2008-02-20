@@ -58,7 +58,9 @@ public class DOFileWriter extends DOBaseWriter implements DOWriter {
         try {
             this.outputFile = outputFile;
             this.isGoodFile = isGoodFile;
-            this.doeViewFileWriter = new DataObjectFileWriter(outputFile.getAbsolutePath(), specialMode);
+            //this.doeViewFileWriter = new DataObjectFileWriter(outputFile.getAbsolutePath(), specialMode);
+            // To write the file in Append Mode
+            this.doeViewFileWriter = new DataObjectFileWriter(outputFile.getAbsolutePath(), "True");
             //initReader();
         }
         catch (IOException ex) {
