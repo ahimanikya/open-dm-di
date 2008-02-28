@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>plugin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory>soa2/modules/ext/mdm/plugin</outputDirectory>
+            <includes>
+                <include>open-dimi-plugin*.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>soa2/modules/ext/mdm/plugin/lib</outputDirectory>
+            <unpack>false</unpack>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+</assembly>
