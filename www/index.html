@@ -1,1 +1,117 @@
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />                                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />                                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />                                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />                                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />       <p>Data Integrator is a subproject of Mural focusing on extracting, transforming, and loading bulk data between files and databases. It provides connectivity to a vast range of heterogeneous and diversified data sources including non relational data sources. It provides an ETL development and runtime environment that is fully integrated into OpenESB and Netbeans and optimized for handling very large record sets. <br />          <br />          Data Integrator is an ETL tool which can be used to preform extract - transform - load to build DataWarehouse or can be used for Data Migration. <br />          <br />          Data Integrator is designed to manage and orchestrate high-volume, high-performance data transformation from within the SOA tier. Data Integrator, along with Java CAPS platform, offers a comprehensive enterprise integration infrastructure. Data Integrator is an enterprise module optimized for extracting, transforming, and loading bulk data between files and databases. It provides connectivity to a vast range of  heterogeneous and diversified data sources including non relational data sources. It provides an ETL development and runtime environment that is fully integrated into Java CAPS and Netbeans and optimized for handling very large record sets.<br />          <br />          Some of its core features include:<br />          <br />          * JBI standard based  Service Engine<br />          * JMX controls for dynamic configuration<br />          * Intuitive Design time Netbeans Plug-in with drag-n-drop capabilities<br />          * BPEL 2.0 invocation support <br />          * Plugs seamlessly in a SOA Environment<br />          * Rich GUI support for Building Joins, Source Extraction and Target conditions<br />          * Configurable ETL/ELT strategies<br />          * Rich Operator palette which features Data cleansing functions like Standardization, <br />            normalization, parse Address, Matching etc. <br />          * Ability to source data from Web pages(HTML tables), RSS Feeds, spreadsheets etc.</p> <p>&nbsp;</p>  <strong>My First Data Integrator Collaboration - Quick Start Guide</strong> <p> In this tutorial, you create an Data Integrator Collaboration called &quot;firstETL.etl&quot; that extracts the data from two source tables (JAVA DB) &quot;PRODUCT_DETAILS&quot; and &quot;PURCHASE_ORDER&quot;, does transformations and loads the data into one target table &quot;ORDER_DEFICIT&quot;(ORACLE). </p> <p> Table MetaData:<br /> <strong>1. PRODUCT_DETAILS</strong><br /> COLUMNS:<br /> PRODUCT_ID    VARCHAR<br /> PRODUCT_NAME   VARCHAR<br /> AVAILABLE_QUANT NUMERIC<br /> </p> <strong>2. PURCHASE_ORDER</strong><br /> COLUMNS:<br /> CUSTOMER_ID    VARCHAR<br /> PRODUCT_ID   VARCHAR<br /> ORDER_QUANT   NUMERIC<br /> <p> <strong>3. ORDER_DEFICIT</strong><br /> COLUMNS:<br /> CUSTOMER_ID   VARCHAR<br /> PRODUCT_NAME  VARCHAR<br /> QUANT_DEFICIT NUMERIC<br /> </p><p> <strong>To create an Data Integrator Application for extract (from source table(s)), transform the data and load the data (into target table(s)), you have to create the following.</strong><br /> </p><p>&nbsp;</p><ul> 	<li>An Data Integrator project (called DataIntegratorApp) 	</li><li>A Data Integrator collaboration, firstETL.etl, under the project DataIntegratorApp. 	</li><li>A Composite Application project, DeploymentCompApp, to deploy the Data Integrator Application into the application server. 	</li><li>Finally, you can use the Composite Application test framework to invoke the deployed Data Integrator Service and see the response. </li></ul> <br />  [<strong>Note: </strong>This tutorial also assumes that the above said tables are pre-created.]  <br /> <p> <strong>To Add a Database connection</strong> <br /> Go to Runtime Tab. Expand the Databases Node, right click on the Drivers node and choose &quot;New Driver...&quot;. Then point to the driver location. Then create a new connection using the uploaded driver by providing the JDBC Url, user name and password.  <br /> <strong>To Create new table</strong> Right click on the JDBC Connection available under the Databases node and choose Connect. Enter user name and password. Expand the connection node. Right Click on the Tables node and Click Create Table. Enter the required details and click Ok. <br /> <strong>Contents</strong><br /> </p><ul> <li>Starting Netbeans IDE (bundled with Sierra) </li><li>Starting/configuring Glassfish instance </li><li>Creating an Data Integrator Module Project </li><li>Creating the Composite Application (DeploymentCompApp) </li><li>Creating a BPEL Module to orchestrate Data Integrator Collaboration(s) </li><li>Running the Composite App or BPEL Module </li><li>Summary </li></ul><br /> <p> <strong>Starting Netbeans IDE (bundled with Sierra)</strong><br /> Go to Sierra install root, C:\CAPS52, --&gt; nebteans\bin and launch Netbeans.exe <br /> <strong>To check the status of the Sun Java System Application Server:</strong><br /> </p><ul> <li>If the Runtime window is not visible, choose Window &gt; Runtime. </li><li>In the Runtime window, expand the Servers node. </li><li>The Servers node should contain a Glassfish Application Server node. </li><li>Check if the Glassfish is started. If not, start it now. </li><li>Wait until the following message appears in the Output window:<br />       Application server startup complete. </li></ul> <br /> <p>      #Before you create an Data Integrator Module Project, make sure the ETL Service Engine (sun-etl-engine) is started.<br /> ##Navigate to the Runtime window.<br /> ##Expand the JBI node until you can select the sun-etl-engine node.<br /> ##Right-click, and choose Start.<br /></p> <p> <strong>Creating a Data Integrator Module Project</strong><br /> You must create a new Data Integrator project to create an Data Integrator Collaboration.<br /> To Create an Data Integrator Project:<br /> 1. Choose File &gt; New Project..<br /> 2. Select SOA from Categories. 3. Select 'ETL Module' from Projects, and click the Next button<br /> 4. Input DataIntegratorApp for the Project Name entry. If necessary, browse to the desired directory to save the Project. Then click Finish.<br /> 5. In the Projects window, expand the DataIntegratorApp project node, right-click the Process Files node and choose New &gt; ETL.<br /> 6. Enter firstETL for the File Name field, and click Next.<br /> 7. Choose the required Source Tables (PURCHASE_ORDER, PRODUCT_DETAILS) from the list of Connections available and Click Next.<br /> 8. Add the source tables that will be used in the join to the tables list on the right and choose the type of join and Click Next.<br /> 9. Choose the required target tables (ORDER_DEFICIT) from the list of available Connections and Click Finish.<br /> 10.The IDE does the following:<br /> 	a. Creates firstETL.etl under the &quot;collaborations&quot; folder/node.<br /> 	b. Opens the firstETL.etl file in the ETL Editor.<br /> <br /></p><p> <strong>To design ETL Collaboration.</strong> </p><ul> <li>Right click on the Join View in the design view canvas area.  </li><li>Join Builder window pops up. In the graphical view area, double click on the condition icon of the join node. </li><li>Condition Builder window opens up. Build the condition for the join. Drag and drop the table columns and operators into the condition builder canvas and construct the condition as PURCHASE_ORDER.PRODUCT_ID = PRODUCT_DETAILS.PRODUCT_ID </li><li>Click Ok in the Condition builder window to set the join condition. </li><li>Click Ok in the Join Builder window to accept the changes. </li><li>Drag and create a connection from PURCHASE_ORDER.CUSTOMER_ID to ORDER_DEFICIT.CUSTOMER_ID. This causes the Data Integrator Editor to map the input from PURCHASE_ORDER.CUSTOMER_ID columns to be inserted into ORDER_DEFICIT.CUSTOMER_ID </li><li>Drag and create a connection from PRODUCT_DETAILS.PRODUCT_NAME TO ORDER_DEFICIT.PRODUCT_NAME. </li><li>Drag and drop a subtraction operator from Number Operators drop down menu. </li><li>Drag and create a connection from PURCHASE_ORDER.ORDER_QUANT to minuend Field of the Subtraction operator. </li><li>Drag and create a connection from PRODUCT_DETAILS.AVAILABLE_QUANT to Subrahend Field of the Subtraction operator. </li><li>Drag and create a connection from result field of the Subtraction operator to the ORDER_DEFICIT.QUANT_DEFICIT Column. </li><li>Click on the Runtime Input arguments button in the tool bar and Click Ok. </li><li>Save the collaboration. </li><li>Right click on the DataIntegratorApp project node and select Build Project. This generates the wsdl for the orchestrated Data Integrator Collaboration. </li></ul><br /><p> <strong>Creating and Deploying the Composite Application</strong> </p><ul> <li>Choose File &gt; New Project. </li><li>Select SOA from Categories. </li><li>Select Composite Application from Projects and click Next. </li><li>Input DeploymentCompApp for the Project Name and click Finish. If necessary, browse to the directory in which you want to save the project. </li><li>Right-click the DeploymentCompApp node, and select Add JBI Module. </li><li>Navigate to the directory under which you created your DataIntegratorApp Project, select the folder DataIntegratorApp, and click the button Add Project JAR Files. </li><li>Right-click the DeploymentCompApp node, and select Deploy Project. </li></ul> <br /><p> <strong>Creating a BPEL Module to orchestrate Data Integrator Collaboration(s)</strong><br /> </p><ul> <li>Choose File &gt; New Project. </li><li>Select SOA from Categories. </li><li>Select &quot;BPEL Module&quot; from Projects and click Next. </li><li>Input &quot;BpelModule&quot; for the Project Name and click Finish. If necessary, browse to the directory in which you want to save the project. </li><li>Under the &quot;BpelModule&quot;, right click on &quot;Process Files&quot; and select &quot;New WSDL Document...&quot;. Give a name for the WSDL document. This is the WSDL definition for the Business Process (BPEL) itself. Click Next. </li><li>In the next screen, provide &quot;PortType Name, Operation Name... &quot; etc. The &quot;Input&quot; and &quot;Output&quot; should map to the &quot;Runtime Input Arguments&quot; and &quot;Runtime Output Arguments&quot; of Data Integrator collaboration. Click Next. </li><li>Provide &quot;Binding Name, Type, Service Name, ...&quot; etc. Click Finish. </li><li>Copy the WSDL definition for the Data Integrator collaboration from &quot;DataIntegratorApp&quot; above to the &quot;BpelModule-&gt;Process Files&quot; </li><li>Right click on &quot;Process Files&quot; and select &quot;New BPEL Process...&quot;. Provide a name for the BPEL and click &quot;Finish&quot;. </li><li>On the BPEL Editor canvas, drag and drop the WSDL for BPEL (created in earlier step). This will create a partner link. Create one more partner link for Data Integrator WSDL (drag and drop). </li><li>Orchestrate the Business Process, using &quot;Receive, Assign, invoke, Reply&quot; activities. </li><li>BPEL Service Engine Reference: <a href="http://wiki.open-esb.java.net/Wiki.jsp?page=BPELSE">BPEL SE Wiki</a> </li></ul> <br /><p> <strong>Running the Composite App or BPEL Module</strong><br /> </p><ul> <li>Once you design a Data Integrator Collaboration and deploy the same as a part of a composite application, the DI service is available, in JBI environment, for invocation. </li><li>When you create a composite application with DI application added as a &quot;JBI Module&quot;, an HTTP Soap binding endpoint is automatically activated. HTTP SOAP binding component is used to provide SOAP over HTTP connectivity to services deployed in the JBI environment (Data Integrator service is just one of them). Ref([http://wiki.open-esb.java.net/Wiki.jsp?page=HTTPBC]) </li><li>User can alternately use BPEL module (described above) to invoke the Data Integrator Service. </li><li>BPEL module itself needs to be wrapped inside a composite application. </li></ul><br /> <p><strong>Summary</strong><br /> In this tutorial, you created a Data Integrator Module, created and deployed a Composite Application, and learnt couple of ways to invoke the deployed Data Integrator Module application. </p><p>&nbsp;</p><p><a href="https://mural.dev.java.net/">Back to Mural</a>                                                </p> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>Project Home Page</title><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"><style type="text/css">
+#colortable, #colortable {
+  border: 2px solid #a3b8cb;
+}
+
+</style></head>
+<body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<hr style="width: 100%; height: 2px;">
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="width: 75%;"><img src="images/DiBanner.gif" alt="Open Data Integrator Banner"></td>
+<td style="vertical-align: bottom; width: 25%">
+<table style="text-align: left; margin-left: auto; margin-right: auto;" id="colortable" border="1" bordercolor="#a3b8cb" cellpadding="4" cellspacing="0">
+<tbody>
+<tr>
+<td style="width: 100px; text-align: center; vertical-align: bottom;"><span style="color: rgb(238, 107, 0);"><span style="color: black;"><img style="border: 0px solid ; width: 25px; height: 4px;" alt="" src="images/Spacer.gif" hspace="0" vspace="0"></span></span>
+<div style="text-align: center;"><span style="color: rgb(238, 107, 0);"><span style="color: black;"></span></span><a href="index.html#info"><span style="color: rgb(238, 107, 0);"><span style="color: black;"><img style="border: 0px solid ; width: 28px; height: 30px;" alt="About" src="images/AboutNormal.gif" align="top" hspace="0" vspace="0"></span></span></a></div>
+<div style="text-align: center;"><a href="index.html#info">About</a></div>
+</td>
+<td style="width: 100px; text-align: center; vertical-align: bottom;">
+<div style="text-align: center;"><a href="https://open-dm-di.dev.java.net/DocumentsByTitle.html"><img alt="" src="images/Documents.gif" style="border: 0px solid ; width: 42px; height: 42px;" vspace="0"></a></div>
+<a href="https://open-dm-di.dev.java.net/DocumentsByTitle.html">Docs</a>
+</td>
+<td style="width: 100px; text-align: center; vertical-align: bottom;">
+<div style="text-align: center;"><a href="https://open-dm-di.dev.java.net/servlets/ProjectMembershipRequest"><img alt="" src="images/Community.gif" style="border: 0px solid ; width: 42px; height: 42px;" vspace="0"></a></div>
+<a href="https://open-dm-di.dev.java.net/servlets/ProjectMembershipRequest">Community</a>
+</td>
+<td style="width: 100px; text-align: center; vertical-align: bottom;"><a href="https://open-dm-di.dev.java.net/servlets/ProjectNewsList"><img style="border: 0px solid ; width: 42px; height: 42px;" src="images/News.gif" alt="" vspace="0"></a><br>
+<a href="https://open-dm-di.dev.java.net/servlets/ProjectNewsList">News</a>
+</td>
+</tr>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td colspan="3" rowspan="1">
+<hr style="width: 100%; height: 2px;"></td>
+</tr>
+</tbody>
+</table>
+
+<table style="text-align: left; width: 85%; height: 425px;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="text-align: left; vertical-align: top; width: 31px;">
+<span style="color: rgb(238, 107, 0);"><span style="color: black;"><img style="border: 0px solid ; width: 60px; height: 60px;" alt="About" src="images/AboutNormal.gif"><a name="info"></a>
+</td>
+<td style="width: 95%;"><span style="font-weight: bold; color: rgb(238, 107, 0);">Open Data Integrator</span> is a subproject of Mural that provides ETL capabilities to extract, transform, and load bulk data between files and databases. It is a true and reliable alternative to proprietary, closed-source extract, transform, and load (ETL) solutions.<br>
+<br>
+Data Integrator provides connectivity to a vast range of heterogeneous and diversified data sources including non-relational data sources. It provides an ETL development and runtime environment that is fully integrated into OpenESB and NetBeans and optimized for handling very large record sets.<br>
+<br>
+Data Integrator is designed to manage and orchestrate high-volume, high-performance data transformation from within the SOA tier. Along with the Java CAPS platform, Data Integrator offers a comprehensive enterprise integration infrastructure. Data Integrator is an enterprise module optimized for ETL functions and can be used for Data Migration. <br>
+<br>
+Some of the core features of Data Integrator include:
+<ul>
+<li>Sub-component of <a href="https://mural.dev.java.net/">Mural</a> community
+that provides high-performance ETL capabilities</li>
+<li>JBI standard based Service Engine</li>
+<li>JMX controls for dynamic configuration</li>
+<li>Intuitive design-time NetBeans Plug-in with drag and drop capabilities</li>
+<li>BPEL 2.0 invocation support</li>
+<li>Plugs seamlessly into a SOA Environment</li>
+<li>Rich GUI support for building joins, source extraction, and target conditions</li>
+<li>Configurable ETL/ELT strategies</li>
+<li>Rich operator palette that features data cleansing functions such as standardization, normalization, address parsing, matching, and so on</li>
+<li>Ability to source data from web pages (HTML tables), RSS Feeds, spreadsheets, and more</li>
+</ul>
+</td>
+</tr>
+<tr>
+</tr>
+<tr>
+<td style="text-align: left; vertical-align: top; width: 31px;"><a href="https://open-dm-di.dev.java.net/servlets/ProjectMembershipRequest"><img style="border: 0px solid ; width: 60px; height: 60px;" src="images/Community.gif" alt=""></a></td>
+<td style="width: 95%;"><span style="font-weight: bold;"><span style="color: rgb(238, 107, 0);">Join our community!</span>
+  </span>Would you like to help expand or improve Open Data Integrator? Do you
+have tips and tricks to share? Sign up here and join us!<br>
+<table style="text-align: left; width: 478px; height: 32px;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="width: 150px;"><a href="https://open-dm-di.dev.java.net/servlets/ProjectMailingListList">Mailing
+Lists</a></td>
+<td style="width: 150px;"><a href="https://open-dm-di.dev.java.net/servlets/ProjectMembershipRequest">Join
+This Project</a></td>
+<td><a href="https://mural.dev.java.net/governance.html">Community
+Governance</a></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr>
+<td style="text-align: left; vertical-align: top; width: 31px;"><a href="https://open-dm-di.dev.java.net/docs/DocumentsByTitle.html"><img style="border: 0px solid ; width: 60px; height: 60px;" src="images/Documents.gif" alt=""></a></td>
+<td style="text-align: left; vertical-align: top; width: 95%;"><span style="font-weight: bold; color: rgb(238, 107, 0);"><br>
+Documentation!</span>
+  Learn about Open Data Integrator, how to access and build the files, and how to work with Data Integrator <a href="https://open-dm-di.dev.java.net/DocumentsByTitle.html">here</a>. <b>A quick-start tutorial is at <a href="https://open-dm-di.dev.java.net/docs/tutorials/QuickStart.html">Data Integrator - Quick Start Guide<a/>.</b></td>
+</tr>
+<tr>
+</tr><tr>
+<td style="text-align: left; vertical-align: top; width: 31px;"><a href="https://open-dm-di.dev.java.net/servlets/ProjectNewsList"><img style="border: 0px solid ; width: 60px; height: 60px;" src="images/News.gif" alt=""></a></td>
+<td style="text-align: left; vertical-align: top; width: 95%;"><span style="font-weight: bold; color: rgb(238, 107, 0);"><br>
+News!</span>
+  Read the latest breaking news about Open Data Integrator. &nbsp;Stay
+tuned to your community <a href="https://open-dm-di.dev.java.net/servlets/ProjectNewsList">here</a>!</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
