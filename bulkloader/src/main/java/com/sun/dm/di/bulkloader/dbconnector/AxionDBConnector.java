@@ -44,7 +44,7 @@ public class AxionDBConnector extends DBConnector {
         etldef = etldefgen;
         targetTableQName = getTargetTableQualifiedName(tablename);
         ConnectToDB(dbDir, dbName);
-        addDBModelToETLDef(null, null, type, targetTableQName, "sa", "sa");
+        addDBModelToETLDef("AXION", null, null, type, targetTableQName, "sa", "sa");
     }
 
     public Connection getDataBaseConnection() {

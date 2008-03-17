@@ -140,13 +140,14 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-bat-file-to-package</id>
+                        <id>copy-bat-sh-file-to-package</id>
                         <phase>process-classes</phase>
                         <goals><goal>run</goal></goals>
                         <configuration>
                             <tasks>
-                                <echo>Copying genCollab.bat file to target ...</echo>
+                                <echo>Copying genCollab (bat and sh) file to target ...</echo>
                                 <copy file="${basedir}/external/genCollab.bat" todir="${project.build.directory}" preservelastmodified="true"></copy>
+								<copy file="${basedir}/external/genCollab.sh" todir="${project.build.directory}" preservelastmodified="true"></copy>
                             </tasks> 
                         </configuration>
                     </execution>
@@ -300,13 +301,14 @@
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>copy-bat-file-to-package</id>
+                                <id>copy-bat-sh-file-to-package</id>
                                 <phase>process-classes</phase>
                                 <goals><goal>run</goal></goals>
                                 <configuration>
                                     <tasks>
-                                        <echo>Copying genCollab.bat file to target ...</echo>
+                                        <echo>Copying genCollab (bat and sh) file to target ...</echo>
                                         <copy file="${basedir}/external/genCollab.bat" todir="${project.build.directory}" preservelastmodified="true"></copy>
+                                        <copy file="${basedir}/external/genCollab.sh" todir="${project.build.directory}" preservelastmodified="true"></copy>
                                     </tasks> 
                                 </configuration>
                             </execution>
