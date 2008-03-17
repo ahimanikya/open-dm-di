@@ -86,7 +86,7 @@ public class ETLDefGenerator {
         this.automapper = new AutoMapper(etldef);
     }
 
-    public void addDBModel(Connection conn, String user_table_name, int type, String login, String pw) {
+    public void addDBModel(Connection conn, String db, String user_table_name, int type, String login, String pw) {
         SQLDBModel model = null;
         try {
             DBMetaDataFactory meta = new DBMetaDataFactory();
@@ -106,9 +106,16 @@ public class ETLDefGenerator {
                     break;
                 case BLConstants.TARGET_TABLE_TYPE:
                     model = SQLModelObjectFactory.getInstance().createDBModel(SQLConstants.TARGET_DBMODEL);
-                    // Assuming Target is always Oracle
                     model.setModelName(dbmeta.getURL());
-                    def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_ORACLE_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
+                    if (db.equals("ORACLE")){
+                        def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_ORACLE_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
+                    }
+                    else if (db.equals("DERBY")){
+                        def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_DERBY_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
+                    }
+                    else if (db.equals("AXION")){
+                        System.out.println("TDB for Axion Flatfile Targets");
+                    }
                     break;
             }
             model.setConnectionDefinition(def);

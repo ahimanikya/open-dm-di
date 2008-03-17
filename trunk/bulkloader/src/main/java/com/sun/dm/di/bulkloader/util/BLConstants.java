@@ -37,6 +37,11 @@ public class BLConstants {
     public static final String URI_ORACLE_PRIFIX = "jdbc" + PS +  "oracle" + PS;
     public static final String ORACLE_PRODUCT_NAME = "Oracle";
     
+    //Derby DB Constants
+    public static final String DB_DERBY_DRIVER = "org.apache.derby.jdbc.ClientDriver";
+    public static final String URI_DERBY_PRIFIX = "jdbc" + PS +  "derby" + PS;
+    public static final String DERBY_PRODUCT_NAME = "Apache Derby";    
+    
     //ETL Constants
     public static final int SOURCE_TABLE_TYPE = SQLConstants.SOURCE_TABLE;
     public static final int TARGET_TABLE_TYPE = SQLConstants.TARGET_TABLE;

@@ -85,4 +85,20 @@ public class ConnectionFactory {
         }
         return dbconnection;
     }
+    
+    public DBConnection createTrgtDerbyConn(String host, int port, String dbname, String schema, String catalog, String login, String pw, String tablename, ETLDefGenerator etldefgen) {
+        // Check if DB Connection is already available. In such a case, do not connect again
+        DBConnection dbconnection = null;
+        if (targetconns.containsKey(host + "_" + port)) {
+            dbconnection = (DBConnection) targetconns.get(host + "_" + port);
+            sLog.fine("Connection Already Exists to [" + host + ":" + port + "]");
+            dbconnection.addDBModelToDEF(etldefgen, dbconnection.getDataBaseConnection(), schema, catalog, BLConstants.TARGET_TABLE_TYPE, login, pw, tablename);
+        } else {
+            dbconnection = new DerbyDBConnector(etldefgen, host, port, dbname, schema, catalog, login, pw, tablename, BLConstants.TARGET_TABLE_TYPE);
+            sLog.fine("Adding New Derby Target Conn for host [" + host + ":" + port + "]");
+            targetconns.put(host + "_" + port, dbconnection);
+        }
+        return dbconnection;
+    }    
+    
 }

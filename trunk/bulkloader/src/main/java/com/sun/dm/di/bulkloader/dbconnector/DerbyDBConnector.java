@@ -19,30 +19,30 @@ import net.java.hulp.i18n.Logger;
  *
  * @author Manish
  */
-public class OracleDBConnector extends DBConnector {
+public class DerbyDBConnector extends DBConnector {
 
     String targetTableQName = null;
     //logger
-    private static Logger sLog = LogUtil.getLogger(OracleDBConnector.class.getName());
+    private static Logger sLog = LogUtil.getLogger(DerbyDBConnector.class.getName());
     private static Localizer sLoc = Localizer.get();    
 
-    public OracleDBConnector() {
+    public DerbyDBConnector() {
         try {
-            sLog.info(sLoc.x("LDR160: Initializing Oracle DB Connector ..."));
-            Class.forName(BLConstants.DB_ORACLE_DRIVER);
+            sLog.info(sLoc.x("LDR160: Initializing Derby DB Connector ..."));
+            Class.forName(BLConstants.DB_DERBY_DRIVER);
         } catch (ClassNotFoundException ex) {
-            sLog.severe(sLoc.x("LDR161 : Oracle Driver Class Not Found : {0}", ex.getMessage()));
+            sLog.severe(sLoc.x("LDR161 : Derby Driver Class Not Found : {0}", ex.getMessage()));
             System.exit(0);
         }
     }
 
-    public OracleDBConnector(ETLDefGenerator etldefgen, String host, int port, String sid, String schema, String catalog, String login, String pw, String tablename, int type) {
+    public DerbyDBConnector(ETLDefGenerator etldefgen, String host, int port, String dbname, String schema, String catalog, String login, String pw, String tablename, int type) {
         this();
         etldef = etldefgen;
         targetTableQName = getTargetTableQualifiedName(tablename);
-        sLog.fine("Oracle Target Table Qualified Name is : " + targetTableQName);
-        ConnectToDB(host, port, sid, login, pw, "ORACLE");
-        addDBModelToETLDef("ORACLE", schema, catalog, type, targetTableQName, login, pw);
+        sLog.fine("Derby Target Table Qualified Name is : " + targetTableQName);
+        ConnectToDB(host, port, dbname, login, pw, "DERBY");
+        addDBModelToETLDef("DERBY", schema, catalog, type, targetTableQName, login, pw);
     }
     
     @Override
@@ -51,7 +51,7 @@ public class OracleDBConnector extends DBConnector {
         targetTableQName = getTargetTableQualifiedName(tablename);
         // Add this connection to ETLDefinition Generator
         if (checkIfTableExistsInDB(schema, catalog, targetTableQName)) {
-            etldef.addDBModel(conn, "ORACLE", targetTableQName, dbtype, login, pw);
+            etldef.addDBModel(conn, "DERBY", targetTableQName, dbtype, login, pw);
         }
     }
     
@@ -73,7 +73,7 @@ public class OracleDBConnector extends DBConnector {
                 mdlist.add(tableMD);
             }
         } catch (SQLException ex) {
-            sLog.severe(sLoc.x("LDR162 : Error Retrieving Oracle DB Metadata : {0}", ex.getMessage()));
+            sLog.severe(sLoc.x("LDR162 : Error Retrieving Derby DB Metadata : {0}", ex.getMessage()));
         }
         return mdlist;
     }

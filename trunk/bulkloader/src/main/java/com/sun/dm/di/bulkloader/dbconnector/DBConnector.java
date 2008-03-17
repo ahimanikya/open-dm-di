@@ -31,7 +31,7 @@ public abstract class DBConnector implements DBConnection {
     ETLDefGenerator etldef = null;
     //logger
     private static Logger sLog = LogUtil.getLogger(DBConnector.class.getName());
-    private static Localizer sLoc = Localizer.get();    
+    private static Localizer sLoc = Localizer.get();
 
     public DBConnector() {
     }
@@ -51,9 +51,15 @@ public abstract class DBConnector implements DBConnection {
         return this.connection;
     }
 
-    public Connection ConnectToDB(String host, int port, String sid, String login, String pw) {
-        String connuri = BLConstants.URI_ORACLE_PRIFIX + "thin" + BLConstants.PS + "@" + host + BLConstants.PS + port + BLConstants.PS + sid;
+    public Connection ConnectToDB(String host, int port, String id, String login, String pw, String dbtype) {
+        String connuri = null;
+        if (dbtype.equals("ORACLE")) {
+            connuri = BLConstants.URI_ORACLE_PRIFIX + "thin" + BLConstants.PS + "@" + host + BLConstants.PS + port + BLConstants.PS + id;
+        } else if (dbtype.equals("DERBY")) {
+            connuri = BLConstants.URI_DERBY_PRIFIX + "//" + host + BLConstants.PS + port + "/" + id;
+        }
         connuristr = connuri;
+
         try {
             this.connection = DriverManager.getConnection(connuri, login, pw);
             if (this.connection != null) {
@@ -67,20 +73,19 @@ public abstract class DBConnector implements DBConnection {
         return this.connection;
     }
 
-    public void addDBModelToETLDef(String schema, String catalog, int dbtype, String targetTableQName, String login, String pw) {
+    public void addDBModelToETLDef(String db, String schema, String catalog, int dbtype, String targetTableQName, String login, String pw) {
         // Add this connection to ETLDefinition Generator
         if (checkIfTableExistsInDB(schema, catalog, targetTableQName)) {
-            etldef.addDBModel(this.connection, targetTableQName, dbtype, login, pw);
-        }
-        else{
+            etldef.addDBModel(this.connection, db, targetTableQName, dbtype, login, pw);
+        } else {
             sLog.infoNoloc("System will exit. Pls correct the problem and rerun the script");
             System.exit(0);
         }
     }
 
-    public void addDBModelToETLDef(String tableName, int dbtype) {
+    public void addDBModelToETLDef(String db, String tableName, int dbtype) {
         // Add this connection to ETLDefinition Generator
-        etldef.addDBModel(this.connection, tableName, dbtype, "sa", "sa");
+        etldef.addDBModel(this.connection, db, tableName, dbtype, "sa", "sa");
     }
 
     public void addDBModelToDEF(ETLDefGenerator etldefgen, Connection conn, String schema, String catalog, int dbtype, String login, String pw, String targetTableQName) {
@@ -103,6 +108,9 @@ public abstract class DBConnector implements DBConnection {
                 DatabaseMetaData dbmd = this.connection.getMetaData();
                 ResultSet rset = null;
                 if (dbproductname.equalsIgnoreCase(BLConstants.ORACLE_PRODUCT_NAME)) {
+                    String[] names = {"TABLE"};
+                    rset = dbmd.getTables(catalog, schema, "%" + targetTableQName, names);
+                } else if (dbproductname.equalsIgnoreCase(BLConstants.DERBY_PRODUCT_NAME)) {
                     String[] names = {"TABLE"};
                     rset = dbmd.getTables(catalog, schema, "%" + targetTableQName, names);
                 } else if (dbproductname.equalsIgnoreCase(BLConstants.AXION_PRODUCT_NAME)) {

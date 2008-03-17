@@ -46,7 +46,7 @@ public class FlatFileDBConnector extends DBConnector {
         sourceTableQName = getSourceTableQualifiedName(filename);
         ConnectToDB(fileloc, sourceTableQName);
         createExternalFlatFileTable(fileloc, filename, fld_delimiter, rec_delimiter, schema, catalog, target_inf);
-        addDBModelToETLDef(sourceTableQName, type);
+        addDBModelToETLDef("AXION", sourceTableQName, type);
     }
 
     public Connection getDataBaseConnection() {
