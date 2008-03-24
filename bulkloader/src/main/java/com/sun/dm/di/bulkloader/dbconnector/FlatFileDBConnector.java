@@ -39,13 +39,13 @@ public class FlatFileDBConnector extends DBConnector {
         }
     }
 
-    public FlatFileDBConnector(ETLDefGenerator etldefgen, String fileloc, String filename, String fld_delimiter, String rec_delimiter, String schema, String catalog, DBConnection target_inf, int type) {
+    public FlatFileDBConnector(ETLDefGenerator etldefgen, String fileloc, String filename, String fld_delimiter, String rec_delimiter, String schema, String catalog, DBConnection target_inf, int trgt_type, int type) {
         this();
         etldef = etldefgen;
         etldef.setSourceFileDBName(filename); //Set the source file db name
         sourceTableQName = getSourceTableQualifiedName(filename);
         ConnectToDB(fileloc, sourceTableQName);
-        createExternalFlatFileTable(fileloc, filename, fld_delimiter, rec_delimiter, schema, catalog, target_inf);
+        createExternalFlatFileTable(fileloc, filename, fld_delimiter, rec_delimiter, schema, catalog, target_inf, trgt_type);
         addDBModelToETLDef("AXION", sourceTableQName, type);
     }
 
@@ -57,7 +57,7 @@ public class FlatFileDBConnector extends DBConnector {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private boolean createExternalFlatFileTable(String fileloc, String filename, String fld_delimiter, String rec_delimiter, String schema, String catalog, DBConnection target_inf) {
+    private boolean createExternalFlatFileTable(String fileloc, String filename, String fld_delimiter, String rec_delimiter, String schema, String catalog, DBConnection target_inf, int trgt_type) {
         boolean status = false;
         try {
             StringBuilder sb = new StringBuilder();
@@ -71,28 +71,67 @@ public class FlatFileDBConnector extends DBConnector {
                 int collen = mdobj.getColumnLength();
 
                 //Handling special cases
-                //1. Column with type and name TIMESTAMP
-                if (colname.equalsIgnoreCase("TIMESTAMP")) {
-                    colname = "IGNORED_TIMESTAMP";
-                    coltype = "VARCHAR2";
-                    collen = 32;
-                    sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
-                }
-                //2. BLOB type columns
-                if (coltype.equalsIgnoreCase("BLOB")) {
-                    colname = "IGNORED_" + colname;
-                    coltype = "VARCHAR2";
-                    collen = 32;
-                    sLog.warn(sLoc.x("LDR155 : Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
-                }
+                switch (trgt_type) {
+                    
+                    
+                    case 1:
+                        //ORACLE Target
+                        //1. Column with type and name TIMESTAMP
+                        if (colname.equalsIgnoreCase("TIMESTAMP")) {
+                            colname = "IGNORED_TIMESTAMP";
+                            coltype = "VARCHAR2";
+                            collen = 32;
+                            sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
+                        }
+                        //2. BLOB type columns
+                        if (coltype.equalsIgnoreCase("BLOB")) {
+                            colname = "IGNORED_" + colname;
+                            coltype = "VARCHAR2";
+                            collen = 32;
+                            sLog.warn(sLoc.x("LDR155 : Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                        }
 
-                if (coltype.equals("VARCHAR2")) {
-                    sb.append(colname + " " + coltype + "(" + collen + ")");
-                } else {
-                    sb.append(colname + " " + coltype);
-                }
-                if (i + 1 < mdlist.size()) {
-                    sb.append(", ");
+                        if (coltype.equals("VARCHAR2")) {
+                            sb.append(colname + " " + coltype + "(" + collen + ")");
+                        } else {
+                            sb.append(colname + " " + coltype);
+                        }
+                        if (i + 1 < mdlist.size()) {
+                            sb.append(", ");
+                        }
+                        break;
+                        
+                        
+                    case 2:
+                        //Derby Target
+                        //1. Column with type and name TIMESTAMP
+                        if (colname.equalsIgnoreCase("TIMESTAMP")) {
+                            colname = "IGNORED_TIMESTAMP";
+                            coltype = "VARCHAR2";
+                            collen = 32;
+                            sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
+                        }
+                        //2. BLOB type columns
+                        if (coltype.equalsIgnoreCase("BLOB")) {
+                            colname = "IGNORED_" + colname;
+                            coltype = "VARCHAR2";
+                            collen = 32;
+                            sLog.warn(sLoc.x("LDR155 : Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                        }
+
+                        if (coltype.equals("VARCHAR")) {
+                            sb.append(colname + " " + "VARCHAR2" + "(" + collen + ")");
+                        } else {
+                            sb.append(colname + " " + coltype);
+                        }
+                        if (i + 1 < mdlist.size()) {
+                            sb.append(", ");
+                        }
+                        break;
+                        
+                        
+                    default:
+                        System.out.println("DB not defined");
                 }
             }
             sb.append(") ORGANIZATION(LOADTYPE=\'DELIMITED\' filename=\'" + filename + "\'");
@@ -101,7 +140,7 @@ public class FlatFileDBConnector extends DBConnector {
             }
             sb.append(" FIELDDELIMITER=\'" + fld_delimiter + "\')");
 
-            sLog.fine("LDR152: Creating external table :" + sb.toString());
+            sLog.infoNoloc("LDR152: Creating external table :" + sb.toString());
 
             Statement stmt = connection.createStatement();
             status = stmt.execute(sb.toString());

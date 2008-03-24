@@ -129,7 +129,7 @@ public class LoaderMain {
                 DBConnection cc_source = null;
                 if (cc_target != null) {
                     if (cc_target.getDataBaseConnection() != null) {
-                        cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), System.getProperty("target.schema"), System.getProperty("target.catalog"), cc_target, etldefgen);
+                        cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), System.getProperty("target.schema"), System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
                     }
                 }
 
