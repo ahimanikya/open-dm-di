@@ -46,11 +46,11 @@ public class ConnectionFactory {
         return connfactory;
     }
 
-    public DBConnection createSrcConn(String filelocation, String filename, String field_delimiter, String record_delimiter, String schema, String catalog, DBConnection target_inf, ETLDefGenerator etldefgen) {
+    public DBConnection createSrcConn(String filelocation, String filename, String field_delimiter, String record_delimiter, String schema, String catalog, DBConnection target_inf, int trgt_type, ETLDefGenerator etldefgen) {
         DBConnection dbconnection = null;
         if (BLTools.validatePath(filelocation, filename)) {
             String newfileloc = BLTools.copySrcDBFileToClassPath(filelocation, filename);
-            dbconnection = new FlatFileDBConnector(etldefgen, newfileloc, filename, field_delimiter, record_delimiter, schema, catalog, target_inf, BLConstants.SOURCE_TABLE_TYPE);
+            dbconnection = new FlatFileDBConnector(etldefgen, newfileloc, filename, field_delimiter, record_delimiter, schema, catalog, target_inf, trgt_type, BLConstants.SOURCE_TABLE_TYPE);
             sLog.fine("Adding New Source Conn for file [" + filename + "]");
             sourceconns.put(filename, dbconnection);
         }
