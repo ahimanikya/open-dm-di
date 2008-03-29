@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="newuntitled_engine" targetNamespace="http://com.sun.jbi/etl/etlengine" xmlns:tns="http://com.sun.jbi/etl/etlengine" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:plink="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:slnk="http://schemas.xmlsoap.org/ws/2002/07/service-link/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://com.sun.jbi/etl/etlengine">
+			<xsd:element name="inputItem">
+				<xsd:complexType>
+					<xsd:sequence>
+					<xsd:element name="FILE_LOC_S1_SBYN_ADDRESS" type="xsd:string"/><xsd:element name="FILE_LOC_T1_SBYN_PATIENTVIEW" type="xsd:string"/></xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="outputItem">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="status" type="xsd:string"/>
+						<xsd:element name="startTime" type="xsd:string"/>
+						<xsd:element name="endTime" type="xsd:string"/>
+						<xsd:element name="rowsInserted" type="xsd:integer"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+		</xsd:schema>
+  </types>
+  <message name="output">
+    <part name="part" element="tns:outputItem"/>
+  </message>
+  <message name="input">
+    <part name="part" element="tns:inputItem"/>
+  </message>
+  <portType name="newuntitled_engine_etlPortType">
+    <operation name="execute">
+      <input name="inputMsg" message="tns:input"/>
+      <output name="outputMsg" message="tns:output"/>
+    </operation>
+  </portType>
+  <binding name="Binding" type="tns:newuntitled_engine_etlPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="execute">
+      <soap:operation soapAction="execute"/>
+      <input name="inputMsg">
+        <soap:body use="literal"/>
+      </input>
+      <output name="outputMsg">
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="newuntitled_engine_etlService">
+    <port name="newuntitled_engine_etlPort" binding="tns:Binding">
+      <soap:address location="http://localhost:12033/etlengine/newuntitled_engine"/>
+    </port>
+  </service>
+    <plink:partnerLinkType xmlns:plink="http://docs.oasis-open.org/wsbpel/2.0/plnktype" name="newuntitled_engine_etlPartnerLinkType">
+        <plink:role name="newuntitled_engine_myrole" portType="tns:newuntitled_engine_etlPortType"/>
+    </plink:partnerLinkType>
+</definitions>
