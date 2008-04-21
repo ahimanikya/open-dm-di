@@ -195,7 +195,7 @@ public class QueryObjectBuilder {
         qo.clearQueryConditions(); //Clears the query conditions from the queru object
 
         for (int i = 0; i < conditionsHolder.size(); i++) {
-            qo.addCondition(new Condition(conditionsHolder.get(i), rootPK));
+            qo.addCondition(new Condition(conditionsHolder.get(i), "=", rootPK, true));
         }
     }
 
