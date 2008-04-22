@@ -41,7 +41,7 @@ if [ -f $DB_DRIVER_JAR ] ; then
 	cp $DB_DRIVER_JAR ./lib/$DB_DRIVER_NAME
 	BLK=`pwd`
 
-	USER_LIBS="$BLK/lib/avalon-framework-4.1.3.jar:BLK/lib/axion-1.0.jar:$BLK/lib/etl-editor-1.0.jar:$BLK/lib/etl-engine-1.0.jar:$BLK/lib/ETLEngineInvoker-1.0.jar:$BLK/lib/i18n-1.0.jar:$BLK/lib/ojdbc14-10.1.0.2.0.jar:$BLK/lib/org-netbeans-modules-db-1.0.jar:$BLK/lib/velocity-1.4.jar:$BLK/lib/velocity-dep-1.4.jar:$BLK/bulkloader-1.0.jar"
+	USER_LIBS="$BLK/lib/avalon-framework-4.1.3.jar:$BLK/lib/axion-1.0.jar:$BLK/lib/etl-editor-1.0.jar:$BLK/lib/etl-engine-1.0.jar:$BLK/lib/ETLEngineInvoker-1.0.jar:$BLK/lib/i18n-1.0.jar:$BLK/lib/ojdbc14-10.1.0.2.0.jar:$BLK/lib/org-netbeans-modules-db-1.0.jar:$BLK/lib/velocity-1.4.jar:$BLK/lib/velocity-dep-1.4.jar:$BLK/bulkloader-1.0.jar"
 
 	OPENIDE_LIB_MODULE=$NB_HOME/platform8/modules
 	OPENIDE_LIB_LIB=$NB_HOME/platform8/lib
