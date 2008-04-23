@@ -37,12 +37,12 @@ public class LoaderMain {
     private static String getPWString(String pw) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < pw.length(); i++) {
-            if ((i % 2) == 0) {
+            //if ((i % 2) == 0) {
                 sb.append("*");
-            } else {
-                char pwchar = pw.charAt(i);
-                sb.append(pwchar);
-            }
+            //} else {
+            //    char pwchar = pw.charAt(i);
+            //    sb.append(pwchar);
+            //}
         }
         return sb.toString();
     }

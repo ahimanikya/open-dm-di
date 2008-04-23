@@ -63,7 +63,7 @@ public abstract class DBConnector implements DBConnection {
         try {
             this.connection = DriverManager.getConnection(connuri, login, pw);
             if (this.connection != null) {
-                sLog.info(sLoc.x("LDR142: Connection established with [ Host: {0}, Port: {1}], Uri :{2}", host, port, connuri));
+                sLog.info(sLoc.x("LDR142: Connection established with [ Host: {0}, Port: {1}], Uri: {2}", host, getStringPort(port), connuri));
             }
         } catch (SQLException ex) {
             sLog.severe(sLoc.x("LDR143: Cannot connect to host [ {0} ]. Reason : {1}", host, ex.getMessage()));
@@ -71,6 +71,17 @@ public abstract class DBConnector implements DBConnection {
         }
 
         return this.connection;
+    }
+    
+    //Somehow, port no passed here has a comma, generate a port without it ?? wierd but works
+    private String getStringPort(int dbport){
+        //Port no has a comma
+        String portno = Integer.toString(dbport);
+        int commaindex = portno.indexOf(",");
+        if (commaindex != -1){
+            portno = portno.substring(0, commaindex) + portno.substring(commaindex + 1, portno.length());
+        }
+        return portno;
     }
 
     public void addDBModelToETLDef(String db, String schema, String catalog, int dbtype, String targetTableQName, String login, String pw) {
@@ -130,10 +141,10 @@ public abstract class DBConnector implements DBConnection {
                 sLog.info(sLoc.x("LDR146: Table [ {0} ] found in the Target DB", targetTableQName));
                 return true;
             } else if (tablenamelist.size() == 0) {
-                sLog.info(sLoc.x("LDR147: Table [  {0}  ] missing in Target Database. Create Target Table and proceed.", targetTableQName));
+                sLog.severe(sLoc.x("LDR147: Table [  {0}  ] missing in Target Database. Create Target Table and proceed.", targetTableQName));
                 return false;
             } else if (tablenamelist.size() > 1) {
-                sLog.info(sLoc.x("LDR148: More Than One Table with Name [ {0} ] available in Target. Count : {1}", targetTableQName, tablenamelist.size()));
+                sLog.severe(sLoc.x("LDR148: More Than One Table with Name [ {0} ] available in Target. Count : {1}", targetTableQName, tablenamelist.size()));
                 return false;
             }
         } else {
