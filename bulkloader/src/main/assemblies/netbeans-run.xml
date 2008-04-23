@@ -11,6 +11,13 @@
       </includes>
    </fileSet>
 </fileSets>
+<files>
+   <file>
+     <source>logger.properties</source>
+     <outputDirectory>soa2/modules/ext/mdm/bulkloader/config</outputDirectory>
+     <filtered>true</filtered>
+   </file>
+ </files>
  <dependencySets>
    <dependencySet>
      <outputDirectory>lib</outputDirectory>
