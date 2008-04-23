@@ -15,8 +15,11 @@ import com.sun.dm.di.bulkloader.util.BLTools;
 import com.sun.dm.di.bulkloader.util.Localizer;
 import com.sun.dm.di.bulkloader.util.LogUtil;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.LogManager;
 import net.java.hulp.i18n.Logger;
 import org.netbeans.modules.etl.codegen.ETLStrategyBuilder;
 
@@ -26,7 +29,13 @@ import org.netbeans.modules.etl.codegen.ETLStrategyBuilder;
  */
 public class LoaderMain {
 
-    //logger
+    /**
+     * Logger instance
+     */
+    private static transient final Logger mLogger = Logger.getLogger(LoaderMain.class);
+    /**
+     * i18n utility 
+     */
     private static Logger sLog = LogUtil.getLogger(LoaderMain.class.getName());
     private static Localizer sLoc = Localizer.get();
 
@@ -38,13 +47,43 @@ public class LoaderMain {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < pw.length(); i++) {
             //if ((i % 2) == 0) {
-                sb.append("*");
-            //} else {
-            //    char pwchar = pw.charAt(i);
-            //    sb.append(pwchar);
-            //}
+            sb.append("*");
+        //} else {
+        //    char pwchar = pw.charAt(i);
+        //    sb.append(pwchar);
+        //}
         }
         return sb.toString();
+    }
+
+    private static void confiugreLogger() {
+        FileInputStream ins = null;
+        try {
+            LogManager logManager;
+            String config = "config/logger.properties";
+            File f = new File("./logs");
+
+            if (f.exists() && f.isDirectory()) {
+                mLogger.info(sLoc.x("logger dir exist"));
+            } else {
+                mLogger.info(sLoc.x("creating new logger dir"));
+                f.mkdir();
+            }
+
+            logManager = LogManager.getLogManager();
+            ins = new FileInputStream(config);
+            logManager.readConfiguration(ins);
+        } catch (IOException ex) {
+            mLogger.infoNoloc(ex.getLocalizedMessage());
+        } catch (SecurityException ex) {
+            mLogger.infoNoloc(ex.getLocalizedMessage());
+        } finally {
+            try {
+                ins.close();
+            } catch (IOException ex) {
+                mLogger.infoNoloc(ex.getLocalizedMessage());
+            }
+        }
     }
 
     /**
@@ -53,6 +92,7 @@ public class LoaderMain {
     public static void main(String[] args) {
 
         sLog.info(sLoc.x("LDR001: Loader Start ..."));
+        confiugreLogger();
         /*
         // Set the System Variables (Source)
         System.setProperty("sourcedb.loc", "D:\\temp\\mural\\masterindextest");
