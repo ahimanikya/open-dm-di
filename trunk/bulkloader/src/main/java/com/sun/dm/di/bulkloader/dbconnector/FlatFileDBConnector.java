@@ -140,7 +140,7 @@ public class FlatFileDBConnector extends DBConnector {
             }
             sb.append(" FIELDDELIMITER=\'" + fld_delimiter + "\')");
 
-            sLog.infoNoloc("LDR152: Creating external table :" + sb.toString());
+            sLog.fine("LDR152: Creating external table :" + sb.toString());
 
             Statement stmt = connection.createStatement();
             status = stmt.execute(sb.toString());
