@@ -136,7 +136,7 @@ public class CreateTriggers {
         sb.append("\n#    ### Execute eTL Commands ###\n");
         // It may happen that there are multiple engine files to be executed, take care of this.
         for (int i = 0; i < dirnames.length; i++) {
-            sb.append("java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS ETLEngineInvoker " + dbsources + "\\" + dirnames[i] + "\\DefaultETL_engine.xml\n");
+            sb.append("java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS ETLEngineInvoker " + dbsources + "/" + dirnames[i] + "/DefaultETL_engine.xml\n");
         }
 
         sb.append("\n#    ### Enable Target Table Constraints ###\n");
