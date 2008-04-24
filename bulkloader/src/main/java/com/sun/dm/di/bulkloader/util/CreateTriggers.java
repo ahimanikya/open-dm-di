@@ -68,7 +68,7 @@ public class CreateTriggers {
         sb.append("set TRGT_DB_PW=<Set Target DB PW. Blank for null>\n");
         sb.append("REM  *********** DO NOT EDIT TEXT ABOVE ***********\n");
 
-        String dbsources = ".\\" + BLConstants.toplevelrt;
+        String dbsources = "." + BLConstants.fs + BLConstants.toplevelrt;
         File dirs = new File(dbsources);
         String[] dirnames = dirs.list();
 
@@ -123,7 +123,7 @@ public class CreateTriggers {
         sb.append("TRGT_DB_PW=<Set Target DB PW. Blank for null>\n");
         sb.append("#  *********** DO NOT EDIT TEXT ABOVE ***********\n");
 
-        String dbsources = "./" + BLConstants.toplevelrt;
+        String dbsources = "." + BLConstants.fs + BLConstants.toplevelrt;
         File dirs = new File(dbsources);
         String[] dirnames = dirs.list();
 
