@@ -155,7 +155,7 @@ public abstract class DBConnector implements DBConnection {
 
     protected String getTargetTableQualifiedName(String tname) {
         if (tname.indexOf(".") != -1) {
-            return tname.substring(0, tname.lastIndexOf("."));
+            return tname.substring(0, tname.lastIndexOf(".")).toUpperCase();
         }
         return tname;
     }
