@@ -11,7 +11,6 @@ package com.sun.dm.di.bulkloader.dbconnector;
 import com.sun.dm.di.bulkloader.modelgen.ETLDefGenerator;
 import com.sun.dm.di.bulkloader.util.BLConstants;
 import com.sun.dm.di.bulkloader.util.BLTools;
-import com.sun.dm.di.bulkloader.util.BLTools;
 import com.sun.dm.di.bulkloader.util.Localizer;
 import com.sun.dm.di.bulkloader.util.LogUtil;
 import java.util.HashMap;

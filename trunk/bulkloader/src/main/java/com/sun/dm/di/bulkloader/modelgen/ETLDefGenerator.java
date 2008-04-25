@@ -396,6 +396,7 @@ public class ETLDefGenerator {
     }
 
     private SQLDBTable getTable(DBMetaDataFactory dbMeta, String schemaName, String catalogName, String tableName, int type) throws Exception {
+        tableName = tableName.toUpperCase(); // Needed as source Flatfile case might be not always upper case - CR 6691780
         String[][] tableList = dbMeta.getTablesOnly(catalogName, schemaName, "", false);
         SQLDBTable aTable = null;
         String[] currTable = null;
@@ -405,12 +406,15 @@ public class ETLDefGenerator {
                 if (currTable[DBMetaDataFactory.NAME].equals(tableName)) {
                     switch (type) {
                         case BLConstants.SOURCE_TABLE_TYPE:
+                            sLog.fine(sLoc.x("Match Ffound for Source Table : " + tableName));
                             aTable = new SourceTableImpl(currTable[DBMetaDataFactory.NAME].trim(), currTable[DBMetaDataFactory.SCHEMA], currTable[DBMetaDataFactory.CATALOG]);
                             break;
                         case BLConstants.TARGET_TABLE_TYPE:
+                            sLog.fine(sLoc.x("Match Ffound for Target Table : " + tableName));
                             aTable = new TargetTableImpl(currTable[DBMetaDataFactory.NAME].trim(), currTable[DBMetaDataFactory.SCHEMA], currTable[DBMetaDataFactory.CATALOG]);
                             break;
                     }
+                    break;
                 }
             }
         }
