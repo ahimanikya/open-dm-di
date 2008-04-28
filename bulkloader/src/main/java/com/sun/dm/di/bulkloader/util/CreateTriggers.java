@@ -1,11 +1,30 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+ *
+ * Copyright 2003-2007 Sun Microsystems, Inc. All Rights Reserved.
+ *
+ * The contents of this file are subject to the terms of the Common 
+ * Development and Distribution License ("CDDL")(the "License"). You 
+ * may not use this file except in compliance with the License.
+ *
+ * You can obtain a copy of the License at
+ * https://open-dm-mi.dev.java.net/cddl.html
+ * or open-dm-mi/bootstrap/legal/license.txt. See the License for the 
+ * specific language governing permissions and limitations under the  
+ * License.  
+ *
+ * When distributing the Covered Code, include this CDDL Header Notice 
+ * in each file and include the License file at
+ * open-dm-mi/bootstrap/legal/license.txt.
+ * If applicable, add the following below this CDDL Header, with the 
+ * fields enclosed by brackets [] replaced by your own identifying 
+ * information: "Portions Copyrighted [year] [name of copyright owner]"
  */
 package com.sun.dm.di.bulkloader.util;
 
 import java.io.File;
 import net.java.hulp.i18n.Logger;
+import com.sun.sql.framework.utils.ScEncrypt;
 
 /**
  *
@@ -25,18 +44,8 @@ public class CreateTriggers {
 
     public void createTriggers() {
         int target_type_code = Integer.parseInt(System.getProperty("target.type"));
-        switch (target_type_code) {
-            case 1: //ORACLE
-                createBAT(target_type_code);
-                createSH(target_type_code);
-                break;
-            case 2: //DERBY
-                createBAT(target_type_code);
-                createSH(target_type_code);
-                break;
-            default:
-                System.out.println("Unable to generate triggers. DB Type Unknown");
-        }
+        createBAT(target_type_code);
+        createSH(target_type_code);
     }
 
     private void createBAT(int target_db_type) {
@@ -57,16 +66,20 @@ public class CreateTriggers {
                 sb.append("set DB_DRIVER=%LIB%" + fs + "derbyclient.jar\n");
                 break;
             default:
-                sb.append("set DB_DRIVER=%LIB%" + fs + "<Unknown Database Type (Code : " + target_db_type  + ")>\n");
+                sb.append("set DB_DRIVER=%LIB%" + fs + "<Unknown Database Type (Code : " + target_db_type + ")>\n");
         }
-        sb.append("set INVOKER_JARS=%LIB%" + fs + "ETLEngineInvoker-1.0.jar;%LIB%" + fs + "etl-engine-1.0.jar\n");
+        sb.append("set INVOKER_JARS=%LIB%" + fs + "etlengineInvoker-1.0.jar;%LIB%" + fs + "etl-engine-1.0.jar\n");
         sb.append("set CP=.;%AXION_JAR%;%AXION_DEPENDENCIES_JARS%;%DB_DRIVER%;%INVOKER_JARS%\n");
-        sb.append("set JAVA_OPTS=\n");
         sb.append("set TRGT_DB_CONN=" + BLConstants.getTrgtConnInfo() + "\n");
         sb.append("set TRGT_SCHEMA=" + System.getProperty("target.schema") + "\n");
-        sb.append("set TRGT_DB_LOGIN=<Set Target DB Login. Blank for null>\n");
-        sb.append("set TRGT_DB_PW=<Set Target DB PW. Blank for null>\n");
-        sb.append("REM  *********** DO NOT EDIT TEXT ABOVE ***********\n");
+        sb.append("REM  *********** DO NOT EDIT TEXT ABOVE ***********\n\n");
+
+        sb.append("REM ---- Target Database Passwd Is Encrypted. Regenerate the package if passwd is changed ----\n");
+        sb.append("set TRGT_DB_LOGIN=" + System.getProperty("target.login") + "\n");
+        sb.append("set TRGT_DB_PW=" + ScEncrypt.encrypt("soabi", System.getProperty("target.pw")) + "\n");
+        sb.append("REM ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
+		sb.append("set JAVA_OPTS=\n");
+        sb.append("set JAVA_HOME=" + System.getProperty("myjava.home") + "\n");
 
         String dbsources = "." + BLConstants.fs + BLConstants.toplevelrt;
         File dirs = new File(dbsources);
@@ -75,19 +88,19 @@ public class CreateTriggers {
         //Create Disable Constraints Strings
         sb.append("\nREM    ### Disable Target Table Constraints ###\n");
         for (int i = 0; i < dirnames.length; i++) {
-            sb.append("java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.etl.engine.bulkloader.TargetDBOperations " + "%TRGT_SCHEMA% " + dirnames[i] + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " disable_constraint\n");
+            sb.append("%JAVA_HOME%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.etl.engine.bulkloader.TargetDBOperations " + "%TRGT_SCHEMA% " + dirnames[i] + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " disable_constraint\n");
         }
 
         sb.append("\nREM    ### Execute eTL Commands ###\n");
         // It may happen that there are multiple engine files to be executed, take care of this.
         for (int i = 0; i < dirnames.length; i++) {
-            sb.append("java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% ETLEngineInvoker " + dbsources + "\\" + dirnames[i] + "\\DefaultETL_engine.xml\n");
+            sb.append(System.getProperty("myjava.home") + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% ETLEngineInvoker " + dbsources + "\\" + dirnames[i] + "\\DefaultETL_engine.xml\n");
         }
 
         sb.append("\nREM    ### Enable Target Table Constraints ###\n");
         //Create enable Constraints Strings
         for (int i = 0; i < dirnames.length; i++) {
-            sb.append("java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.etl.engine.bulkloader.TargetDBOperations " + "%TRGT_SCHEMA% " + dirnames[i] + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " enable_constraint\n");
+            sb.append("%JAVA_HOME%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.etl.engine.bulkloader.TargetDBOperations " + "%TRGT_SCHEMA% " + dirnames[i] + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " enable_constraint\n");
         }
 
         // Contents end.
@@ -112,16 +125,20 @@ public class CreateTriggers {
                 sb.append("DB_DRIVER=\"$LIB" + fs + "derbyclient.jar\"\n");
                 break;
             default:
-                sb.append("DB_DRIVER=\"$LIB" + fs + "<Unknown Database Type (Code : " + target_db_type  + ")>\"\n");
+                sb.append("DB_DRIVER=\"$LIB" + fs + "<Unknown Database Type (Code : " + target_db_type + ")>\"\n");
         }
-        sb.append("INVOKER_JARS=\"$LIB" + fs + "ETLEngineInvoker-1.0.jar:$LIB" + fs + "etl-engine-1.0.jar\"\n");
+        sb.append("INVOKER_JARS=\"$LIB" + fs + "etlengineInvoker-1.0.jar:$LIB" + fs + "etl-engine-1.0.jar\"\n");
         sb.append("CP=\".:$AXION_JAR:$AXION_DEPENDENCIES_JARS:$DB_DRIVER:$INVOKER_JARS\"\n");
-        sb.append("JAVA_OPTS=\n");
         sb.append("TRGT_DB_CONN=\"" + BLConstants.getTrgtConnInfo() + "\"\n");
         sb.append("TRGT_SCHEMA=\"" + System.getProperty("target.schema") + "\"\n");
-        sb.append("TRGT_DB_LOGIN=<Set Target DB Login. Blank for null>\n");
-        sb.append("TRGT_DB_PW=<Set Target DB PW. Blank for null>\n");
-        sb.append("#  *********** DO NOT EDIT TEXT ABOVE ***********\n");
+        sb.append("#  *********** DO NOT EDIT TEXT ABOVE ***********\n\n");
+
+        sb.append("# ---- Target Database Passwd Is Encrypted. Regenerate the package if passwd is changed ----\n");
+        sb.append("TRGT_DB_LOGIN=" + System.getProperty("target.login") + "\n");
+        sb.append("TRGT_DB_PW=" + ScEncrypt.encrypt("soabi", System.getProperty("target.pw")) + "\n");
+        sb.append("# ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
+		sb.append("JAVA_OPTS=\n");
+        sb.append("JAVA_HOME=" + System.getProperty("myjava.home") + "\n");
 
         String dbsources = "." + BLConstants.fs + BLConstants.toplevelrt;
         File dirs = new File(dbsources);
@@ -130,19 +147,19 @@ public class CreateTriggers {
         //Create Disable Constraints Strings
         sb.append("\n#    ### Disable Target Table Constraints ###\n");
         for (int i = 0; i < dirnames.length; i++) {
-            sb.append("java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " disable_constraint\n");
+            sb.append(System.getProperty("myjava.home") + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " disable_constraint\n");
         }
 
         sb.append("\n#    ### Execute eTL Commands ###\n");
         // It may happen that there are multiple engine files to be executed, take care of this.
         for (int i = 0; i < dirnames.length; i++) {
-            sb.append("java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS ETLEngineInvoker " + dbsources + "/" + dirnames[i] + "/DefaultETL_engine.xml\n");
+            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS ETLEngineInvoker " + dbsources + "/" + dirnames[i] + "/DefaultETL_engine.xml\n");
         }
 
         sb.append("\n#    ### Enable Target Table Constraints ###\n");
         //Create enable Constraints Strings
         for (int i = 0; i < dirnames.length; i++) {
-            sb.append("java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " enable_constraint\n");
+            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " enable_constraint\n");
         }
 
         // Contents end.
