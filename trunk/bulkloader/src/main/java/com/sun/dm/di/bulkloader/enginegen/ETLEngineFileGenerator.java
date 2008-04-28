@@ -111,7 +111,7 @@ public class ETLEngineFileGenerator {
             try {
                 fr.close();
             } catch (IOException ex) {
-                sLog.severe(sLoc.x("LDR203: IO Exception while writing engine file : {0}", ex.getMessage()));
+                sLog.severe(sLoc.x("LDR203: I/O Exception while writing engine file : {0}", ex.getMessage()));
             }
         }
     }

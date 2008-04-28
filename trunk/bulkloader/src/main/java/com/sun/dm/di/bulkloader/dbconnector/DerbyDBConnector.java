@@ -28,10 +28,10 @@ public class DerbyDBConnector extends DBConnector {
 
     public DerbyDBConnector() {
         try {
-            sLog.info(sLoc.x("LDR160: Initializing Derby DB Connector ..."));
+            sLog.info(sLoc.x("LDR190: Initializing Derby DB Connector ..."));
             Class.forName(BLConstants.DB_DERBY_DRIVER);
         } catch (ClassNotFoundException ex) {
-            sLog.severe(sLoc.x("LDR161 : Derby Driver Class Not Found : {0}", ex.getMessage()));
+            sLog.severe(sLoc.x("LDR191 : Derby Driver Class Not Found : {0}", ex.getMessage()));
             System.exit(0);
         }
     }
@@ -73,7 +73,7 @@ public class DerbyDBConnector extends DBConnector {
                 mdlist.add(tableMD);
             }
         } catch (SQLException ex) {
-            sLog.severe(sLoc.x("LDR162 : Error Retrieving Derby DB Metadata : {0}", ex.getMessage()));
+            sLog.severe(sLoc.x("LDR192 : Error Retrieving Derby DB Metadata : {0}", ex.getMessage()));
         }
         return mdlist;
     }
