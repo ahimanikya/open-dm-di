@@ -71,14 +71,14 @@ public class CreateTriggers {
         sb.append("set INVOKER_JARS=%LIB%" + fs + "etlengineInvoker-1.0.jar;%LIB%" + fs + "etl-engine-1.0.jar\n");
         sb.append("set CP=.;%AXION_JAR%;%AXION_DEPENDENCIES_JARS%;%DB_DRIVER%;%INVOKER_JARS%\n");
         sb.append("set TRGT_DB_CONN=" + BLConstants.getTrgtConnInfo() + "\n");
-        sb.append("set TRGT_SCHEMA=" + System.getProperty("target.schema") + "\n");
+        sb.append("set TRGT_SCHEMA=" + System.getProperty("target.schema").toUpperCase() + "\n");
         sb.append("REM  *********** DO NOT EDIT TEXT ABOVE ***********\n\n");
 
         sb.append("REM ---- Target Database Passwd Is Encrypted. Regenerate the package if passwd is changed ----\n");
         sb.append("set TRGT_DB_LOGIN=" + System.getProperty("target.login") + "\n");
         sb.append("set TRGT_DB_PW=" + ScEncrypt.encrypt("soabi", System.getProperty("target.pw")) + "\n");
         sb.append("REM ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
-		sb.append("set JAVA_OPTS=\n");
+	sb.append("set JAVA_OPTS=\n");
         sb.append("set JAVA_HOME=" + System.getProperty("myjava.home") + "\n");
 
         String dbsources = "." + BLConstants.fs + BLConstants.toplevelrt;
@@ -94,7 +94,7 @@ public class CreateTriggers {
         sb.append("\nREM    ### Execute eTL Commands ###\n");
         // It may happen that there are multiple engine files to be executed, take care of this.
         for (int i = 0; i < dirnames.length; i++) {
-            sb.append(System.getProperty("myjava.home") + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% ETLEngineInvoker " + dbsources + "\\" + dirnames[i] + "\\DefaultETL_engine.xml\n");
+            sb.append("%JAVA_HOME%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% ETLEngineInvoker " + dbsources + "\\" + dirnames[i] + "\\DefaultETL_engine.xml\n");
         }
 
         sb.append("\nREM    ### Enable Target Table Constraints ###\n");
@@ -130,7 +130,7 @@ public class CreateTriggers {
         sb.append("INVOKER_JARS=\"$LIB" + fs + "etlengineInvoker-1.0.jar:$LIB" + fs + "etl-engine-1.0.jar\"\n");
         sb.append("CP=\".:$AXION_JAR:$AXION_DEPENDENCIES_JARS:$DB_DRIVER:$INVOKER_JARS\"\n");
         sb.append("TRGT_DB_CONN=\"" + BLConstants.getTrgtConnInfo() + "\"\n");
-        sb.append("TRGT_SCHEMA=\"" + System.getProperty("target.schema") + "\"\n");
+        sb.append("TRGT_SCHEMA=\"" + System.getProperty("target.schema").toUpperCase() + "\"\n");
         sb.append("#  *********** DO NOT EDIT TEXT ABOVE ***********\n\n");
 
         sb.append("# ---- Target Database Passwd Is Encrypted. Regenerate the package if passwd is changed ----\n");
@@ -147,7 +147,7 @@ public class CreateTriggers {
         //Create Disable Constraints Strings
         sb.append("\n#    ### Disable Target Table Constraints ###\n");
         for (int i = 0; i < dirnames.length; i++) {
-            sb.append(System.getProperty("myjava.home") + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " disable_constraint\n");
+            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " disable_constraint\n");
         }
 
         sb.append("\n#    ### Execute eTL Commands ###\n");
