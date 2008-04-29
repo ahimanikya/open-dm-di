@@ -61,17 +61,22 @@ public class CreateTriggers {
         switch (target_db_type) {
             case 1: //ORACLE
                 sb.append("set DB_DRIVER=%LIB%" + fs + "ojdbc14-10.1.0.2.0.jar\n");
+                sb.append("set TRGT_SCHEMA=" + System.getProperty("target.schema").toUpperCase() + "\n");
                 break;
             case 2: //DERBY
                 sb.append("set DB_DRIVER=%LIB%" + fs + "derbyclient.jar\n");
+                sb.append("set TRGT_SCHEMA=" + System.getProperty("target.schema") + "\n");
                 break;
+            case 3: //SQL Server
+                sb.append("set DB_DRIVER=%LIB%" + fs + "sqljdbc.jar\n");
+                sb.append("set TRGT_SCHEMA=" + System.getProperty("target.schema") + "\n");
+                break;                
             default:
                 sb.append("set DB_DRIVER=%LIB%" + fs + "<Unknown Database Type (Code : " + target_db_type + ")>\n");
         }
         sb.append("set INVOKER_JARS=%LIB%" + fs + "etlengineInvoker-1.0.jar;%LIB%" + fs + "etl-engine-1.0.jar\n");
         sb.append("set CP=.;%AXION_JAR%;%AXION_DEPENDENCIES_JARS%;%DB_DRIVER%;%INVOKER_JARS%\n");
         sb.append("set TRGT_DB_CONN=" + BLConstants.getTrgtConnInfo() + "\n");
-        sb.append("set TRGT_SCHEMA=" + System.getProperty("target.schema").toUpperCase() + "\n");
         sb.append("REM  *********** DO NOT EDIT TEXT ABOVE ***********\n\n");
 
         sb.append("REM ---- Target Database Passwd Is Encrypted. Regenerate the package if passwd is changed ----\n");
@@ -120,17 +125,22 @@ public class CreateTriggers {
         switch (target_db_type) {
             case 1: //ORACLE
                 sb.append("DB_DRIVER=\"$LIB" + fs + "ojdbc14-10.1.0.2.0.jar\"\n");
+                sb.append("TRGT_SCHEMA=\"" + System.getProperty("target.schema").toUpperCase() + "\"\n");
                 break;
             case 2: //DERBY
                 sb.append("DB_DRIVER=\"$LIB" + fs + "derbyclient.jar\"\n");
+                sb.append("TRGT_SCHEMA=\"" + System.getProperty("target.schema") + "\"\n");
                 break;
+            case 3: //SQL Server
+                sb.append("DB_DRIVER=\"LIB" + fs + "sqljdbc.jar\n");
+                sb.append("TRGT_SCHEMA=\"" + System.getProperty("target.schema") + "\"\n");
+                break;                
             default:
                 sb.append("DB_DRIVER=\"$LIB" + fs + "<Unknown Database Type (Code : " + target_db_type + ")>\"\n");
         }
         sb.append("INVOKER_JARS=\"$LIB" + fs + "etlengineInvoker-1.0.jar:$LIB" + fs + "etl-engine-1.0.jar\"\n");
         sb.append("CP=\".:$AXION_JAR:$AXION_DEPENDENCIES_JARS:$DB_DRIVER:$INVOKER_JARS\"\n");
         sb.append("TRGT_DB_CONN=\"" + BLConstants.getTrgtConnInfo() + "\"\n");
-        sb.append("TRGT_SCHEMA=\"" + System.getProperty("target.schema").toUpperCase() + "\"\n");
         sb.append("#  *********** DO NOT EDIT TEXT ABOVE ***********\n\n");
 
         sb.append("# ---- Target Database Passwd Is Encrypted. Regenerate the package if passwd is changed ----\n");

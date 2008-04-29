@@ -54,7 +54,12 @@ public class BLConstants {
     //Derby DB Constants
     public static final String DB_DERBY_DRIVER = "org.apache.derby.jdbc.ClientDriver";
     public static final String URI_DERBY_PRIFIX = "jdbc" + PS +  "derby" + PS;
-    public static final String DERBY_PRODUCT_NAME = "Apache Derby";    
+    public static final String DERBY_PRODUCT_NAME = "Apache Derby";
+    
+    //SQL Server DB Constants
+    public static final String DB_SQLSERVER_DRIVER = "com.SeeBeyond.sqlserver.jdbc.sqlserver.SQLServerDriver";
+    public static final String URI_SQLSERVER_PRIFIX = "jdbc" + PS +  "seebeyond" + PS + "sqlserver" + PS;
+    public static final String SQLSERVER_PRODUCT_NAME = "Microsoft SQL Server";    
     
     //ETL Constants
     public static final int SOURCE_TABLE_TYPE = SQLConstants.SOURCE_TABLE;
