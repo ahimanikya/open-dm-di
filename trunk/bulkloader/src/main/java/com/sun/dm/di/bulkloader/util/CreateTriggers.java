@@ -46,8 +46,33 @@ public class CreateTriggers {
         int target_type_code = Integer.parseInt(System.getProperty("target.type"));
         createBAT(target_type_code);
         createSH(target_type_code);
+        createConfig();
     }
 
+    private void createConfig() {
+        StringBuilder sb = new StringBuilder();
+        // Place contents here
+        String fs = BLConstants.fs;
+       
+        
+        String dbsources = "." + BLConstants.fs + BLConstants.toplevelrt;
+        File dirs = new File(dbsources);
+        String[] dirnames = dirs.list();
+
+        //Create Disable Constraints Strings
+        
+       
+        // It may happen that there are multiple engine files to be executed, take care of this.
+        for (int i = 0; i < dirnames.length; i++) {
+            sb.append(dbsources + "\\" + dirnames[i] + "\\DefaultETL_engine.xml\n");
+        }
+
+        
+        // Contents end.
+        BLTools.writeIntoFile(dumppath, "files.config", sb.toString());
+    }
+
+    
     private void createBAT(int target_db_type) {
         StringBuilder sb = new StringBuilder();
         // Place contents here
@@ -91,22 +116,22 @@ public class CreateTriggers {
         String[] dirnames = dirs.list();
 
         //Create Disable Constraints Strings
-        sb.append("\nREM    ### Disable Target Table Constraints ###\n");
+        /*sb.append("\nREM    ### Disable Target Table Constraints ###\n");
         for (int i = 0; i < dirnames.length; i++) {
             sb.append("%JAVA_HOME%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.etl.engine.bulkloader.TargetDBOperations " + "%TRGT_SCHEMA% " + dirnames[i] + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " disable_constraint\n");
-        }
+        }*/
 
         sb.append("\nREM    ### Execute eTL Commands ###\n");
         // It may happen that there are multiple engine files to be executed, take care of this.
-        for (int i = 0; i < dirnames.length; i++) {
-            sb.append("%JAVA_HOME%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% ETLEngineInvoker " + dbsources + "\\" + dirnames[i] + "\\DefaultETL_engine.xml\n");
-        }
+        //for (int i = 0; i < dirnames.length; i++) {
+            sb.append("%JAVA_HOME%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% ETLEngineInvoker .\\files.config\n");
+        //}
 
-        sb.append("\nREM    ### Enable Target Table Constraints ###\n");
+        /*sb.append("\nREM    ### Enable Target Table Constraints ###\n");
         //Create enable Constraints Strings
         for (int i = 0; i < dirnames.length; i++) {
             sb.append("%JAVA_HOME%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.etl.engine.bulkloader.TargetDBOperations " + "%TRGT_SCHEMA% " + dirnames[i] + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " enable_constraint\n");
-        }
+        }*/
 
         // Contents end.
         BLTools.writeIntoFile(dumppath, "startLoad.bat", sb.toString());
@@ -155,22 +180,22 @@ public class CreateTriggers {
         String[] dirnames = dirs.list();
 
         //Create Disable Constraints Strings
-        sb.append("\n#    ### Disable Target Table Constraints ###\n");
-        for (int i = 0; i < dirnames.length; i++) {
-            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " disable_constraint\n");
-        }
+//        sb.append("\n#    ### Disable Target Table Constraints ###\n");
+//        for (int i = 0; i < dirnames.length; i++) {
+//            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " disable_constraint\n");
+//        }
 
-        sb.append("\n#    ### Execute eTL Commands ###\n");
+//        sb.append("\n#    ### Execute eTL Commands ###\n");
         // It may happen that there are multiple engine files to be executed, take care of this.
-        for (int i = 0; i < dirnames.length; i++) {
-            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS ETLEngineInvoker " + dbsources + "/" + dirnames[i] + "/DefaultETL_engine.xml\n");
-        }
+//        for (int i = 0; i < dirnames.length; i++) {
+            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS ETLEngineInvoker ./files.config\n");
+//        }
 
-        sb.append("\n#    ### Enable Target Table Constraints ###\n");
-        //Create enable Constraints Strings
-        for (int i = 0; i < dirnames.length; i++) {
-            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " enable_constraint\n");
-        }
+//        sb.append("\n#    ### Enable Target Table Constraints ###\n");
+//        //Create enable Constraints Strings
+//        for (int i = 0; i < dirnames.length; i++) {
+//            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " enable_constraint\n");
+//        }
 
         // Contents end.
         BLTools.writeIntoFile(dumppath, "startLoad.sh", sb.toString());
