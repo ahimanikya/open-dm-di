@@ -45,7 +45,7 @@ public class CreateZip {
     byte[] buf = new byte[1024]; // Create a buffer for reading the files
     String zipoutdir = null; // Zip Output Dir
     ZipOutputStream zout = null; // Zip Output Stream
-    String[] filesToMove = {"lib", BLConstants.toplevelrt};
+    String[] filesToMove = {"lib","config", BLConstants.toplevelrt};
     //logger
     private static Logger sLog = LogUtil.getLogger(CreateZip.class.getName());
     private static Localizer sLoc = Localizer.get();    
