@@ -45,7 +45,8 @@ import net.java.hulp.i18n.Logger;
  */
 public class DataBaseQuerySlave extends Thread {
 
-    HashMap childTypeMap = new HashMap();
+    ChildType[] childTypeContainer = null;
+    HashMap childIndexRefMap = new HashMap();
     Connection conn = null;
     List doLinkedList = null;
     ArrayList filteredSelects;
@@ -54,7 +55,6 @@ public class DataBaseQuerySlave extends Thread {
     // Thread Constants
     private boolean isSlaveRunning = false;
     private boolean isThreadSleeping = true;
-    private int count = 0;
     private boolean isBatchFull = true;
     // File Handling Constants
     private char CHILD_CHAR = '*';
@@ -88,8 +88,24 @@ public class DataBaseQuerySlave extends Thread {
         this.filteredSelects = filters;
         this.dbreader = dbreader;
         this.mdservice = MetaDataManager.getMetaDataManager().getMetaDataService();
+        
+        //Initialize the chidl type container to maximum size of children that are possible in the model
+        this.childTypeContainer = new ChildType[this.mdservice.getChildIndexMap().keySet().size()];
+        initChildIndexRefMap();
+        
         //Query Manager init
         initQueryManager();
+    }
+    
+    private void initChildIndexRefMap(){
+        Iterator i = this.mdservice.getChildIndexMap().keySet().iterator();
+        while (i.hasNext()){
+            Object key = i.next();
+            String indexvalue = this.mdservice.getChildIndexMap().get(key).toString();
+            String childQname = key.toString();
+            String childname = childQname.substring(childQname.lastIndexOf(".") + 1, childQname.length());
+            this.childIndexRefMap.put(childname, indexvalue);
+        }
     }
 
     /**
@@ -243,35 +259,38 @@ public class DataBaseQuerySlave extends Thread {
      */
     private void getDataObject(DataObjectNode dataObjectNode) {
         sLog.fine("DataBaseDataReader : Using DataObjectNode to DataObject mapping method");
+        //sLog.infoNoloc("Processing Data Object :: \n" + dataObjectNode.toString());
+        
         DataObject newDataObjectHolder = new DataObject();
+        
         //Inset Queried System fields to Data Object
         insertSystemFields(newDataObjectHolder, dataObjectNode.getDefaultSystemFields());
+        
         // Add Fields to the parent
         ObjectNode objectNode = dataObjectNode.getObjectNode();
         copyFields(objectNode, newDataObjectHolder, dataObjectNode);
 
         //Analyze children
         ArrayList allChildren = objectNode.getAllChildrenFromHashMap();
+        
+        // Init ChildType Container with dummy Child Type Objects for its capacity
+        for (int j=0; j < this.childTypeContainer.length; j++){
+            this.childTypeContainer[j] = new ChildType();
+        }
+        
         if (allChildren != null) {
+            
             for (int i = 0; i < allChildren.size(); i++) {
                 ObjectNode childnode = (ObjectNode) allChildren.get(i);
-                if (this.childTypeMap.containsKey(childnode.pGetTag())) {
-                    ChildType childtype = (ChildType) this.childTypeMap.get(childnode.pGetTag());
-                    // Add New Data Object for the child instance
-                    childtype.addChild(copyFields(childnode, new DataObject(), null));
-                } else {
-                    // ChildType is not available in the parent, create it
-                    ChildType childtype = new ChildType();
-                    childtype.addChild(copyFields(childnode, new DataObject(), null));
-                    this.childTypeMap.put(childnode.pGetTag(), childtype); // Add it to the map
-                }
+                int childindex = Integer.parseInt((String)this.childIndexRefMap.get(childnode.pGetTag()));
+                this.childTypeContainer[childindex].addChild(copyFields(childnode, new DataObject(), null));
             }
 
             // Add All Children to the parant data object
-            Iterator i = this.childTypeMap.keySet().iterator();
-            while (i.hasNext()) {
-                newDataObjectHolder.addChildType((ChildType) this.childTypeMap.get(i.next()));
+            for (int i=0; i < this.childTypeContainer.length; i++){
+                newDataObjectHolder.addChildType(this.childTypeContainer[i]);
             }
+            
         }
 
         // Check if data object list is below threashold, in this case, keep adding to this list or else add and sleep
@@ -291,18 +310,16 @@ public class DataBaseQuerySlave extends Thread {
      * @param dataObjectNode - DataObject Node generated out of Object Node
      */
     private void addDataObjectToList(DataObject dobj, DataObjectNode dataObjectNode) {
-        /*
-        System.out.println("     DataObj Generated On Demand from DB ... DOs available for processing : " + doLinkedList.size());
-        ++count;
-        if (count%5000 == 0){
-        System.out.println("     Generating New DataObject  >> >> >> " + count + " ,  Available In Queue to Consume : " + doLinkedList.size());
-        }
-         */
+        
         // Add Data Object to List
         doLinkedList.add(dobj);
+        
         //Clear Temporary Structures
-        this.childTypeMap.clear(); //Clean up map for reuse
-        //FInalize Data Object Node
+        for (int i=0; i < this.childTypeContainer.length; i++){
+            this.childTypeContainer[i] = null; //Clean up array for reuse
+        }
+        
+        //Finalize Data Object Node
         this.dbreader.submitObjectForFinalization(dataObjectNode);
 
     }
