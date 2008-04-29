@@ -4,23 +4,24 @@ REM ********************************
 REM * BULK LOADER SETTINGS [START] *
 REM ********************************
 	REM #### NETBEANS AND JAVA ####
-set NB_HOME=<Set Netbeans Home e.g. D:\JavaCAPS52\netbeans>
+set NB_HOME=<Set Netbeans Home e.g. D:\JavaCAPS6\netbeans>
 set JAVA_HOME=<Set Java Home e.g. D:\Software\jre1.5.0_11\bin>
 set DB_DRIVER_PATH=<Set DB Driver Path e.g. D:\Software-downloads\OJDBC1.4>
-set DB_DRIVER_NAME=<Set DB Driver Name e.g. ojdbc14-10.1.0.2.0.jar>
+set DB_DRIVER_NAME=<Set DB Driver Name e.g. ojdbc14-10.1.0.2.0.jar or * for bunch of files>
 
 	REM #### SOURCE DATABASE ####
-set SOURCE_LOC=<Specify Source Dir e.g. D:\temp\mural\masterindex_image_files>
+set SOURCE_LOC=<Specify Source Dir e.g. D:\temp\mural\masterindextest>
 set FIELD_DELIMITER="|"
 set RECORD_DELIMITER="$$$"
 
 	REM #### TARGET DATABASE ####
-REM Specify from following options (ORACLE=1, DERBY=2)
-    set TARGET_DB_TYPE=1
-set TARGET_LOC=<DataBase Host/IP e.g. localhost>
-set TARGET_PORT=<Specify Port No e.g. 1521>
-REM Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for Derby
-    set TARGET_ID=<Specify Sid/DBname e.g. orcl>
+REM Specify from following options (ORACLE=1, DERBY=2, SQLSERVER=3)
+    set TARGET_DB_TYPE=3
+    set TARGET_LOC=<DataBase Host/IP e.g. localhost>
+REM Note : 1521 (Oracle), 1527 (Derby), 1433 (SQLServer)
+    set TARGET_PORT=<Specify Port No e.g. 1521>
+REM Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for Derby, 'Authentication Method' for SQL Server
+    set TARGET_ID=<Specify Sid/DBname/AuthenticationMethod e.g. orcl or type4 etc.>
 set TARGET_SCHEMA=<Specify Schema e.g. OE, Blank for null>
 set TARGET_CATALOG=<Specify Catalog e.g. OE, Blank for null>
 set TARGET_LOGIN=<Specify Target DB Login>

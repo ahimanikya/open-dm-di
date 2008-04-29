@@ -87,7 +87,6 @@ public class FlatFileDBConnector extends DBConnector {
                 //Handling special cases
                 switch (trgt_type) {
                     
-                    
                     case 1:
                         //ORACLE Target
                         //1. Column with type and name TIMESTAMP
@@ -105,7 +104,7 @@ public class FlatFileDBConnector extends DBConnector {
                             sLog.warn(sLoc.x("LDR155 : Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
                         }
 
-                        if (coltype.equals("VARCHAR2")) {
+                        if (coltype.equalsIgnoreCase("VARCHAR2")) {
                             sb.append(colname + " " + coltype + "(" + collen + ")");
                         } else {
                             sb.append(colname + " " + coltype);
@@ -133,7 +132,7 @@ public class FlatFileDBConnector extends DBConnector {
                             sLog.warn(sLoc.x("LDR155 : Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
                         }
 
-                        if (coltype.equals("VARCHAR")) {
+                        if (coltype.equalsIgnoreCase("VARCHAR")) {
                             sb.append(colname + " " + "VARCHAR2" + "(" + collen + ")");
                         } else {
                             sb.append(colname + " " + coltype);
@@ -142,6 +141,46 @@ public class FlatFileDBConnector extends DBConnector {
                             sb.append(", ");
                         }
                         break;
+                        
+                        
+                    case 3:
+                        //SQL Server Target
+                        //1. Column with type and name TIMESTAMP
+                        if (colname.equalsIgnoreCase("TIMESTAMP")) {
+                            colname = "IGNORED_TIMESTAMP";
+                            coltype = "VARCHAR";
+                            collen = 32;
+                            sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
+                        }
+                        //2. BLOB type columns
+                        if (coltype.equalsIgnoreCase("BLOB")) {
+                            colname = "IGNORED_" + colname;
+                            coltype = "VARCHAR";
+                            collen = 32;
+                            sLog.warn(sLoc.x("LDR155 : Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                        }
+                        //3. datetime column
+                        if (coltype.equalsIgnoreCase("datetime")) {
+                            coltype = "VARCHAR";
+                            collen = 32;
+                            sLog.warn(sLoc.x("LDR155 : Excluding Column Type datetime from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                        }
+                        //4. image column type
+                        if (coltype.equalsIgnoreCase("image")) {
+                            coltype = "VARCHAR";
+                            collen = 32;
+                            sLog.warn(sLoc.x("LDR155 : Excluding Column Type image from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                        }                        
+
+                        if (coltype.equalsIgnoreCase("VARCHAR")) {
+                            sb.append(colname + " " + "VARCHAR2" + "(" + collen + ")");
+                        } else {
+                            sb.append(colname + " " + coltype);
+                        }
+                        if (i + 1 < mdlist.size()) {
+                            sb.append(", ");
+                        }
+                        break;                        
                         
                         
                     default:

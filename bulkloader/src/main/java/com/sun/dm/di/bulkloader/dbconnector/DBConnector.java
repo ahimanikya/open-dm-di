@@ -71,6 +71,8 @@ public abstract class DBConnector implements DBConnection {
             connuri = BLConstants.URI_ORACLE_PRIFIX + "thin" + BLConstants.PS + "@" + host + BLConstants.PS + port + BLConstants.PS + id;
         } else if (dbtype.equals("DERBY")) {
             connuri = BLConstants.URI_DERBY_PRIFIX + "//" + host + BLConstants.PS + port + "/" + id;
+        } else if (dbtype.equals("SQLSERVER")) {
+            connuri = BLConstants.URI_SQLSERVER_PRIFIX + "//" + host + BLConstants.PS + port + ";" + "AuthenticationMethod=" + id;
         }
         connuristr = connuri;
 
@@ -86,13 +88,13 @@ public abstract class DBConnector implements DBConnection {
 
         return this.connection;
     }
-    
+
     //Somehow, port no passed here has a comma, generate a port without it ?? wierd but works
-    private String getStringPort(int dbport){
+    private String getStringPort(int dbport) {
         //Port no has a comma
         String portno = Integer.toString(dbport);
         int commaindex = portno.indexOf(",");
-        if (commaindex != -1){
+        if (commaindex != -1) {
             portno = portno.substring(0, commaindex) + portno.substring(commaindex + 1, portno.length());
         }
         return portno;
@@ -125,14 +127,32 @@ public abstract class DBConnector implements DBConnection {
             String dbproductname = null;
             try {
                 dbproductname = this.connection.getMetaData().getDatabaseProductName();
+                sLog.infoNoloc("Database Product Name (Target MetaData)  :: " + dbproductname);
             } catch (SQLException ex) {
                 sLog.severe(sLoc.x("LDR144:Error while connecting to DB : {0}", ex.getMessage()));
             }
+            
+            //SomeTimes Catalog is null but does not show that.
+            if (catalog != null){
+                if (catalog.length() == 0){
+                    catalog = null;
+                }
+            }
+            
+            //Sometimes Schema is null but does not show that
+            if (schema != null){
+                if (schema.length() == 0){
+                    schema = null;
+                }
+            }            
 
             try {
                 DatabaseMetaData dbmd = this.connection.getMetaData();
                 ResultSet rset = null;
                 if (dbproductname.equalsIgnoreCase(BLConstants.ORACLE_PRODUCT_NAME)) {
+                    String[] names = {"TABLE"};
+                    rset = dbmd.getTables(catalog, schema, "%" + targetTableQName, names);
+                } else if (dbproductname.equalsIgnoreCase(BLConstants.SQLSERVER_PRODUCT_NAME)) {
                     String[] names = {"TABLE"};
                     rset = dbmd.getTables(catalog, schema, "%" + targetTableQName, names);
                 } else if (dbproductname.equalsIgnoreCase(BLConstants.DERBY_PRODUCT_NAME)) {
@@ -150,7 +170,6 @@ public abstract class DBConnector implements DBConnection {
             } catch (SQLException ex) {
                 sLog.severe(sLoc.x("LDR145: Error while retriving DB metadata : {0}", ex.getMessage()));
             }
-
             if (tablenamelist.size() == 1) {
                 sLog.info(sLoc.x("LDR146: Table [ {0} ] found in the Target DB", targetTableQName));
                 return true;
@@ -164,6 +183,7 @@ public abstract class DBConnector implements DBConnection {
         } else {
             sLog.warnNoloc("Connection to Target DB is null");
         }
+
         return false;
     }
 
@@ -171,6 +191,7 @@ public abstract class DBConnector implements DBConnection {
         if (tname.indexOf(".") != -1) {
             return tname.substring(0, tname.lastIndexOf(".")).toUpperCase();
         }
+
         return tname;
     }
 }

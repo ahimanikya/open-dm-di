@@ -139,6 +139,9 @@ public class LoaderMain {
             case 2:
                 param_debug.append("\tTarget Database Type : DERBY (Code : " + target_type_code + ")\n");
                 break;
+            case 3:
+                param_debug.append("\tTarget Database Type : SQL LOADER (Code : " + target_type_code + ")\n");
+                break;                
             default:
                 param_debug.append("\tTarget Database Type : UNKNOWN (Code : " + target_type_code + ")\n");
                 break;
@@ -167,14 +170,17 @@ public class LoaderMain {
             for (int i = 0; i < datafiles.length; i++) {
                 ETLDefGenerator etldefgen = new ETLDefGenerator("ETLDEF_" + datafiles[i], ETLStrategyBuilder.EXEC_MODE_SIMPLE);
                 DBConnection cc_target = null;
-                String dbschemaT = System.getProperty("target.schema").toUpperCase(); //Schema has to be uppercase
                 switch (target_type_code) {
                     case 1:
+                        String dbschemaT = System.getProperty("target.schema").toUpperCase(); //Schema has to be uppercase
                         cc_target = cfact.createTrgtOracleConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), dbschemaT, System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
                         break;
                     case 2:
                         cc_target = cfact.createTrgtDerbyConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
                         break;
+                    case 3:
+                        cc_target = cfact.createTrgtSQLServerConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
+                        break;                        
                     default:
                         cc_target = null;
                         break;
@@ -187,7 +193,7 @@ public class LoaderMain {
                 DBConnection cc_source = null;
                 if (cc_target != null) {
                     if (cc_target.getDataBaseConnection() != null) {
-                        cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), dbschemaT, System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
+                        cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), System.getProperty("target.schema"), System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
                     }
                 }
 

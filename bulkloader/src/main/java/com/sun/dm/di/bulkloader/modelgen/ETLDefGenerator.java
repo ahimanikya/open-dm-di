@@ -124,6 +124,9 @@ public class ETLDefGenerator {
                     if (db.equals("ORACLE")){
                         def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_ORACLE_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
                     }
+                    else if (db.equals("SQLSERVER")){
+                        def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_SQLSERVER_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
+                    }
                     else if (db.equals("DERBY")){
                         def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_DERBY_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
                     }
