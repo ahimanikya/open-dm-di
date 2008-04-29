@@ -35,8 +35,6 @@ import com.sun.dm.di.bulkloader.util.LogUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.LogManager;
 import net.java.hulp.i18n.Logger;
 import org.netbeans.modules.etl.codegen.ETLStrategyBuilder;
@@ -218,33 +216,4 @@ public class LoaderMain {
         sLog.info(sLoc.x("LDR010: Loader Ends."));
     }
 
-    private static void disableTargetTableConstrains(DBConnection cc_target, String filename) {
-        try {
-            Statement stmt = cc_target.getDataBaseConnection().createStatement();
-            //Query All Constraints from the target table being processed
-            StringBuilder disablesql = new StringBuilder();
-            disablesql.append("ALTER TABLE ");
-            if (System.getProperty("target.catalog") != null) {
-                disablesql.append(System.getProperty("target.catalog") + "." + getTargetTableQualifiedName(filename));
-            } else {
-                disablesql.append(getTargetTableQualifiedName(filename));
-            }
-
-            disablesql.append(" DISABLE CONSTRAINT ");
-
-            // Name of the constraint on this table
-            System.out.println("SQL IS -------------> " + disablesql.toString());
-
-        //stmt.executeUpdate(sql);
-        } catch (SQLException ex) {
-            sLog.errorNoloc("SQL Exception while trying to disable constraints", ex);
-        }
-    }
-
-    private static String getTargetTableQualifiedName(String tname) {
-        if (tname.indexOf(".") != -1) {
-            return tname.substring(0, tname.lastIndexOf("."));
-        }
-        return tname;
-    }
 }
