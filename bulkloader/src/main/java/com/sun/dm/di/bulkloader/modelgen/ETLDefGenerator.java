@@ -50,11 +50,14 @@ import org.netbeans.modules.sql.framework.model.DBColumn;
 import org.netbeans.modules.sql.framework.model.DBConnectionDefinition;
 import org.netbeans.modules.sql.framework.model.DBMetaDataFactory;
 import org.netbeans.modules.sql.framework.model.ForeignKey;
+import org.netbeans.modules.sql.framework.model.SQLCondition;
 import org.netbeans.modules.sql.framework.model.SQLConstants;
+import org.netbeans.modules.sql.framework.model.SQLDBColumn;
 import org.netbeans.modules.sql.framework.model.SQLDBModel;
 import org.netbeans.modules.sql.framework.model.SQLDBTable;
 import org.netbeans.modules.sql.framework.model.SQLDefinition;
 import org.netbeans.modules.sql.framework.model.SQLModelObjectFactory;
+import org.netbeans.modules.sql.framework.model.SQLObject;
 import org.netbeans.modules.sql.framework.model.impl.ForeignKeyImpl;
 import org.netbeans.modules.sql.framework.model.impl.PrimaryKeyImpl;
 import org.netbeans.modules.sql.framework.model.impl.SourceColumnImpl;
@@ -71,7 +74,7 @@ import org.xml.sax.SAXException;
 public class ETLDefGenerator {
 
     private ETLDefinition etldef = null;
-    AutoMapper automapper = null;
+    //AutoMapper automapper = null;
     //Engine File Generator
     private HashMap connDefs = new HashMap();
     private Map otdNamePoolNameMap = new HashMap();
@@ -85,7 +88,7 @@ public class ETLDefGenerator {
     String packagename = null;
     //logger
     private static Logger sLog = LogUtil.getLogger(ETLDefGenerator.class.getName());
-    private static Localizer sLoc = Localizer.get();    
+    private static Localizer sLoc = Localizer.get();
 
     public ETLDefGenerator() {
         etldef = new ETLDefinitionImpl();
@@ -97,7 +100,7 @@ public class ETLDefGenerator {
         etldef.setExecutionStrategyCode(strategy);
         //etldef.getSQLDefinition().setDbInstanceName("TESTDB");
         //etldef.getSQLDefinition().setWorkingFolder("D:/temp/LDR2");
-        this.automapper = new AutoMapper(etldef);
+        //this.automapper = new AutoMapper(etldef);
     }
 
     public void addDBModel(Connection conn, String db, String user_table_name, int type, String login, String pw) {
@@ -121,16 +124,13 @@ public class ETLDefGenerator {
                 case BLConstants.TARGET_TABLE_TYPE:
                     model = SQLModelObjectFactory.getInstance().createDBModel(SQLConstants.TARGET_DBMODEL);
                     model.setModelName(dbmeta.getURL());
-                    if (db.equals("ORACLE")){
+                    if (db.equals("ORACLE")) {
                         def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_ORACLE_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
-                    }
-                    else if (db.equals("SQLSERVER")){
+                    } else if (db.equals("SQLSERVER")) {
                         def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_SQLSERVER_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
-                    }
-                    else if (db.equals("DERBY")){
+                    } else if (db.equals("DERBY")) {
                         def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_DERBY_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
-                    }
-                    else if (db.equals("AXION")){
+                    } else if (db.equals("AXION")) {
                         System.out.println("TDB for Axion Flatfile Targets");
                     }
                     break;
@@ -205,9 +205,26 @@ public class ETLDefGenerator {
             // Add Table Model to ETL Definition
             etldef.addObject(model);
 
-            // Write Default Model to Package
+            // Add Table Join Conditions
+            // Assuming the target table has been already added to the model
             if (type == BLConstants.SOURCE_TABLE_TYPE) {
-                automapper.autoMapSourceToTarget();
+                TargetTableImpl tt = (TargetTableImpl) etldef.getTargetTables().get(0);
+                SQLCondition cond = tt.getJoinCondition();
+                if (cond == null) {
+                    SQLModelObjectFactory.getInstance().createSQLCondition(TargetTableImpl.JOIN_CONDITION);
+                }
+
+                List<DBColumn> srcColumnList = ((SourceTableImpl) ffTable).getColumnList();
+                for (DBColumn srcCol : srcColumnList) {
+                    DBColumn col = tt.getColumn(srcCol.getName());
+                    if (col != null) {
+                        ((TargetColumnImpl) col).setValue((SQLDBColumn) srcCol);
+                        if (col.isPrimaryKey()) {
+                            cond.addEqualityPredicate((SQLObject) srcCol, (SQLDBColumn) col);
+                        }
+                    }
+                }
+                //automapper.autoMapSourceToTarget();
                 writeModelToPackage();
             }
 
@@ -216,7 +233,6 @@ public class ETLDefGenerator {
         }
     }
 
-    
     /**
      * Utility Method to print generated eTL Definition 
      */
@@ -265,12 +281,13 @@ public class ETLDefGenerator {
 
             File dumpfile = new File(BLConstants.artiTop + sourcepackage + BLConstants.fs + etl_def_name);
             fwriter = new FileWriter(dumpfile);
-            String etldefWithRef = automapper.insertColumnRefToSrc(etldef.toXMLString(null));
-            setETLDefinitionFile(etldefWithRef);
-            fwriter.write(etldefWithRef);
-
-        } catch (BaseException ex) {
-            sLog.errorNoloc("[writeModelToPackage] BaseException", ex);
+            try {
+                //String etldefWithRef = automapper.insertColumnRefToSrc(etldef.toXMLString(null));
+                //setETLDefinitionFile(etldef.toXMLString(null));
+                fwriter.write(etldef.toXMLString(null));
+            } catch (BaseException ex) {
+                sLog.errorNoloc("[writeModelToPackage] BaseException", ex);
+            }
         } catch (IOException ex) {
             sLog.errorNoloc("[writeModelToPackage] IOException", ex);
         } finally {
@@ -387,9 +404,9 @@ public class ETLDefGenerator {
             connDefs.put(key, conndef);
             otdNamePoolNameMap.put(oid, key);
         // TODO all the parameters for InternalDBMetadata comes from collab
-            // env
-            //InternalDBMetadata dbMetadata = new InternalDBMetadata("c:\\temp", false, key);
-            //internalDBConfigParams.put(oid, dbMetadata);
+        // env
+        //InternalDBMetadata dbMetadata = new InternalDBMetadata("c:\\temp", false, key);
+        //internalDBConfigParams.put(oid, dbMetadata);
         }
 
     }
