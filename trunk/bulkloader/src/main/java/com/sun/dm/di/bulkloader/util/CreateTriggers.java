@@ -173,7 +173,7 @@ public class CreateTriggers {
         sb.append("TRGT_DB_PW=" + ScEncrypt.encrypt("soabi", System.getProperty("target.pw")) + "\n");
         sb.append("# ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
 		sb.append("JAVA_OPTS=\n");
-        sb.append("JAVA_PATH=" + System.getProperty("myjava.home") + "\n");
+        sb.append("JAVA_PATH=" + System.getProperty("myjava.path") + "\n");
 
         String dbsources = "." + BLConstants.fs + BLConstants.toplevelrt;
         File dirs = new File(dbsources);
