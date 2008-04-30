@@ -124,7 +124,7 @@ public class CreateTriggers {
         sb.append("\nREM    ### Execute eTL Commands ###\n");
         // It may happen that there are multiple engine files to be executed, take care of this.
         //for (int i = 0; i < dirnames.length; i++) {
-            sb.append("%JAVA_PATH%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% ETLEngineInvoker .\\files.config\n");
+            sb.append("%JAVA_PATH%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.dm.di.ETLEngineInvoker.ETLEngineInvoker .\\files.config\n");
         //}
 
         /*sb.append("\nREM    ### Enable Target Table Constraints ###\n");
@@ -133,7 +133,7 @@ public class CreateTriggers {
             sb.append("%JAVA_PATH%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.etl.engine.bulkloader.TargetDBOperations " + "%TRGT_SCHEMA% " + dirnames[i] + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " enable_constraint\n");
         }*/
 
-        // Contents end.
+        // Contents end. 
         BLTools.writeIntoFile(dumppath, "startLoad.bat", sb.toString());
     }
 
