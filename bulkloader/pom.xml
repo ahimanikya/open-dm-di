@@ -28,21 +28,6 @@
                 <artifactId>maven-install-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>install-etl-engine-invoker</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <generatePom>true</generatePom>
-                            <packaging>jar</packaging>
-                            <groupId>mural</groupId>
-                            <artifactId>ETLEngineInvoker</artifactId>
-                            <version>1.0</version>
-                            <file>${basedir}/external/ETLEngineInvoker.jar</file>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>install-oracle-jdbc-14</id>
                         <phase>process-resources</phase>
                         <goals>
@@ -68,21 +53,6 @@
                             <artifactId>i18n</artifactId>
                             <version>1.0</version>
                             <file>${basedir}/src/main/resources/globalization/net.java.hulp.i18n.jar</file>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>install-etl-engine</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <generatePom>true</generatePom>
-                            <packaging>jar</packaging>
-                            <groupId>etl-engine</groupId>
-                            <artifactId>etl-engine</artifactId>
-                            <version>1.0</version>
-                            <file>${basedir}/external/etlengine.jar</file>
                         </configuration>
                     </execution>
                     <execution>
@@ -203,98 +173,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-install-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>install-etl-engine-invoker</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>install-file</goal>
-                                </goals>
-                                <configuration>
-                                    <generatePom>true</generatePom>
-                                    <packaging>jar</packaging>
-                                    <groupId>mural</groupId>
-                                    <artifactId>ETLEngineInvoker</artifactId>
-                                    <version>1.0</version>
-                                    <file>${basedir}/external/ETLEngineInvoker.jar</file>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>install-oracle-jdbc-14</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>install-file</goal>
-                                </goals>
-                                <configuration>
-                                    <generatePom>true</generatePom>
-                                    <packaging>jar</packaging>
-                                    <groupId>oracle.jdbc</groupId>
-                                    <artifactId>ojdbc14</artifactId>
-                                    <version>10.1.0.2.0</version>
-                                    <file>${basedir}/external/ojdbc14-10.1.0.2.0.jar</file>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>install-i18n</id>
-                                <phase>process-resources</phase>
-                                <goals><goal>install-file</goal></goals>
-                                <configuration>
-                                    <generatePom>true</generatePom>
-                                    <packaging>jar</packaging>
-                                    <groupId>mural</groupId>
-                                    <artifactId>i18n</artifactId>
-                                    <version>1.0</version>
-                                    <file>${basedir}/src/main/resources/globalization/net.java.hulp.i18n.jar</file>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>install-etl-engine</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>install-file</goal>
-                                </goals>
-                                <configuration>
-                                    <generatePom>true</generatePom>
-                                    <packaging>jar</packaging>
-                                    <groupId>etl-engine</groupId>
-                                    <artifactId>etl-engine</artifactId>
-                                    <version>1.0</version>
-                                    <file>${basedir}/external/etlengine.jar</file>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>install-etl-editor</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>install-file</goal>
-                                </goals>
-                                <configuration>
-                                    <generatePom>true</generatePom>
-                                    <packaging>jar</packaging>
-                                    <groupId>etl-editor</groupId>
-                                    <artifactId>etl-editor</artifactId>
-                                    <version>1.0</version>
-                                    <file>${basedir}/external/org-netbeans-modules-etl-editor.jar</file>
-                                </configuration>
-                            </execution>
-                            <!--
-                            <execution>
-                                <id>install-org-netbeans-modules-db</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>install-file</goal>
-                                </goals>
-                                <configuration>
-                                    <generatePom>true</generatePom>
-                                    <packaging>jar</packaging>
-                                    <groupId>org-netbeans-modules-db</groupId>
-                                    <artifactId>org-netbeans-modules-db</artifactId>
-                                    <version>1.0</version>
-                                    <file>${basedir}/external/org-netbeans-modules-db.jar</file>
-                                </configuration>
-                            </execution>
-							-->
-                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -376,7 +254,7 @@
             <groupId>mural</groupId>
             <artifactId>ETLEngineInvoker</artifactId>
             <version>1.0</version>
-            <scope>runtime</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
