@@ -27,7 +27,6 @@ import com.sun.dm.di.bulkloader.util.LogUtil;
 import com.sun.etl.engine.ETLEngine;
 import com.sun.sql.framework.exception.BaseException;
 import com.sun.sql.framework.utils.StringUtil;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,7 +35,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import net.java.hulp.i18n.Logger;
 import org.netbeans.modules.etl.codegen.DBConnectionDefinitionTemplate;
 import org.netbeans.modules.etl.codegen.ETLCodegenUtil;
@@ -48,8 +46,6 @@ import org.netbeans.modules.etl.utils.ETLDeploymentConstants;
 import org.netbeans.modules.sql.framework.common.jdbc.SQLDBConnectionDefinition;
 import org.netbeans.modules.sql.framework.model.SQLDBModel;
 import org.netbeans.modules.sql.framework.model.SQLDefinition;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -68,10 +64,9 @@ class EngineFileCodeGen {
     Map otdSchemaOverrideMapMap = new HashMap();
     //logger
     private static Logger sLog = LogUtil.getLogger(EngineFileCodeGen.class.getName());
-    private static Localizer sLoc = Localizer.get();    
+    private static Localizer sLoc = Localizer.get();
 
     protected EngineFileCodeGen() {
-
     }
 
     protected EngineFileCodeGen(ETLDefinition etldef) {
@@ -83,7 +78,6 @@ class EngineFileCodeGen {
         }
     }
 
-    
     protected EngineFileCodeGen(File etldef) {
         FileInputStream fis = null;
         try {
@@ -104,16 +98,15 @@ class EngineFileCodeGen {
         this.etldef = new ETLDefinitionImpl();
     }
 
-    
     protected String genEnginecode() {
         ETLEngine engine = null;
 
         try {
             DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
-            ByteArrayInputStream bais = new ByteArrayInputStream(this.etldefstr.getBytes("UTF-8"));
-            Element root = f.newDocumentBuilder().parse(bais).getDocumentElement();
+            //ByteArrayInputStream bais = new ByteArrayInputStream(this.etldefstr.getBytes("UTF-8"));
+            //Element root = f.newDocumentBuilder().parse(bais).getDocumentElement();
 
-            etldef.parseXML(root);
+            //etldef.parseXML(root);
             collabName = etldef.getDisplayName();
             SQLDefinition sqlDefinition = etldef.getSQLDefinition();
 
@@ -142,12 +135,8 @@ class EngineFileCodeGen {
 
         } catch (BaseException ex) {
             sLog.errorNoloc("Base Exception", ex);
-        } catch (ParserConfigurationException ex) {
-            sLog.errorNoloc("ParserConfigurationException", ex);
-        } catch (SAXException ex) {
-            sLog.errorNoloc("SAXException", ex);
-        } catch (IOException ex) {
-            sLog.errorNoloc("IOException", ex);
+        //} catch (IOException ex) {
+        //    sLog.errorNoloc("IOException", ex);
         }
         sLog.info(sLoc.x("LDR211: Successfully Generated eTL Engine File from Model : {0}", etldef.getDisplayName()));
         return engine.toXMLString();
@@ -189,9 +178,9 @@ class EngineFileCodeGen {
             connDefs.put(key, conndef);
             otdNamePoolNameMap.put(oid, key);
         // TODO all the parameters for InternalDBMetadata comes from collab
-            // env
-            //InternalDBMetadata dbMetadata = new InternalDBMetadata("c:\\temp", false, key);
-            //internalDBConfigParams.put(oid, dbMetadata);
+        // env
+        //InternalDBMetadata dbMetadata = new InternalDBMetadata("c:\\temp", false, key);
+        //internalDBConfigParams.put(oid, dbMetadata);
         } else { // jdbc connection
 
             SQLDBConnectionDefinition conndef = originalConndef;
@@ -202,9 +191,9 @@ class EngineFileCodeGen {
             connDefs.put(key, conndef);
             otdNamePoolNameMap.put(oid, key);
         // TODO all the parameters for InternalDBMetadata comes from collab
-            // env
-            //InternalDBMetadata dbMetadata = new InternalDBMetadata("c:\\temp", false, key);
-            //internalDBConfigParams.put(oid, dbMetadata);
+        // env
+        //InternalDBMetadata dbMetadata = new InternalDBMetadata("c:\\temp", false, key);
+        //internalDBConfigParams.put(oid, dbMetadata);
         }
 
     }

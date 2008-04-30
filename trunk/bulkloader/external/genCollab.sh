@@ -7,7 +7,7 @@ clear
 
 	# **** NETBEANS AND JAVA ****
 NB_HOME=<Set Netbeans Home e.g. /openesb/netbeans-6.1-build-200803100002>
-JAVA_HOME=<Set Java Home e.g. /usr/jdk/instances/jdk1.5.0/jre/bin>
+JAVA_PATH=<Set Java Home e.g. /usr/jdk/instances/jdk1.5.0/jre/bin>
 DB_DRIVER_PATH=<Set DB Driver Path e.g. /openesb/glassfish-v2-ur1-b09d-patch-20080310/javadb/lib>
 DB_DRIVER_NAME=<Set DB Driver Name e.g. derbyclient.jar>
 
@@ -17,10 +17,11 @@ FIELD_DELIMITER=|
 RECORD_DELIMITER=$$$
 
 	# **** TARGET DATABASE ****
-# Specify from following options (ORACLE=1, DERBY=2)
-    TARGET_DB_TYPE=2
-TARGET_LOC=<DataBase Host/IP e.g. localhost>
-TARGET_PORT=<Specify Port No e.g. 1527>
+# Specify from following options (ORACLE=1, DERBY=2, SQLSERVER=3)
+    TARGET_DB_TYPE=<Set Database Type e.g. 3>
+    TARGET_LOC=<DataBase Host/IP e.g. localhost>
+# Note : 1521 (Oracle), 1527 (Derby), 1433 (SQLServer)
+    TARGET_PORT=<Specify Port No e.g. 1433>
 # Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for Derby
     TARGET_ID=<Specify DB Name e.g. sample>
 TARGET_SCHEMA=<Specify Schema e.g. APP, Blank for null>
@@ -51,7 +52,7 @@ if [ -f $DB_DRIVER_JAR ] ; then
 	OPENIDE_LIBS="$OPENIDE_LIB_MODULE/org-openide-nodes.jar:$OPENIDE_LIB_MODULE/org-openide-text.jar:$OPENIDE_LIB_MODULE/org-openide-loaders.jar:$OPENIDE_LIB_MODULE/org-openide-windows.jar:$OPENIDE_LIB_MODULE/org-openide-dialogs.jar:$OPENIDE_LIB_MODULE/org-openide-awt.jar:$OPENIDE_LIB_CORE/org-openide-filesystems.jar:$OPENIDE_LIB_LIB/org-openide-util.jar:$OPENIDE_LIB_IDE8_MOD/org-netbeans-modules-db.jar"
 	ALL_LIBS="$USER_LIBS:$OPENIDE_LIBS:$DB_DRIVER_JAR:$CLASSPATH"
 	
-	$JAVA_HOME/java -Xms128m -Xmx512m -Dsourcedb.loc=$SOURCE_LOC -Dfield.delimiter=$FIELD_DELIMITER -Drecord.delimiter=$RECORD_DELIMITER -Dtarget.type=$TARGET_DB_TYPE -Dtarget.host=$TARGET_LOC -Dtarget.port=$TARGET_PORT -Dtarget.id=$TARGET_ID -Dtarget.schema=$TARGET_SCHEMA -Dtarget.catalog=$TARGET_CATALOG -Dtarget.login=$TARGET_LOGIN -Dtarget.pw=$TARGET_PW -Dmyjava.home=$JAVA_HOME -cp $ALL_LIBS com.sun.dm.di.bulkloader.LoaderMain
+	$JAVA_PATH/java -Xms128m -Xmx512m -Dsourcedb.loc=$SOURCE_LOC -Dfield.delimiter=$FIELD_DELIMITER -Drecord.delimiter=$RECORD_DELIMITER -Dtarget.type=$TARGET_DB_TYPE -Dtarget.host=$TARGET_LOC -Dtarget.port=$TARGET_PORT -Dtarget.id=$TARGET_ID -Dtarget.schema=$TARGET_SCHEMA -Dtarget.catalog=$TARGET_CATALOG -Dtarget.login=$TARGET_LOGIN -Dtarget.pw=$TARGET_PW -Dmyjava.home=$JAVA_HOME -cp $ALL_LIBS com.sun.dm.di.bulkloader.LoaderMain
 
     else
 	echo " Unable to locate Database Driver on Specified Path.";
