@@ -109,7 +109,7 @@ public class CreateTriggers {
         sb.append("set TRGT_DB_PW=" + ScEncrypt.encrypt("soabi", System.getProperty("target.pw")) + "\n");
         sb.append("REM ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
 	sb.append("set JAVA_OPTS=\n");
-        sb.append("set JAVA_HOME=" + System.getProperty("myjava.home") + "\n");
+        sb.append("set JAVA_PATH=" + System.getProperty("myjava.path") + "\n");
 
         String dbsources = "." + BLConstants.fs + BLConstants.toplevelrt;
         File dirs = new File(dbsources);
@@ -118,19 +118,19 @@ public class CreateTriggers {
         //Create Disable Constraints Strings
         /*sb.append("\nREM    ### Disable Target Table Constraints ###\n");
         for (int i = 0; i < dirnames.length; i++) {
-            sb.append("%JAVA_HOME%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.etl.engine.bulkloader.TargetDBOperations " + "%TRGT_SCHEMA% " + dirnames[i] + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " disable_constraint\n");
+            sb.append("%JAVA_PATH%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.etl.engine.bulkloader.TargetDBOperations " + "%TRGT_SCHEMA% " + dirnames[i] + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " disable_constraint\n");
         }*/
 
         sb.append("\nREM    ### Execute eTL Commands ###\n");
         // It may happen that there are multiple engine files to be executed, take care of this.
         //for (int i = 0; i < dirnames.length; i++) {
-            sb.append("%JAVA_HOME%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% ETLEngineInvoker .\\files.config\n");
+            sb.append("%JAVA_PATH%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% ETLEngineInvoker .\\files.config\n");
         //}
 
         /*sb.append("\nREM    ### Enable Target Table Constraints ###\n");
         //Create enable Constraints Strings
         for (int i = 0; i < dirnames.length; i++) {
-            sb.append("%JAVA_HOME%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.etl.engine.bulkloader.TargetDBOperations " + "%TRGT_SCHEMA% " + dirnames[i] + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " enable_constraint\n");
+            sb.append("%JAVA_PATH%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.etl.engine.bulkloader.TargetDBOperations " + "%TRGT_SCHEMA% " + dirnames[i] + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " enable_constraint\n");
         }*/
 
         // Contents end.
@@ -173,7 +173,7 @@ public class CreateTriggers {
         sb.append("TRGT_DB_PW=" + ScEncrypt.encrypt("soabi", System.getProperty("target.pw")) + "\n");
         sb.append("# ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
 		sb.append("JAVA_OPTS=\n");
-        sb.append("JAVA_HOME=" + System.getProperty("myjava.home") + "\n");
+        sb.append("JAVA_PATH=" + System.getProperty("myjava.home") + "\n");
 
         String dbsources = "." + BLConstants.fs + BLConstants.toplevelrt;
         File dirs = new File(dbsources);
@@ -182,19 +182,19 @@ public class CreateTriggers {
         //Create Disable Constraints Strings
 //        sb.append("\n#    ### Disable Target Table Constraints ###\n");
 //        for (int i = 0; i < dirnames.length; i++) {
-//            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " disable_constraint\n");
+//            sb.append("$JAVA_PATH" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " disable_constraint\n");
 //        }
 
 //        sb.append("\n#    ### Execute eTL Commands ###\n");
         // It may happen that there are multiple engine files to be executed, take care of this.
 //        for (int i = 0; i < dirnames.length; i++) {
-            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS ETLEngineInvoker ./files.config\n");
+            sb.append("$JAVA_PATH" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS ETLEngineInvoker ./files.config\n");
 //        }
 
 //        sb.append("\n#    ### Enable Target Table Constraints ###\n");
 //        //Create enable Constraints Strings
 //        for (int i = 0; i < dirnames.length; i++) {
-//            sb.append("$JAVA_HOME" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " enable_constraint\n");
+//            sb.append("$JAVA_PATH" + fs + "java -cp $CP -Xms256M -Xmx1024M $JAVA_OPTS com.sun.etl.engine.bulkloader.TargetDBOperations " + "$TRGT_SCHEMA " + dirnames[i] + " $TRGT_DB_CONN" + " $TRGT_DB_LOGIN" + " $TRGT_DB_PW" + " enable_constraint\n");
 //        }
 
         // Contents end.
