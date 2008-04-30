@@ -225,6 +225,9 @@ public class ETLDefGenerator {
                     }
                 }
                 //automapper.autoMapSourceToTarget();
+                
+                //Set App Data working dir and db instance
+                etldef.getSQLDefinition().setAxiondbWorkingDirectory("." + BLConstants.fs + "AppData");
                 writeModelToPackage();
             }
 

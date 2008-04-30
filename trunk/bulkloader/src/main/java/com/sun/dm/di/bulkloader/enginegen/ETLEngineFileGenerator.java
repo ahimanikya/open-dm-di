@@ -54,47 +54,6 @@ public class ETLEngineFileGenerator {
             this.gentargetfile = engineFileName + "_engine.xml";
         }
     }
-
-    /*
-    public void generateETLEngineFile(File eTLModelFile) throws Exception {
-        StringBuffer fileData = new StringBuffer(1000);
-        BufferedReader reader = new BufferedReader(new FileReader(eTLModelFile));
-        char[] buf = new char[1024];
-        int numRead=0;
-        while((numRead=reader.read(buf)) != -1){
-            String readData = String.valueOf(buf, 0, numRead);
-            fileData.append(readData);
-            buf = new char[1024];
-        }
-        reader.close();
-        generateETLEngineFile(fileData.toString());
-    }
-
-    public void generateETLEngineFile(String eTLModelFile) throws Exception {
-        ByteArrayInputStream bais = null;
-        try {
-            DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
-            bais = new ByteArrayInputStream(eTLModelFile.getBytes("UTF-8"));
-            Element root = f.newDocumentBuilder().parse(bais).getDocumentElement();
-            
-            this.etldef.parseXML(root);
-        } catch (BaseException ex) {
-            Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                bais.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ETLDefGenerator.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }        
-    }
-    */
     
     public void generateETLEngineFile(ETLDefGenerator etldefgen) {
         EngineFileCodeGen enginecodegen = new EngineFileCodeGen(etldefgen.getETLDefinition());

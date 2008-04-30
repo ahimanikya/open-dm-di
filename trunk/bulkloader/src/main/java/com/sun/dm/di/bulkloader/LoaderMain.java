@@ -170,7 +170,7 @@ public class LoaderMain {
         param_debug.append("\tTarget Catalog : " + System.getProperty("target.catalog") + "\n");
         param_debug.append("\tTarget Login : " + System.getProperty("target.login") + "\n");
         param_debug.append("\tTarget PW : " + getPWString(System.getProperty("target.pw")) + "\n");
-        param_debug.append("\tJava Home : " + System.getProperty("myjava.home") + "\n");
+        param_debug.append("\tJava Path : " + System.getProperty("myjava.path") + "\n");
         sLog.info(sLoc.x("LDR002: {0}", param_debug.toString()));
 
 
