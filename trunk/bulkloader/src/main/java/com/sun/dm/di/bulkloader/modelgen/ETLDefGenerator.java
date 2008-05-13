@@ -42,7 +42,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import net.java.hulp.i18n.Logger;
 import org.netbeans.modules.etl.codegen.DBConnectionDefinitionTemplate;
 import org.netbeans.modules.etl.codegen.ETLCodegenUtil;
-import org.netbeans.modules.etl.codegen.impl.InternalDBMetadata;
 import org.netbeans.modules.etl.model.ETLDefinition;
 import org.netbeans.modules.etl.model.impl.ETLDefinitionImpl;
 import org.netbeans.modules.sql.framework.common.jdbc.SQLDBConnectionDefinition;
@@ -64,6 +63,7 @@ import org.netbeans.modules.sql.framework.model.impl.SourceColumnImpl;
 import org.netbeans.modules.sql.framework.model.impl.SourceTableImpl;
 import org.netbeans.modules.sql.framework.model.impl.TargetColumnImpl;
 import org.netbeans.modules.sql.framework.model.impl.TargetTableImpl;
+import org.netbeans.modules.sql.framework.model.utils.SQLObjectUtil;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
@@ -86,6 +86,7 @@ public class ETLDefGenerator {
     Map otdSchemaOverrideMapMap = new HashMap();
     String sourcefilename = null;
     String packagename = null;
+    String etldefname = null;
     //logger
     private static Logger sLog = LogUtil.getLogger(ETLDefGenerator.class.getName());
     private static Localizer sLoc = Localizer.get();
@@ -96,11 +97,15 @@ public class ETLDefGenerator {
 
     public ETLDefGenerator(String displayName, Integer strategy) {
         sLog.info(sLoc.x("LDR310: Initializing eTL Definition File Generator .."));
-        etldef = new ETLDefinitionImpl(displayName);
+
+        if (displayName.indexOf(".") != -1) {
+            etldefname = displayName.substring(0, displayName.indexOf("."));
+        } else {
+            etldefname = displayName;
+        }
+
+        etldef = new ETLDefinitionImpl("ETLDEF_" + etldefname);
         etldef.setExecutionStrategyCode(strategy);
-        //etldef.getSQLDefinition().setDbInstanceName("TESTDB");
-        //etldef.getSQLDefinition().setWorkingFolder("D:/temp/LDR2");
-        //this.automapper = new AutoMapper(etldef);
     }
 
     public void addDBModel(Connection conn, String db, String user_table_name, int type, String login, String pw) {
@@ -118,18 +123,18 @@ public class ETLDefGenerator {
                     //Assuming Source is always Axion DB
                     String utn = user_table_name.toUpperCase();
                     String s_url = "jdbc:axiondb:" + utn + ":" + "." + BLConstants.fs + BLConstants.toplevelrt + BLConstants.fs + utn + BLConstants.fs + BLConstants.EXTDB_PREFIX + utn;
-                    model.setModelName(s_url);
-                    def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_AXION_DRIVER, s_url, login, pw, "Bulk Loader Source Model");
+                    model.setModelName("SourceConnection1");
+                    def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition("SourceConnection1", meta.getDBType(), BLConstants.DB_AXION_DRIVER, s_url, login, pw, "Bulk Loader Source Model");
                     break;
                 case BLConstants.TARGET_TABLE_TYPE:
                     model = SQLModelObjectFactory.getInstance().createDBModel(SQLConstants.TARGET_DBMODEL);
-                    model.setModelName(dbmeta.getURL());
+                    model.setModelName("TargetConnection1");
                     if (db.equals("ORACLE")) {
-                        def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_ORACLE_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
+                        def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition("TargetConnection1", meta.getDBType(), BLConstants.DB_ORACLE_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
                     } else if (db.equals("SQLSERVER")) {
-                        def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_SQLSERVER_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
+                        def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition("TargetConnection1", meta.getDBType(), BLConstants.DB_SQLSERVER_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
                     } else if (db.equals("DERBY")) {
-                        def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition(meta.getDBName(), meta.getDBType(), BLConstants.DB_DERBY_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
+                        def = SQLModelObjectFactory.getInstance().createDBConnectionDefinition("TargetConnection1", meta.getDBType(), BLConstants.DB_DERBY_DRIVER, dbmeta.getURL(), login, pw, "Bulk Loader Target Model");
                     } else if (db.equals("AXION")) {
                         System.out.println("TDB for Axion Flatfile Targets");
                     }
@@ -189,15 +194,31 @@ public class ETLDefGenerator {
             // Setting table properties for tables in eTL definition file
             switch (type) {
                 case BLConstants.SOURCE_TABLE_TYPE:
-                    ((SourceTableImpl) ffTable).setEditable(true);
-                    ((SourceTableImpl) ffTable).setSelected(true);
-                    ((SourceTableImpl) ffTable).setAliasName("S1");
+                    SourceTableImpl srcTableImpl = (SourceTableImpl) ffTable;
+                    srcTableImpl.setEditable(true);
+                    srcTableImpl.setSelected(true);
+                    srcTableImpl.setAliasName("S1");
+                    srcTableImpl.setName(etldefname);
+                    srcTableImpl.setDisplayName(etldefname);
+                    //ORG Prop Attributes
+                    srcTableImpl.setAttribute("ORGPROP_TRIMWHITESPACE", "false");
+                    srcTableImpl.setAttribute("ORGPROP_FIELDDELIMITER", "|");
+                    srcTableImpl.setAttribute("ORGPROP_RECORDDELIMITER", "$$$");
+                    srcTableImpl.setAttribute("ORGPROP_LOADTYPE", "DELIMITED");
+                    srcTableImpl.setAttribute("ORGPROP_ROWSTOSKIP", "0");
+                    srcTableImpl.setAttribute("ORGPROP_FILENAME", "." + BLConstants.fs + "ETLProcess" + BLConstants.fs + etldefname + BLConstants.fs + "DB_" + etldefname + BLConstants.fs + etldefname + ".data");
+                    srcTableImpl.setAttribute("ORGPROP_CREATE_IF_NOT_EXIST", "false");
+                    srcTableImpl.setAttribute("ORGPROP_VALIDATION", "false");
+                    srcTableImpl.setTemporaryTableName(SQLObjectUtil.generateTemporaryTableName(user_table_name.toUpperCase()));
                     model.addTable((SourceTableImpl) ffTable);
                     break;
                 case BLConstants.TARGET_TABLE_TYPE:
-                    ((TargetTableImpl) ffTable).setEditable(true);
-                    ((TargetTableImpl) ffTable).setSelected(true);
-                    ((TargetTableImpl) ffTable).setAliasName("T1");
+                    TargetTableImpl trgtTableImpl = (TargetTableImpl) ffTable;
+                    trgtTableImpl.setEditable(true);
+                    trgtTableImpl.setSelected(true);
+                    trgtTableImpl.setAliasName("T1");
+                    trgtTableImpl.setName(etldefname);
+                    trgtTableImpl.setDisplayName(etldefname);
                     model.addTable((TargetTableImpl) ffTable);
                     break;
             }
@@ -224,10 +245,11 @@ public class ETLDefGenerator {
                         }
                     }
                 }
-                //automapper.autoMapSourceToTarget();
                 
+                //automapper.autoMapSourceToTarget();
+
                 //Set App Data working dir and db instance
-                etldef.getSQLDefinition().setAxiondbWorkingDirectory("." + BLConstants.fs + "AppData");
+                etldef.getSQLDefinition().setAxiondbWorkingDirectory(BLConstants.getCWD() + BLConstants.fs + "BulkLoaderWorkDir");
                 writeModelToPackage();
             }
 
@@ -381,35 +403,23 @@ public class ETLDefGenerator {
         if (oid == null) {// support older version of DBModel
             return;
         }
+        
         SQLDBConnectionDefinition originalConndef = (SQLDBConnectionDefinition) element.getConnectionDefinition();
 
         if (originalConndef.getDriverClass().equals("org.axiondb.jdbc.AxionDriver")) {
             SQLDBConnectionDefinition conndefTemplate = this.connectionDefnTemplate.getDBConnectionDefinition("STCDBADAPTER");
             SQLDBConnectionDefinition conndef = (SQLDBConnectionDefinition) conndefTemplate.cloneObject();
-
             setConnectionParams(conndef);
-
             String key = originalConndef.getName() + "-" + dbtable;
             conndef.setName(key);
             connDefs.put(key, conndef);
             otdNamePoolNameMap.put(oid, key);
-            // TODO all the parameters for InternalDBMetadata comes from collab
-            // env
-            InternalDBMetadata dbMetadata = new InternalDBMetadata("c:\\temp", false, key);
-            internalDBConfigParams.put(oid, dbMetadata);
         } else { // jdbc connection
-
             SQLDBConnectionDefinition conndef = originalConndef;
-
-
             String key = originalConndef.getName() + "-" + dbtable;
             conndef.setName(key);
             connDefs.put(key, conndef);
             otdNamePoolNameMap.put(oid, key);
-        // TODO all the parameters for InternalDBMetadata comes from collab
-        // env
-        //InternalDBMetadata dbMetadata = new InternalDBMetadata("c:\\temp", false, key);
-        //internalDBConfigParams.put(oid, dbMetadata);
         }
 
     }

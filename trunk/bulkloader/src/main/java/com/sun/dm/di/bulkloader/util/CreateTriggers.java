@@ -51,17 +51,11 @@ public class CreateTriggers {
 
     private void createConfig() {
         StringBuilder sb = new StringBuilder();
-        // Place contents here
-        String fs = BLConstants.fs;
        
-        
         String dbsources = "." + BLConstants.fs + BLConstants.toplevelrt;
         File dirs = new File(dbsources);
         String[] dirnames = dirs.list();
-
-        //Create Disable Constraints Strings
         
-       
         // It may happen that there are multiple engine files to be executed, take care of this.
         for (int i = 0; i < dirnames.length; i++) {
             sb.append(dbsources + "\\" + dirnames[i] + "\\DefaultETL_engine.xml\n");
@@ -146,25 +140,23 @@ public class CreateTriggers {
         sb.append("#  *********** DO NOT EDIT TEXT BELOW ***********\n");
         sb.append("LIB=./lib\n");
         sb.append("AXION_JAR=$LIB" + fs + "axion-1.0.jar\n");
-        sb.append("AXION_DEPENDENCIES_JARS=\"$LIB/commons-primitives-1.0.jar:$LIB/commons-logging-1.1.jar:$LIB/commons-collections-2.0.jar:$LIB/commons-codec-1.3.jar\"\n");
+        //sb.append("AXION_DEPENDENCIES_JARS=\"$LIB/commons-primitives-1.0.jar:$LIB/commons-logging-1.1.jar:$LIB/commons-collections-2.0.jar:$LIB/commons-codec-1.3.jar\"\n");
+        sb.append("DB_DRIVER=\"$LIB" + fs + System.getProperty("dbdriver.name") + "\n");
         switch (target_db_type) {
             case 1: //ORACLE
-                sb.append("DB_DRIVER=\"$LIB" + fs + "ojdbc14-10.1.0.2.0.jar\"\n");
                 sb.append("TRGT_SCHEMA=\"" + System.getProperty("target.schema").toUpperCase() + "\"\n");
                 break;
             case 2: //DERBY
-                sb.append("DB_DRIVER=\"$LIB" + fs + "derbyclient.jar\"\n");
                 sb.append("TRGT_SCHEMA=\"" + System.getProperty("target.schema") + "\"\n");
                 break;
             case 3: //SQL Server
-                sb.append("DB_DRIVER=\"LIB" + fs + "sqljdbc.jar\n");
                 sb.append("TRGT_SCHEMA=\"" + System.getProperty("target.schema") + "\"\n");
                 break;                
             default:
                 sb.append("DB_DRIVER=\"$LIB" + fs + "<Unknown Database Type (Code : " + target_db_type + ")>\"\n");
         }
         sb.append("INVOKER_JARS=\"$LIB" + fs + "etlengineInvoker-1.0.jar:$LIB" + fs + "etl-engine-1.0.jar\"\n");
-        sb.append("CP=\".:$AXION_JAR:$AXION_DEPENDENCIES_JARS:$DB_DRIVER:$INVOKER_JARS\"\n");
+        sb.append("CP=\".:$AXION_JAR:$DB_DRIVER:$INVOKER_JARS\"\n");
         sb.append("TRGT_DB_CONN=\"" + BLConstants.getTrgtConnInfo() + "\"\n");
         sb.append("#  *********** DO NOT EDIT TEXT ABOVE ***********\n\n");
 

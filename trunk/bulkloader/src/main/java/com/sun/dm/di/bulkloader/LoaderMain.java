@@ -153,7 +153,7 @@ public class LoaderMain {
                 break;
             case 3:
                 param_debug.append("\tTarget Database Type : SQL LOADER (Code : " + target_type_code + ")\n");
-                break;                
+                break;
             default:
                 param_debug.append("\tTarget Database Type : UNKNOWN (Code : " + target_type_code + ")\n");
                 break;
@@ -171,6 +171,7 @@ public class LoaderMain {
         param_debug.append("\tTarget Login : " + System.getProperty("target.login") + "\n");
         param_debug.append("\tTarget PW : " + getPWString(System.getProperty("target.pw")) + "\n");
         param_debug.append("\tJava Path : " + System.getProperty("myjava.path") + "\n");
+        param_debug.append("\tDatabase Driver : " + System.getProperty("dbdriver.name") + "\n");
         sLog.info(sLoc.x("LDR002: {0}", param_debug.toString()));
 
 
@@ -182,25 +183,25 @@ public class LoaderMain {
             /*
             ArrayList<String> tableNames = new ArrayList<String>();
             for(String df :datafiles){
-                tableNames.add(df.substring(0, df.indexOf(".")));
+            tableNames.add(df.substring(0, df.indexOf(".")));
             }
             DBConnection target = cfact.createTrgtOracleConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[0], new ETLDefGenerator("ETLDEF_" + datafiles[0], ETLStrategyBuilder.EXEC_MODE_STAGING));
             try {
-                System.out.println("Manish Enter 1 ......");
-                getTableSequence(target.getDataBaseConnection(), System.getProperty("target.schema"), System.getProperty("target.catalog"), tableNames);
+            getTableSequence(target.getDataBaseConnection(), System.getProperty("target.schema"), System.getProperty("target.catalog"), tableNames);
             } catch (SQLException ex) {
-                java.util.logging.Logger.getLogger(LoaderMain.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoaderMain.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(LoaderMain.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoaderMain.class.getName()).log(Level.SEVERE, null, ex);
             }
-            */
-            
+             */
+
             for (int i = 0; i < datafiles.length; i++) {
-                ETLDefGenerator etldefgen = new ETLDefGenerator("ETLDEF_" + datafiles[i], ETLStrategyBuilder.EXEC_MODE_STAGING);
+                ETLDefGenerator etldefgen = new ETLDefGenerator(datafiles[i], ETLStrategyBuilder.EXEC_MODE_STAGING);
                 DBConnection cc_target = null;
                 switch (target_type_code) {
                     case 1:
                         String dbschemaT = System.getProperty("target.schema").toUpperCase(); //Schema has to be uppercase
+
                         cc_target = cfact.createTrgtOracleConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), dbschemaT, System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
                         break;
                     case 2:
@@ -208,7 +209,7 @@ public class LoaderMain {
                         break;
                     case 3:
                         cc_target = cfact.createTrgtSQLServerConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
-                        break;                        
+                        break;
                     default:
                         cc_target = null;
                         break;
@@ -249,9 +250,8 @@ public class LoaderMain {
 
         sLog.info(sLoc.x("LDR010: Loader Ends."));
     }
-    
-    public static List getTableSequence(Connection con, String schema, String catalog, List<String> tableNames) throws SQLException, IOException{
-        System.out.println("Manish enter 2 .......");
+
+    public static List getTableSequence(Connection con, String schema, String catalog, List<String> tableNames) throws SQLException, IOException {
         Map<String, List<String>> tables = new HashMap<String, List<String>>();
         //DBMetaDataFactory dbFactory = new DBMetaDataFactory();
         //dbFactory.connectDB(con);
@@ -269,15 +269,15 @@ public class LoaderMain {
                 //populate my parent list
                 do {
                     pkTables.add(rs.getString("PKTABLE_NAME"));
-                    System.out.println("Has Ref:: " +  tableName + "-->" +rs.getString("PKTABLE_NAME"));
+                    System.out.println("Has Ref:: " + tableName + "-->" + rs.getString("PKTABLE_NAME"));
                 } while (rs.next());
                 tables.put(tableName, pkTables);
             }
         }
-        
+
         List<String> parents = new ArrayList<String>();
-        
-       for (int i =0; i< 5; i++) {
+
+        for (int i = 0; i < 5; i++) {
             Set<String> tableNamesSet = new HashSet<String>();
             tableNamesSet.addAll(tables.keySet());
             for (String tableName : tableNamesSet) {
@@ -285,26 +285,23 @@ public class LoaderMain {
                     parents.add(tableName);
                     System.out.println("WN FK (Parents) : " + tableName);
                     tables.remove(tableName);
-                } else if(parents.containsAll(tables.get(tableName))){
+                } else if (parents.containsAll(tables.get(tableName))) {
                     parents.add(tableName);
                     tables.remove(tableName);
                     System.out.println(" 2nd : " + tableName);
-                }
-                else{
+                } else {
                     System.out.println(tableName + "-->" + tables.get(tableName).get(0));
                 }
             }
         }
-        
-        File file = new File(BLConstants.getCWD()+ BLConstants.fs + "TableOrder.txt");
-        System.out.println("Manish tables :: " + file.getAbsolutePath());
+
+        File file = new File(BLConstants.getCWD() + BLConstants.fs + "TableOrder.txt");
         FileOutputStream fout = new FileOutputStream(file);
-        for(String tblName: parents){
-            fout.write((tblName+"\r\n").getBytes());
+        for (String tblName : parents) {
+            fout.write((tblName + "\r\n").getBytes());
         }
         fout.flush();
         fout.close();
         return Collections.EMPTY_LIST;
-    }    
-
+    }
 }
