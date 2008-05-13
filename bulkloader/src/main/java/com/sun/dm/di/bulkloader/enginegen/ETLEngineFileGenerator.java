@@ -38,9 +38,8 @@ import net.java.hulp.i18n.Logger;
 public class ETLEngineFileGenerator {
 
     private String gentargetfile = null;
-    //logger
     private static Logger sLog = LogUtil.getLogger(ETLEngineFileGenerator.class.getName());
-    private static Localizer sLoc = Localizer.get();    
+    private static Localizer sLoc = Localizer.get();
 
     public ETLEngineFileGenerator() {
         this(BLConstants.DEFAULT_ENGINE_NAME);
@@ -54,7 +53,7 @@ public class ETLEngineFileGenerator {
             this.gentargetfile = engineFileName + "_engine.xml";
         }
     }
-    
+
     public void generateETLEngineFile(ETLDefGenerator etldefgen) {
         EngineFileCodeGen enginecodegen = new EngineFileCodeGen(etldefgen.getETLDefinition());
         String enginefile = enginecodegen.genEnginecode();
@@ -68,8 +67,8 @@ public class ETLEngineFileGenerator {
 
         String gentarget = BLConstants.artiTop + packagename;
         enginefile = new File(gentarget, gentargetfile);
-        sLog.info(sLoc.x("LDR201: Writing engine file to disk : {0}",enginefile.getAbsolutePath()));
-        
+        sLog.info(sLoc.x("LDR201: Writing engine file to disk : {0}", enginefile.getAbsolutePath()));
+
         try {
             fr = new FileWriter(enginefile);
             fr.write(enginefilecontents);
