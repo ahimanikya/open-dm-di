@@ -28,6 +28,8 @@ import com.sun.etl.engine.ETLEngineExecEvent;
 import com.sun.etl.engine.ETLEngineListener;
 import com.sun.etl.engine.ETLEngineLogEvent;
 import com.sun.etl.engine.impl.ETLEngineImpl;
+import com.sun.sql.framework.jdbc.DBConnectionParameters;
+import com.sun.sql.framework.utils.RuntimeAttribute;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,6 +38,8 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -83,13 +87,34 @@ public class ETLEngineInvoker {
                 }
             }
             input.close();
+
             for (int i = 0; i < arrFiles.size(); i++) {
-                ETLEngineInvoker invoker  = new ETLEngineInvoker();
+                ETLEngineInvoker invoker = new ETLEngineInvoker();
                 invoker.startProcessing(new File(arrFiles.get(i)));
             }
 
         } catch (Exception ex) {
             Logger.getLogger("global").log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private static void setAppDataRoot(ETLEngine myengine) {
+        List connDefs = myengine.getConnectionDefList();
+        String PARAM_APP_DATA_ROOT = "APP_DATAROOT";
+        Iterator itr = connDefs.iterator();
+        while (itr.hasNext()) {
+            DBConnectionParameters conn = (DBConnectionParameters) itr.next();
+            if (conn.getConnectionURL().indexOf(PARAM_APP_DATA_ROOT) != -1) {
+                String url = conn.getConnectionURL();
+                String workingDirectory = ".";
+                System.out.println("MANISH Working dir is : " + workingDirectory);
+                if (workingDirectory == null || "".equalsIgnoreCase(workingDirectory)) {
+                    //we should default to Design-time?
+                }
+                String newUrl = url.replaceAll(PARAM_APP_DATA_ROOT, workingDirectory);
+                System.out.println("modified url is " + newUrl);
+                conn.setConnectionURL(newUrl);
+            }
         }
     }
 
