@@ -72,9 +72,11 @@ public abstract class DBConnector implements DBConnection {
         } else if (dbtype.equals("DERBY")) {
             connuri = BLConstants.URI_DERBY_PRIFIX + "//" + host + BLConstants.PS + port + "/" + id;
         } else if (dbtype.equals("SQLSERVER")) {
-            connuri = BLConstants.URI_SQLSERVER_PRIFIX + "//" + host + BLConstants.PS + port + ";" + "AuthenticationMethod=" + id;
+            //connuri = BLConstants.URI_SQLSERVER_PRIFIX + "//" + host + BLConstants.PS + port + ";" + "AuthenticationMethod=" + id;
+            connuri = BLConstants.URI_SQLSERVER_PRIFIX + "//" + host + BLConstants.PS + port + ";" + "databaseName=" + id;
         }
         connuristr = connuri;
+        sLog.fine("Database Connection URI :: " + connuristr);
 
         try {
             this.connection = DriverManager.getConnection(connuri, login, pw);

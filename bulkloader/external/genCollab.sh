@@ -22,8 +22,8 @@ RECORD_DELIMITER=$$$
     TARGET_LOC=<DataBase Host/IP e.g. localhost>
 # Note : 1521 (Oracle), 1527 (Derby), 1433 (SQLServer)
     TARGET_PORT=<Specify Port No e.g. 1433>
-# Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for Derby
-    TARGET_ID=<Specify DB Name e.g. sample>
+# Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for Derby, 'Database Name' for SQL Server
+    TARGET_ID=<Specify Sid/DBname/databaseName e.g. orcl or eindex etc.>
 TARGET_SCHEMA=<Specify Schema e.g. APP, Blank for null>
 TARGET_CATALOG=<Specify Catalog e.g. APP, Blank for null>
 TARGET_LOGIN=<Specify Target DB Login>
