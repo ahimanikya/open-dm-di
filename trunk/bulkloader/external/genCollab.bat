@@ -20,8 +20,8 @@ REM Specify from following options (ORACLE=1, DERBY=2, SQLSERVER=3)
     set TARGET_LOC=<DataBase Host/IP e.g. localhost>
 REM Note : 1521 (Oracle), 1527 (Derby), 1433 (SQLServer)
     set TARGET_PORT=<Specify Port No e.g. 1521>
-REM Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for Derby, 'Authentication Method' for SQL Server
-    set TARGET_ID=<Specify Sid/DBname/AuthenticationMethod e.g. orcl or type4 etc.>
+REM Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for Derby, 'Database Name' for SQL Server
+    set TARGET_ID=<Specify Sid/DBname/databaseName e.g. orcl or type4 etc.>
 set TARGET_SCHEMA=<Specify Schema e.g. OE, Blank for null>
 set TARGET_CATALOG=<Specify Catalog e.g. OE, Blank for null>
 set TARGET_LOGIN=<Specify Target DB Login>

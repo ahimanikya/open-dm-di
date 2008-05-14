@@ -76,18 +76,15 @@ public class CreateTriggers {
         sb.append("cls\n");
         sb.append("set LIB=.\\lib\n");
         sb.append("set AXION_JAR=%LIB%" + fs + "axion-1.0.jar\n");
-        sb.append("set AXION_DEPENDENCIES_JARS=%LIB%\\commons-primitives-1.0.jar;%LIB%\\commons-logging-1.1.jar;%LIB%\\commons-collections-2.0.jar;%LIB%\\commons-codec-1.3.jar\n");
+        sb.append("set DB_DRIVER=%LIB%" + fs + System.getProperty("dbdriver.name") + "\n");
         switch (target_db_type) {
             case 1: //ORACLE
-                sb.append("set DB_DRIVER=%LIB%" + fs + "ojdbc14-10.1.0.2.0.jar\n");
                 sb.append("set TRGT_SCHEMA=" + System.getProperty("target.schema").toUpperCase() + "\n");
                 break;
             case 2: //DERBY
-                sb.append("set DB_DRIVER=%LIB%" + fs + "derbyclient.jar\n");
                 sb.append("set TRGT_SCHEMA=" + System.getProperty("target.schema") + "\n");
                 break;
             case 3: //SQL Server
-                sb.append("set DB_DRIVER=%LIB%" + fs + "sqljdbc.jar\n");
                 sb.append("set TRGT_SCHEMA=" + System.getProperty("target.schema") + "\n");
                 break;                
             default:
@@ -140,7 +137,6 @@ public class CreateTriggers {
         sb.append("#  *********** DO NOT EDIT TEXT BELOW ***********\n");
         sb.append("LIB=./lib\n");
         sb.append("AXION_JAR=$LIB" + fs + "axion-1.0.jar\n");
-        //sb.append("AXION_DEPENDENCIES_JARS=\"$LIB/commons-primitives-1.0.jar:$LIB/commons-logging-1.1.jar:$LIB/commons-collections-2.0.jar:$LIB/commons-codec-1.3.jar\"\n");
         sb.append("DB_DRIVER=\"$LIB" + fs + System.getProperty("dbdriver.name") + "\n");
         switch (target_db_type) {
             case 1: //ORACLE
