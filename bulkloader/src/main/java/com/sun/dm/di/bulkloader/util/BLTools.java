@@ -75,8 +75,7 @@ public class BLTools {
             } else {
                 sLog.severe(sLoc.x("LDR404: File [ {0} ] does not exist in dir", filepath));
             }
-        }
-        else{
+        } else {
             sLog.severe(sLoc.x("LDR405: File is Null"));
             return false;
         }
@@ -93,7 +92,7 @@ public class BLTools {
             if (dbfile.isFile()) {
                 ret = true;
             } else {
-                sLog.severe(sLoc.x("LDR406: DataBase file [ {0}.VER ] does not exist in dir : {1}",dbName,dbDir));
+                sLog.severe(sLoc.x("LDR406: DataBase file [ {0}.VER ] does not exist in dir : {1}", dbName, dbDir));
             }
         } else {
             sLog.severe(sLoc.x("LDR407: DataBase File does not exist: {0}", dbfile));
@@ -125,7 +124,7 @@ public class BLTools {
         return false;
     }
 
-    public static String copySrcDBFileToClassPath(String sourceFileLoc, String filename) {
+    public static String copySrcDBFileToClassPath(String sourceFileLoc, String filename, int trgt_type) {
         File newsourcedir = null;
         try {
             // Create a DB Dir
@@ -140,7 +139,11 @@ public class BLTools {
             sLog.fine("Created Dir : " + newsourcedir.getAbsolutePath());
 
             //Move Source File to This
-            copy(new File(sourceFileLoc, filename), new File(newsourcedir.getAbsolutePath(), filename));
+            if (trgt_type == 1) { //Files Copied for oracle should be in upper case
+                copy(new File(sourceFileLoc, filename), new File(newsourcedir.getAbsolutePath(), filename.toUpperCase()));
+            } else {
+                copy(new File(sourceFileLoc, filename), new File(newsourcedir.getAbsolutePath(), filename));
+            }
 
         } catch (Exception ex) {
             sLog.errorNoloc("[copySrcDBFileToClassPath] Exception", ex);
@@ -151,7 +154,7 @@ public class BLTools {
 
     private static void copy(File source, File dest) throws IOException {
         sLog.fine("Copying file [" + source.getAbsolutePath() + "] to [" + dest.getAbsolutePath() + "]");
-        FileChannel in = null, out = null;
+        FileChannel in = null,out  = null;
         try {
             in = new FileInputStream(source).getChannel();
             out = new FileOutputStream(dest).getChannel();
@@ -191,4 +194,19 @@ public class BLTools {
             }
         }
     }
+    
+    public static boolean deleteDir(File dir){
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i=0; i<children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // The directory is now empty so delete it
+        return dir.delete();
+    }
+    
 }

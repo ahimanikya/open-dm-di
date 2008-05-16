@@ -24,7 +24,8 @@ RECORD_DELIMITER=$$$
     TARGET_PORT=<Specify Port No e.g. 1433>
 # Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for Derby, 'Database Name' for SQL Server
     TARGET_ID=<Specify Sid/DBname/databaseName e.g. orcl or eindex etc.>
-TARGET_SCHEMA=<Specify Schema e.g. APP, Blank for null>
+# Note: SCHEMA name is case-sersitive for all other databases supported except Oracle
+    TARGET_SCHEMA=<Specify Schema e.g. APP, Blank for null>
 TARGET_CATALOG=<Specify Catalog e.g. APP, Blank for null>
 TARGET_LOGIN=<Specify Target DB Login>
 TARGET_PW=<Specify Target DB Passwd>
@@ -42,7 +43,7 @@ if [ -f $DB_DRIVER_JAR ] ; then
 	cp $DB_DRIVER_JAR ./lib/$DB_DRIVER_NAME
 	BLK=`pwd`
 
-	USER_LIBS="$BLK/lib/avalon-framework-4.1.3.jar:$BLK/lib/axion-1.0.jar:$BLK/lib/etl-editor-1.0.jar:$BLK/lib/etl-engine-1.0.jar:$BLK/lib/ETLEngineInvoker-1.0.jar:$BLK/lib/i18n-1.0.jar:$BLK/lib/ojdbc14-10.1.0.2.0.jar:$BLK/lib/org-netbeans-modules-db-1.0.jar:$BLK/lib/velocity-1.4.jar:$BLK/lib/velocity-dep-1.4.jar:$BLK/bulkloader-1.0.jar"
+	USER_LIBS="$BLK/lib/avalon-framework-4.1.3.jar:$BLK/lib/axion-1.0.jar:$BLK/lib/etl-editor-1.0.jar:$BLK/lib/etl-engine-1.0.jar:$BLK/lib/ETLEngineInvoker-1.0.jar:$BLK/lib/i18n-1.0.jar:$BLK/lib/ojdbc14-10.1.0.2.0.jar:$BLK/lib/org-netbeans-modules-db-1.0.jar:$BLK/lib/velocity-1.4.jar:$BLK/lib/velocity-dep-1.4.jar:$BLK/lib/bulkloader-1.0.jar"
 
 	OPENIDE_LIB_MODULE=$NB_HOME/platform8/modules
 	OPENIDE_LIB_LIB=$NB_HOME/platform8/lib
@@ -53,7 +54,7 @@ if [ -f $DB_DRIVER_JAR ] ; then
 	OPENIDE_LIBS="$OPENIDE_LIB_MODULE/org-openide-nodes.jar:$OPENIDE_LIB_MODULE/org-openide-text.jar:$OPENIDE_LIB_MODULE/org-openide-loaders.jar:$OPENIDE_LIB_MODULE/org-openide-windows.jar:$OPENIDE_LIB_MODULE/org-openide-dialogs.jar:$OPENIDE_LIB_MODULE/org-openide-awt.jar:$OPENIDE_LIB_CORE/org-openide-filesystems.jar:$OPENIDE_LIB_LIB/org-openide-util.jar:$OPENIDE_LIB_IDE9_MOD/org-netbeans-modules-db.jar";$OPENIDE_LIB_XML2_MOD/org-netbeans-modules-xml-validation.jar;$OPENIDE_LIB_IDE9_MOD/org-netbeans-api-xml.jar;$OPENIDE_LIB_SOA2_MOD/org-netbeans-modules-soa-ui.jar;$OPENIDE_LIB_XML2_MOD/org-netbeans-modules-xml-xam-ui.jar
 	ALL_LIBS="$USER_LIBS:$OPENIDE_LIBS:$DB_DRIVER_JAR:$CLASSPATH"
 	
-	$JAVA_PATH/java -Xms128m -Xmx512m -Dsourcedb.loc=$SOURCE_LOC -Dfield.delimiter=$FIELD_DELIMITER -Drecord.delimiter=$RECORD_DELIMITER -Dtarget.type=$TARGET_DB_TYPE -Dtarget.host=$TARGET_LOC -Dtarget.port=$TARGET_PORT -Dtarget.id=$TARGET_ID -Dtarget.schema=$TARGET_SCHEMA -Dtarget.catalog=$TARGET_CATALOG -Dtarget.login=$TARGET_LOGIN -Dtarget.pw=$TARGET_PW -Dmyjava.path=$JAVA_PATH -Ddbdriver.name=$DB_DRIVER_NAME -cp $ALL_LIBS com.sun.dm.di.bulkloader.LoaderMain
+	"$JAVA_PATH"/java -Xms128m -Xmx512m -Dsourcedb.loc=$SOURCE_LOC -Dfield.delimiter=$FIELD_DELIMITER -Drecord.delimiter=$RECORD_DELIMITER -Dtarget.type=$TARGET_DB_TYPE -Dtarget.host=$TARGET_LOC -Dtarget.port=$TARGET_PORT -Dtarget.id=$TARGET_ID -Dtarget.schema=$TARGET_SCHEMA -Dtarget.catalog=$TARGET_CATALOG -Dtarget.login=$TARGET_LOGIN -Dtarget.pw=$TARGET_PW -Dmyjava.path=$JAVA_PATH -Ddbdriver.name=$DB_DRIVER_NAME -cp $ALL_LIBS com.sun.dm.di.bulkloader.LoaderMain
 
     else
 	echo " Unable to locate Database Driver on Specified Path.";
