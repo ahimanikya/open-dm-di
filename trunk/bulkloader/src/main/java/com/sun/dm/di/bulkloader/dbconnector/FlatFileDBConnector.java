@@ -56,6 +56,10 @@ public class FlatFileDBConnector extends DBConnector {
     public FlatFileDBConnector(ETLDefGenerator etldefgen, String fileloc, String filename, String fld_delimiter, String rec_delimiter, String schema, String catalog, DBConnection target_inf, int trgt_type, int type) {
         this();
         etldef = etldefgen;
+        if (trgt_type == 1){
+            // Handle Oracle target for upper case
+            filename = filename.toUpperCase();
+        }
         etldef.setSourceFileDBName(filename); //Set the source file db name
         sourceTableQName = getSourceTableQualifiedName(filename);
         ConnectToDB(fileloc, sourceTableQName);

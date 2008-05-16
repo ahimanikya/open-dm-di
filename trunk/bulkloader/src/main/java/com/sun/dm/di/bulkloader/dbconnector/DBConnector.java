@@ -133,20 +133,20 @@ public abstract class DBConnector implements DBConnection {
             } catch (SQLException ex) {
                 sLog.severe(sLoc.x("LDR144:Error while connecting to DB : {0}", ex.getMessage()));
             }
-            
+
             //SomeTimes Catalog is null but does not show that.
-            if (catalog != null){
-                if (catalog.length() == 0){
+            if (catalog != null) {
+                if (catalog.length() == 0) {
                     catalog = null;
                 }
             }
-            
+
             //Sometimes Schema is null but does not show that
-            if (schema != null){
-                if (schema.length() == 0){
+            if (schema != null) {
+                if (schema.length() == 0) {
                     schema = null;
                 }
-            }            
+            }
 
             try {
                 DatabaseMetaData dbmd = this.connection.getMetaData();
@@ -173,6 +173,15 @@ public abstract class DBConnector implements DBConnection {
                 sLog.severe(sLoc.x("LDR145: Error while retriving DB metadata : {0}", ex.getMessage()));
             }
             if (tablenamelist.size() == 1) {
+                //For SQL Server Loading, check for exact table name match (case sensitive)
+                // For some reason, metadata query finds the table name in case - insensitive way, hence the fix
+                if (dbproductname.equalsIgnoreCase(BLConstants.SQLSERVER_PRODUCT_NAME)) {
+                    //Match the names
+                    if (!tablenamelist.get(0).equals(targetTableQName)) {
+                        sLog.severe(sLoc.x("LDR149: Table [  {0}  ] mismatch in Target Database. Target Table name must match with the source for SQL Server Loading. Name found in Target DB [{1}]", targetTableQName, tablenamelist.get(0)));
+                        return false;
+                    }
+                }
                 sLog.info(sLoc.x("LDR146: Table [ {0} ] found in the Target DB", targetTableQName));
                 return true;
             } else if (tablenamelist.size() == 0) {
@@ -190,10 +199,33 @@ public abstract class DBConnector implements DBConnection {
     }
 
     protected String getTargetTableQualifiedName(String tname) {
-        if (tname.indexOf(".") != -1) {
-            return tname.substring(0, tname.lastIndexOf(".")).toUpperCase();
-        }
+        int target_type_code = Integer.parseInt(System.getProperty("target.type"));
+        switch (target_type_code) {
+            case 1:
+                // Note that only oracle source tables need to be read as upper case table names
+                if (tname.indexOf(".") != -1) {
+                    return tname.substring(0, tname.lastIndexOf(".")).toUpperCase();
+                } else {
+                    return tname.toUpperCase();
+                }
+            case 2:
+                if (tname.indexOf(".") != -1) {
+                    return tname.substring(0, tname.lastIndexOf("."));
+                }
+                break;
+            case 3:
+                if (tname.indexOf(".") != -1) {
+                    return tname.substring(0, tname.lastIndexOf("."));
+                }
+                break;
+            default:
+                if (tname.indexOf(".") != -1) {
+                    return tname.substring(0, tname.lastIndexOf(".")).toUpperCase(); //ORACLE is Default
 
+                } else {
+                    return tname.toUpperCase();
+                }
+        }
         return tname;
     }
 }
