@@ -58,9 +58,7 @@ import org.netbeans.modules.etl.codegen.ETLStrategyBuilder;
  */
 public class LoaderMain {
 
-
     private static transient final Logger mLogger = Logger.getLogger(LoaderMain.class);
-
     private static Logger sLog = LogUtil.getLogger(LoaderMain.class.getName());
     private static Localizer sLoc = Localizer.get();
 
@@ -75,7 +73,6 @@ public class LoaderMain {
         return sb.toString();
     }
 
-    
     private static void confiugreLogger() {
         FileInputStream ins = null;
         try {
@@ -106,13 +103,11 @@ public class LoaderMain {
         }
     }
 
-
-    
     public static void main(String[] args) {
 
         sLog.info(sLoc.x("LDR001: Loader Start ..."));
         confiugreLogger();
-        
+
         // This is to test locally
         /*
         // Set the System Variables (Source)
@@ -173,51 +168,58 @@ public class LoaderMain {
             File f = new File(System.getProperty("sourcedb.loc"));
             String[] datafiles = f.list();
 
-/*
+
+            /*
             //Sequencing Database Loading based on Table relationships - Start
             ArrayList<String> tableNames = new ArrayList<String>();
             for (String df : datafiles) {
-                tableNames.add(df.substring(0, df.indexOf(".")));
+            tableNames.add(df.substring(0, df.indexOf(".")));
             }
-
+            
             DBConnection target = null;
             switch (target_type_code) {
-                case 1:
-                    String dbschemaT = System.getProperty("target.schema").toUpperCase(); //Schema has to be uppercase
-                    target = cfact.createTrgtOracleConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[0], new ETLDefGenerator(datafiles[0], ETLStrategyBuilder.EXEC_MODE_STAGING));
-                    break;
-                case 2:
-                    target = cfact.createTrgtDerbyConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[0], new ETLDefGenerator(datafiles[0], ETLStrategyBuilder.EXEC_MODE_STAGING));
-                    break;
-                case 3:
-                    target = cfact.createTrgtSQLServerConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[0], new ETLDefGenerator(datafiles[0], ETLStrategyBuilder.EXEC_MODE_STAGING));
-                default:
-                    target = null;
-                    break;
+            case 1:
+            String dbschemaT = System.getProperty("target.schema").toUpperCase(); //Schema has to be uppercase
+            target = cfact.createTrgtOracleConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), dbschemaT, System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[0], new ETLDefGenerator(datafiles[0], ETLStrategyBuilder.EXEC_MODE_STAGING));
+            break;
+            case 2:
+            target = cfact.createTrgtDerbyConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[0], new ETLDefGenerator(datafiles[0], ETLStrategyBuilder.EXEC_MODE_STAGING));
+            break;
+            case 3:
+            target = cfact.createTrgtSQLServerConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[0], new ETLDefGenerator(datafiles[0], ETLStrategyBuilder.EXEC_MODE_STAGING));
+            default:
+            target = null;
+            break;
             }
             
             try {
-                getTableSequence(target.getDataBaseConnection(), System.getProperty("target.schema"), System.getProperty("target.catalog"), tableNames);
+            getTableSequence(target.getDataBaseConnection(), System.getProperty("target.schema"), System.getProperty("target.catalog"), tableNames);
             } catch (SQLException ex) {
-                java.util.logging.Logger.getLogger(LoaderMain.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoaderMain.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(LoaderMain.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(LoaderMain.class.getName()).log(Level.SEVERE, null, ex);
             }
-             //Sequencing Database Loading based on Table relationships - End
+            System.exit(0);
+            //Sequencing Database Loading based on Table relationships - End
              */
 
             for (int i = 0; i < datafiles.length; i++) {
-                ETLDefGenerator etldefgen = new ETLDefGenerator(datafiles[i], ETLStrategyBuilder.EXEC_MODE_STAGING);
+                System.out.println(" \n\n\t\t*********** Processing File [" + datafiles[i] + "] **************");
+                ETLDefGenerator etldefgen = null;
                 DBConnection cc_target = null;
                 switch (target_type_code) {
                     case 1:
+                        etldefgen = new ETLDefGenerator(datafiles[i].toUpperCase(), ETLStrategyBuilder.EXEC_MODE_STAGING);
                         String dbschemaT = System.getProperty("target.schema").toUpperCase(); //Schema has to be uppercase
+
                         cc_target = cfact.createTrgtOracleConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), dbschemaT, System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
                         break;
                     case 2:
+                        etldefgen = new ETLDefGenerator(datafiles[i], ETLStrategyBuilder.EXEC_MODE_STAGING);
                         cc_target = cfact.createTrgtDerbyConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
                         break;
                     case 3:
+                        etldefgen = new ETLDefGenerator(datafiles[i], ETLStrategyBuilder.EXEC_MODE_STAGING);
                         cc_target = cfact.createTrgtSQLServerConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
                         break;
                     default:
@@ -232,7 +234,22 @@ public class LoaderMain {
                 DBConnection cc_source = null;
                 if (cc_target != null) {
                     if (cc_target.getDataBaseConnection() != null) {
-                        cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), System.getProperty("target.schema"), System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
+                        switch (target_type_code) {
+                            case 1:
+                                String dbschemaT = System.getProperty("target.schema").toUpperCase(); //Schema has to be uppercase
+
+                                cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), dbschemaT, System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
+                                break;
+                            case 2:
+                                cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), System.getProperty("target.schema"), System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
+                                break;
+                            case 3:
+                                cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), System.getProperty("target.schema"), System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
+                                break;
+                            default:
+                                cc_target = null;
+                                break;
+                        }
                     }
                 }
 
@@ -240,12 +257,16 @@ public class LoaderMain {
                     // Generate ETL Engine File
                     ETLEngineFileGenerator defgen = new ETLEngineFileGenerator();
                     defgen.generateETLEngineFile(etldefgen);
+                    //CLose the soutce conn when done
+                    try {
+                        cc_source.getDataBaseConnection().close();
+                    } catch (SQLException ex) {
+                        sLog.infoNoloc("Failed to close source conn after use : " + ex.getMessage());
+                    }
                 } else {
                     sLog.severe(sLoc.x("LDR008: Source connection is null. Engine file gen aborted"));
                 }
 
-            //Try to disable Target Table Constraints
-            //disableTargetTableConstrains(cc_target, datafiles[i]);
             }
 
             //Generate loader triggers and zip
@@ -253,6 +274,22 @@ public class LoaderMain {
             CreateZip ziputil = new CreateZip();
             gentriggers.createTriggers();
             ziputil.createZipPackage(BLConstants.getCWD());
+            //Do Cleanup
+            boolean ret = false;
+            sLog.infoNoloc("Cleaning up Folder ETLLoader ...");
+            ret = BLTools.deleteDir(new File(BLConstants.getCWD() + BLConstants.fs + "ETLLoader"));
+            if (ret) {
+                sLog.infoNoloc("Success!");
+            } else {
+                sLog.infoNoloc("Failed!");
+            }
+            sLog.infoNoloc("Cleaning up Folder ETLProcess ...");
+            ret = BLTools.deleteDir(new File(BLConstants.getCWD() + BLConstants.fs + "ETLProcess"));
+            if (ret) {
+                sLog.infoNoloc("Success!");
+            } else {
+                sLog.infoNoloc("Failed!");
+            }
         } else {
             sLog.severe(sLoc.x("LDR009: Loader will exit abnormally"));
             System.exit(0);

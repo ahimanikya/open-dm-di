@@ -245,7 +245,7 @@ public class ETLDefGenerator {
                         }
                     }
                 }
-                
+
                 //automapper.autoMapSourceToTarget();
 
                 //Set App Data working dir and db instance
@@ -403,7 +403,7 @@ public class ETLDefGenerator {
         if (oid == null) {// support older version of DBModel
             return;
         }
-        
+
         SQLDBConnectionDefinition originalConndef = (SQLDBConnectionDefinition) element.getConnectionDefinition();
 
         if (originalConndef.getDriverClass().equals("org.axiondb.jdbc.AxionDriver")) {
@@ -438,12 +438,20 @@ public class ETLDefGenerator {
         Map connectionParams = new HashMap();
         connectionParams.put(KEY_DATABASE_NAME, collabName);
         connectionParams.put(DBConnectionDefinitionTemplate.KEY_METADATA_DIR, metadataDir);
-
         conndef.setConnectionURL(StringUtil.replace(conndef.getConnectionURL(), connectionParams));
     }
 
     private SQLDBTable getTable(DBMetaDataFactory dbMeta, String schemaName, String catalogName, String tableName, int type) throws Exception {
-        tableName = tableName.toUpperCase(); // Needed as source Flatfile case might be not always upper case - CR 6691780
+        int target_type_code = Integer.parseInt(System.getProperty("target.type"));
+        // Some cludge has to be made for SQL Server handling here. Tables names need to maintain case for SQL Server
+        if ((target_type_code == 3)) {
+               if ((type == BLConstants.SOURCE_TABLE_TYPE)){
+                   tableName = tableName.toUpperCase();
+               }
+        }
+        else{
+            tableName = tableName.toUpperCase(); // Needed as source Flatfile case might be not always upper case - CR 6691780
+        }
         String[][] tableList = dbMeta.getTablesOnly(catalogName, schemaName, "", false);
         SQLDBTable aTable = null;
         String[] currTable = null;
@@ -453,11 +461,11 @@ public class ETLDefGenerator {
                 if (currTable[DBMetaDataFactory.NAME].equals(tableName)) {
                     switch (type) {
                         case BLConstants.SOURCE_TABLE_TYPE:
-                            sLog.fine(sLoc.x("Match Ffound for Source Table : " + tableName));
+                            sLog.info(sLoc.x("Match Found for Source Table : " + tableName));
                             aTable = new SourceTableImpl(currTable[DBMetaDataFactory.NAME].trim(), currTable[DBMetaDataFactory.SCHEMA], currTable[DBMetaDataFactory.CATALOG]);
                             break;
                         case BLConstants.TARGET_TABLE_TYPE:
-                            sLog.fine(sLoc.x("Match Ffound for Target Table : " + tableName));
+                            sLog.info(sLoc.x("Match Found for Target Table : " + tableName));
                             aTable = new TargetTableImpl(currTable[DBMetaDataFactory.NAME].trim(), currTable[DBMetaDataFactory.SCHEMA], currTable[DBMetaDataFactory.CATALOG]);
                             break;
                     }

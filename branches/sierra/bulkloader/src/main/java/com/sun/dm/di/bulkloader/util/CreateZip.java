@@ -55,7 +55,8 @@ public class CreateZip {
             filenames = new ArrayList();
             String cwd = BLConstants.getCWD();
 
-            zipoutdir = (new File(cwd)).getParent();
+            //zipoutdir = (new File(cwd)).getParent();
+            zipoutdir = cwd;
             sLog.info(sLoc.x("LDR430: Zip output dir :: {0}", zipoutdir));
             zout = new ZipOutputStream(new FileOutputStream(zipoutdir + BLConstants.fs + BLConstants.zipname));
 

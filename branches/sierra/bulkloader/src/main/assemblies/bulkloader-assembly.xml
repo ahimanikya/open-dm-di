@@ -10,19 +10,24 @@
             <directory>target</directory>
             <outputDirectory>soa2/modules/ext/mdm/bulkloader</outputDirectory>
             <includes>
-                <include>bulkloader*.jar</include>
+                <!--<include>bulkloader*.jar</include>-->
                 <include>*.bat</include>
                 <include>*.sh</include>
             </includes>
         </fileSet>
     </fileSets>
-	<files>
-	<file>
-     <source>logger.properties</source>
-     <outputDirectory>soa2/modules/ext/mdm/bulkloader/config</outputDirectory>
-     <filtered>true</filtered>
-	</file>
-   </files> 
+    <files>
+        <file>
+            <source>logger.properties</source>
+            <outputDirectory>soa2/modules/ext/mdm/bulkloader/config</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>target/bulkloader-1.0.jar</source>
+            <outputDirectory>soa2/modules/ext/mdm/bulkloader/lib</outputDirectory>
+            <filtered>true</filtered>
+        </file>        
+    </files>
     <dependencySets>
         <dependencySet>
             <outputDirectory>soa2/modules/ext/mdm/bulkloader/lib</outputDirectory>
