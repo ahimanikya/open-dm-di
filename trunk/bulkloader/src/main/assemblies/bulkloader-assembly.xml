@@ -10,7 +10,7 @@
             <directory>target</directory>
             <outputDirectory>soa2/modules/ext/mdm/bulkloader</outputDirectory>
             <includes>
-                <!--<include>bulkloader*.jar</include>-->
+                <include>bulkloader*.jar</include>
                 <include>*.bat</include>
                 <include>*.sh</include>
             </includes>
@@ -22,11 +22,13 @@
             <outputDirectory>soa2/modules/ext/mdm/bulkloader/config</outputDirectory>
             <filtered>true</filtered>
         </file>
+        <!--
         <file>
             <source>target/bulkloader-1.0.jar</source>
             <outputDirectory>soa2/modules/ext/mdm/bulkloader/lib</outputDirectory>
             <filtered>true</filtered>
-        </file>        
+        </file>
+        -->
     </files>
     <dependencySets>
         <dependencySet>
