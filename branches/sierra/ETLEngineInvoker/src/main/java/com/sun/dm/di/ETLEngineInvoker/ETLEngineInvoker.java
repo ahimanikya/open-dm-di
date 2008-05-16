@@ -28,8 +28,6 @@ import com.sun.etl.engine.ETLEngineExecEvent;
 import com.sun.etl.engine.ETLEngineListener;
 import com.sun.etl.engine.ETLEngineLogEvent;
 import com.sun.etl.engine.impl.ETLEngineImpl;
-import com.sun.sql.framework.jdbc.DBConnectionParameters;
-import com.sun.sql.framework.utils.RuntimeAttribute;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,8 +36,6 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -65,14 +61,20 @@ public class ETLEngineInvoker {
     public ETLEngineInvoker() {
     }
 
-    private void startProcessing(File engineFile) {
+    /*private void startProcessing(File engineFile) {
         ETLWorkerThread worker = new ETLWorkerThread(engineFile);
         Thread workerThread = new Thread(worker);
         workerThread.start();
+    }*/
+    
+    private void startProcessing(File engineFile) {
+        
+        executeEngine(engineFile);
     }
 
     public static void main(String[] args) {
         confiugreLogger();
+        String engineFileName ="";
         try {
             if (args.length >= 1) {
                 ENGINE_FILE = args[0];
@@ -87,10 +89,13 @@ public class ETLEngineInvoker {
                 }
             }
             input.close();
-
             for (int i = 0; i < arrFiles.size(); i++) {
+                engineFileName = arrFiles.get(i);
+                mLogger.info("Start executing Engine File :: " + engineFileName );
                 ETLEngineInvoker invoker = new ETLEngineInvoker();
+                
                 invoker.startProcessing(new File(arrFiles.get(i)));
+                 mLogger.info("End executing Engine File :: " + engineFileName );
             }
 
         } catch (Exception ex) {
@@ -98,26 +103,35 @@ public class ETLEngineInvoker {
         }
     }
 
-    private static void setAppDataRoot(ETLEngine myengine) {
-        List connDefs = myengine.getConnectionDefList();
-        String PARAM_APP_DATA_ROOT = "APP_DATAROOT";
-        Iterator itr = connDefs.iterator();
-        while (itr.hasNext()) {
-            DBConnectionParameters conn = (DBConnectionParameters) itr.next();
-            if (conn.getConnectionURL().indexOf(PARAM_APP_DATA_ROOT) != -1) {
-                String url = conn.getConnectionURL();
-                String workingDirectory = ".";
-                System.out.println("MANISH Working dir is : " + workingDirectory);
-                if (workingDirectory == null || "".equalsIgnoreCase(workingDirectory)) {
-                    //we should default to Design-time?
-                }
-                String newUrl = url.replaceAll(PARAM_APP_DATA_ROOT, workingDirectory);
-                System.out.println("modified url is " + newUrl);
-                conn.setConnectionURL(newUrl);
+    private void executeEngine(File engineFile) {
+
+        try {
+            System.out.println("Setting Engine context...");
+            engine = new ETLEngineImpl();
+            ETLEngineContext context = new ETLEngineContext();
+            System.out.println("Parsing Engine File...");
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = factory.newDocumentBuilder();
+            Document doc = docBuilder.parse(new FileInputStream(engineFile));
+            engine.setContext(context);
+            engine.setRunningOnAppServer(true);
+            engine.parseXML(doc.getDocumentElement());
+            System.out.println("Initializing engine listener...");
+            listener = new ETLEngineListenerImpl();
+
+
+            System.out.println("Transferring control to ETL Engine ...");
+            engine.exec(listener);
+            synchronized (listener) {
+                listener.wait();
+
             }
+
+        } catch (Exception ex) {
+            Logger.getLogger("global").log(Level.SEVERE, null, ex);
         }
     }
-
+/*
     private class ETLWorkerThread implements Runnable {
 
         private File engineFile = null;
@@ -158,7 +172,7 @@ public class ETLEngineInvoker {
             }
         }
     }
-
+*/
     private class ETLEngineListenerImpl implements ETLEngineListener {
 
         public void executionPerformed(ETLEngineExecEvent event) {
