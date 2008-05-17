@@ -204,7 +204,7 @@ public class LoaderMain {
              */
 
             for (int i = 0; i < datafiles.length; i++) {
-                System.out.println(" \n\n\t\t*********** Processing File [" + datafiles[i] + "] **************");
+                System.out.println(" \n\n\t\t*********** Processing Source [" + datafiles[i] + "] **************");
                 ETLDefGenerator etldefgen = null;
                 DBConnection cc_target = null;
                 switch (target_type_code) {
@@ -274,22 +274,6 @@ public class LoaderMain {
             CreateZip ziputil = new CreateZip();
             gentriggers.createTriggers();
             ziputil.createZipPackage(BLConstants.getCWD());
-            //Do Cleanup
-            boolean ret = false;
-            sLog.infoNoloc("Cleaning up Folder ETLLoader ...");
-            ret = BLTools.deleteDir(new File(BLConstants.getCWD() + BLConstants.fs + "ETLLoader"));
-            if (ret) {
-                sLog.infoNoloc("Success!");
-            } else {
-                sLog.infoNoloc("Failed!");
-            }
-            sLog.infoNoloc("Cleaning up Folder ETLProcess ...");
-            ret = BLTools.deleteDir(new File(BLConstants.getCWD() + BLConstants.fs + "ETLProcess"));
-            if (ret) {
-                sLog.infoNoloc("Success!");
-            } else {
-                sLog.infoNoloc("Failed!");
-            }
         } else {
             sLog.severe(sLoc.x("LDR009: Loader will exit abnormally"));
             System.exit(0);
