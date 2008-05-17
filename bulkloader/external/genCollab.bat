@@ -53,6 +53,13 @@ REM Execution
 	"%JAVA_PATH%"\java -Xms128m -Xmx512m -Dsourcedb.loc=%SOURCE_LOC% -Dfield.delimiter=%FIELD_DELIMITER% -Drecord.delimiter=%RECORD_DELIMITER% -Dtarget.type=%TARGET_DB_TYPE% -Dtarget.host=%TARGET_LOC% -Dtarget.port=%TARGET_PORT% -Dtarget.id=%TARGET_ID% -Dtarget.schema=%TARGET_SCHEMA% -Dtarget.catalog=%TARGET_CATALOG% -Dtarget.login=%TARGET_LOGIN% -Dtarget.pw=%TARGET_PW% -Dmyjava.path=%JAVA_PATH% -Ddbdriver.name=%DB_DRIVER_NAME% -cp %ALL_LIBS% com.sun.dm.di.bulkloader.LoaderMain
 REM Execution
 
+//Cleanup
+RMDIR .\\ETLLoader /s/q
+RMDIR .\\ETLProcess /s/q
+RMDIR .\\etl-loader.zip /s/q
+RMDIR .\\BulkLoaderWorkDir /s/q
+RMDIR .\\usrdir /s/q
+
 set RUNSTAT=SUCCESS
 :GetExit
 if (%RUNSTAT%) == (START) echo Unable to Locate Database Driver on Specified Path. Check Path : %DB_DRIVER_JAR%
