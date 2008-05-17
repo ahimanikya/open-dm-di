@@ -22,9 +22,7 @@
  */
 package com.sun.dm.di.ETLEngineInvoker.bulkloader;
 
-import com.sun.sql.framework.utils.ScEncrypt;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -36,17 +34,29 @@ import java.util.ArrayList;
  */
 public class TargetDBOperations {
 
-    private static String ENABLE_CONSTRAINT = "enable_constraint";
-    private static String DISABLE_CONSTRAINST = "disable_constraint";
-
-    private static ArrayList getNamesOfTableConstraints(String cat, String table, Statement stmt) {
-        System.out.print("Collecting constraints for table " + table + " ...");
+    private ArrayList getNamesOfTableConstraints(String schema, String table, Statement stmt, int dbtype) {
         ArrayList conslist = null;
         StringBuilder query = new StringBuilder();
-        query.append("SELECT CONSTRAINT_NAME FROM USER_CONSTRAINTS WHERE ");
-        query.append("TABLE_NAME='" + table + "' ");
-        if (cat != null) {
-            query.append(" AND OWNER='" + cat + "'");
+        switch (dbtype) {
+            case 1:
+                System.out.print("[Oracle]Collecting constraints for table " + table + " ...");
+                query.append("SELECT CONSTRAINT_NAME FROM USER_CONSTRAINTS WHERE ");
+                query.append("TABLE_NAME='" + table + "' ");
+                if (schema != null) {
+                    query.append(" AND OWNER='" + schema + "'");
+                }
+                break;
+            case 3:
+                System.out.print("[SQL Server]Collecting constraints for table " + table + " ...");
+
+                query.append("SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.CONSTRAINT_TABLE_USAGE WHERE ");
+                query.append("TABLE_NAME='" + table + "' ");
+                if (schema != null) {
+                    query.append(" AND TABLE_SCHEMA='" + schema + "'");
+                }
+                break;
+            default:
+                break;
         }
 
         try {
@@ -64,26 +74,39 @@ public class TargetDBOperations {
         return conslist;
     }
 
-    public static void enableConstrains(String catalog, String table_name, String dbconnstr, String login, String pw) {
-        Connection conn = null;
+    public void enableConstrains(String schema, Connection trgtconn, String table_name, int dbtype) {
         Statement stmt = null;
         try {
-            conn = connectToDB(dbconnstr, login, pw);
-            if (conn != null) {
-                stmt = conn.createStatement();
-                //Get the names of table constrainst
-                ArrayList cons_names = getNamesOfTableConstraints(catalog, table_name, stmt);
+            stmt = trgtconn.createStatement();
+            //Get the names of table constrainst
+            ArrayList cons_names = getNamesOfTableConstraints(schema, table_name, stmt, dbtype);
+            if (cons_names != null) {
                 for (int i = 0; i < cons_names.size(); i++) {
                     //Query All Constraints from the target table being processed
                     StringBuilder enablesql = new StringBuilder();
-                    enablesql.append("ALTER TABLE ");
-                    if (catalog != null) {
-                        enablesql.append(catalog + "." + table_name);
-                    } else {
-                        enablesql.append(table_name);
+                    switch (dbtype) {
+                        case 1:
+                            enablesql.append("ALTER TABLE ");
+                            if (schema != null) {
+                                enablesql.append(schema + "." + table_name);
+                            } else {
+                                enablesql.append(table_name);
+                            }
+                            enablesql.append(" ENABLE CONSTRAINT " + cons_names.get(i));
+                            System.out.println("[Oracle]Enable Constraint [" + cons_names.get(i) + "] on table : " + table_name);
+                            break;
+                        case 3:
+                            enablesql.append("ALTER TABLE ");
+                            if (schema != null) {
+                                enablesql.append(schema + "." + table_name);
+                            } else {
+                                enablesql.append(table_name);
+                            }
+                            enablesql.append(" CHECK CONSTRAINT " + cons_names.get(i));
+                            System.out.println("[SQLServer]Enable Constraint [" + cons_names.get(i) + "] on table : " + table_name);
+                            break;
+                        default:
                     }
-                    enablesql.append(" ENABLE CONSTRAINT " + cons_names.get(i));
-                    System.out.println("Enable Constraint [" + cons_names.get(i) + "] on table : " + table_name);
                     stmt.executeUpdate(enablesql.toString());
                 }
             }
@@ -96,35 +119,42 @@ public class TargetDBOperations {
             } catch (SQLException ex) {
                 System.out.println("SQL Exception while trying to closing statement : " + ex.getMessage());
             }
-
-            try {
-                conn.close();
-            } catch (SQLException ex) {
-                System.out.println("SQL Exception while trying to closing db connection : " + ex.getMessage());
-            }
         }
     }
 
-    public static void disableConstrains(String catalog, String table_name, String dbconnstr, String login, String pw) {
+    public void disableConstrains(String schema, Connection trgtconn, String table_name, int dbtype) {
         Statement stmt = null;
-        Connection conn = null;
         try {
-            conn = connectToDB(dbconnstr, login, pw);
-            if (conn != null) {
-                stmt = conn.createStatement();
-                //Get the names of table constrainst
-                ArrayList cons_names = getNamesOfTableConstraints(catalog, table_name, stmt);
+            stmt = trgtconn.createStatement();
+            //Get the names of table constrainst
+            ArrayList cons_names = getNamesOfTableConstraints(schema, table_name, stmt, dbtype);
+            if (cons_names != null) {
                 for (int i = 0; i < cons_names.size(); i++) {
                     //Query All Constraints from the target table being processed
                     StringBuilder disablesql = new StringBuilder();
-                    disablesql.append("ALTER TABLE ");
-                    if (catalog != null) {
-                        disablesql.append(catalog + "." + table_name);
-                    } else {
-                        disablesql.append(table_name);
+                    switch (dbtype) {
+                        case 1:
+                            disablesql.append("ALTER TABLE ");
+                            if (schema != null) {
+                                disablesql.append(schema + "." + table_name);
+                            } else {
+                                disablesql.append(table_name);
+                            }
+                            disablesql.append(" DISABLE CONSTRAINT " + cons_names.get(i));
+                            System.out.println("[Oracle ]Disable Constraint [" + cons_names.get(i) + "] on table : " + table_name);
+                            break;
+                        case 3:
+                            disablesql.append("ALTER TABLE ");
+                            if (schema != null) {
+                                disablesql.append(schema + "." + table_name);
+                            } else {
+                                disablesql.append(table_name);
+                            }
+                            disablesql.append(" NOCHECK CONSTRAINT " + cons_names.get(i));
+                            System.out.println("[SQLServer]Disable Constraint [" + cons_names.get(i) + "] on table : " + table_name);
+                            break;
+                        default:
                     }
-                    disablesql.append(" DISABLE CONSTRAINT " + cons_names.get(i));
-                    System.out.println("Disable Constraint [" + cons_names.get(i) + "] on table : " + table_name);
                     stmt.executeUpdate(disablesql.toString());
                 }
             }
@@ -136,44 +166,10 @@ public class TargetDBOperations {
             } catch (SQLException ex) {
                 System.out.println("SQL Exception while trying to closing statement : " + ex.getMessage());
             }
-
-            try {
-                conn.close();
-            } catch (SQLException ex) {
-                System.out.println("SQL Exception while trying to closing db connection" + ex.getMessage());
-            }
         }
     }
 
-    private static Connection connectToDB(String dbconnstr, String login, String pw) {
-        pw = ScEncrypt.decrypt("soabi", pw);
-        if (dbconnstr.indexOf("axion") != -1) {
-            System.out.println("Init Axion Driver");
-            try {
-                Class.forName("org.axiondb.jdbc.AxionDriver");
-                return DriverManager.getConnection(dbconnstr, login, pw);
-            } catch (SQLException ex) {
-                System.out.println("Axion driver SQL exception :: " + ex.getMessage());
-            } catch (ClassNotFoundException ex) {
-                System.out.println("Axion driver Class not found exception :: " + ex.getMessage());
-            }
-        } else if (dbconnstr.indexOf("oracle") != -1) {
-            System.out.println("Init Oracle Driver");
-            try {
-                Class.forName("oracle.jdbc.driver.OracleDriver");
-                return DriverManager.getConnection(dbconnstr, login, pw);
-            } catch (SQLException ex) {
-                System.out.println("Oracle SQL exception :: " + ex.getMessage());
-            } catch (ClassNotFoundException ex) {
-                System.out.println("Oracle driver Class not found exception :: " + ex.getMessage());
-            }
-        }
-
-        return null;
-
-    }
-
-    private static String getPWString(String pw) {
+    private String getPWString(String pw) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < pw.length(); i++) {
             //    if ((i % 2) == 0) {
@@ -189,7 +185,7 @@ public class TargetDBOperations {
     /**
      * 
      * @param args
-     * args[0] - Target DB Catalog
+     * args[0] - Target DB Schema
      * args[1] - Target DB Table Name
      * args[2] - Target DB Connection String
      * args[3] - Target DB Login
@@ -197,18 +193,20 @@ public class TargetDBOperations {
      * args[5] - enable/disable constraint flag
      */
     public static void main(String[] args) {
+        /*
         if (args.length == 6) {
-            System.out.println("\n Target DB Catalog : " + args[0]);
-            System.out.println(" Target DB Table Name : " + args[1]);
-            System.out.println(" Target DB Connection String : " + args[2]);
-            System.out.println(" Target DB Login : " + args[3]);
-            System.out.println(" Target DB Passwd : " + getPWString(args[4]));
-            System.out.println(" Target DB arg (enable or disable constraints) : " + args[5]);
-            if (args[5].equalsIgnoreCase(ENABLE_CONSTRAINT)) {
-                enableConstrains(args[0], args[1], args[2], args[3], args[4]);
-            } else if (args[5].equalsIgnoreCase(DISABLE_CONSTRAINST)) {
-                disableConstrains(args[0], args[1], args[2], args[3], args[4]);
-            }
+        System.out.println("\n Target DB Schema : " + args[0]);
+        System.out.println(" Target DB Table Name : " + args[1]);
+        System.out.println(" Target DB Connection String : " + args[2]);
+        System.out.println(" Target DB Login : " + args[3]);
+        System.out.println(" Target DB Passwd : " + getPWString(args[4]));
+        System.out.println(" Target DB arg (enable or disable constraints) : " + args[5]);
+        if (args[5].equalsIgnoreCase(ENABLE_CONSTRAINT)) {
+        enableConstrains(args[0], args[1], args[2], args[3], args[4]);
+        } else if (args[5].equalsIgnoreCase(DISABLE_CONSTRAINST)) {
+        disableConstrains(args[0], args[1], args[2], args[3], args[4]);
         }
+        }
+         */
     }
 }
