@@ -62,6 +62,13 @@ if [ -f $DB_DRIVER_JAR ] ; then
 	exit;
 fi
 
+//Cleanup
+rm -rf ./ETLLoader
+rm -rf ./ETLProcess
+rm -rf ./etl-loader.zip
+rm -rf ./BulkLoaderWorkDir
+rm -rf ./usrdir
+
 # *****************************
 #   DO NOT EDIT THIS [END]
 # *****************************
