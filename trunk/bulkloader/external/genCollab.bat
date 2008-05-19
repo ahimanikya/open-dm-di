@@ -9,7 +9,7 @@ set JAVA_PATH=<Set Java Home e.g. D:\Software\jre1.5.0_11\bin>
 
 REM  Use sqlserverJdbcDriver.jar under lib for connecting with SQL Server
     set DB_DRIVER_PATH=<Set DB Driver Path e.g. .\lib>
-    set DB_DRIVER_NAME=<Set DB Driver Name e.g. sqlserverJdbcDriver.jar>
+    set DB_DRIVER_NAME=<Set DB Driver Name e.g. sqlserverdriver-1.0.jar>
 
 	REM #### SOURCE DATABASE ####
 set SOURCE_LOC=<Specify Source Dir e.g. D:\temp\mural\masterindextest>
