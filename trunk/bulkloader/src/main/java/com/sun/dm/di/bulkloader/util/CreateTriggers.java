@@ -103,7 +103,7 @@ public class CreateTriggers {
         sb.append("set TRGT_DB_PW=" + ScEncrypt.encrypt("soabi", System.getProperty("target.pw")) + "\n");
         sb.append("REM ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
 	sb.append("set JAVA_OPTS=\n");
-        sb.append("set JAVA_PATH=" + System.getProperty("myjava.path") + "\n");
+        sb.append("set JAVA_PATH=\"" + System.getProperty("myjava.path") + "\"\n");
 
         sb.append("\nREM    ### Execute Bulk Loading Commands ###\n");
         sb.append("%JAVA_PATH%" + fs + "java -cp %CP% -Xms256M -Xmx1024M %JAVA_OPTS% com.sun.dm.di.ETLEngineInvoker.ETLEngineInvoker " + "%TRGT_SCHEMA% " + " %TRGT_DB_CONN%" + " %TRGT_DB_LOGIN%" + " %TRGT_DB_PW%" + " .\\files.config\n");
@@ -147,7 +147,7 @@ public class CreateTriggers {
         sb.append("TRGT_DB_PW=" + ScEncrypt.encrypt("soabi", System.getProperty("target.pw")) + "\n");
         sb.append("# ----- ----- ----- ----- ----- ----- ----- ----- -----\n");
 		sb.append("JAVA_OPTS=\n");
-        sb.append("JAVA_PATH=" + System.getProperty("myjava.path") + "\n");
+        sb.append("JAVA_PATH=\"" + System.getProperty("myjava.path") + "\"\n");
 
         //Create Disable Constraints Strings
         
