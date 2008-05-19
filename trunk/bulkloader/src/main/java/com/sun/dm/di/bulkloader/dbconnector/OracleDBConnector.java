@@ -46,7 +46,7 @@ public class OracleDBConnector extends DBConnector {
 
     public OracleDBConnector() {
         try {
-            sLog.info(sLoc.x("LDR160: Initializing Oracle DB Connector ..."));
+            sLog.fine("LDR160: Initializing Oracle DB Connector ...");
             Class.forName(BLConstants.DB_ORACLE_DRIVER);
         } catch (ClassNotFoundException ex) {
             sLog.severe(sLoc.x("LDR161 : Oracle Driver Class Not Found : {0}", ex.getMessage()));

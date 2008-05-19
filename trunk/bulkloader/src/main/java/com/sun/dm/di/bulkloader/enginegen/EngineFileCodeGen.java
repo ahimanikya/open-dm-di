@@ -118,7 +118,7 @@ class EngineFileCodeGen {
             sqlDefinition.clearOverride(true, true);
 
 
-            sLog.info(sLoc.x("LDR211: Successfully Generated eTL Engine File from Model : {0}", etldef.getDisplayName()));
+            sLog.info(sLoc.x("LDR211: Successfully Generated ETL Engine File from Model : {0}", etldef.getDisplayName()));
             return engine.toXMLString();
         } catch (BaseException ex) {
             java.util.logging.Logger.getLogger(EngineFileCodeGen.class.getName()).log(Level.SEVERE, null, ex);

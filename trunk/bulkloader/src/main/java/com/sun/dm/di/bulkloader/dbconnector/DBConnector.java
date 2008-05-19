@@ -56,7 +56,8 @@ public abstract class DBConnector implements DBConnection {
         try {
             this.connection = DriverManager.getConnection(connuri);
             if (this.connection != null) {
-                sLog.info(sLoc.x("LDR140: Connection established with File DB : {0}", connuri));
+                sLog.info(sLoc.x("LDR140: Connection established with File DB.\nURI : {0}", connuri));
+                sLog.fine("Connection URI : " + connuri);
             }
         } catch (SQLException ex) {
             sLog.severe(sLoc.x("LDR141: Cannot connect to Database [ {0} ]. Reason : {1}", connuri, ex.getMessage()));
@@ -81,7 +82,7 @@ public abstract class DBConnector implements DBConnection {
         try {
             this.connection = DriverManager.getConnection(connuri, login, pw);
             if (this.connection != null) {
-                sLog.info(sLoc.x("LDR142: Connection established with [ Host: {0}, Port: {1}], Uri: {2}", host, getStringPort(port), connuri));
+                sLog.info(sLoc.x("LDR142: Connection established with [ Host: {0} ] successfully.", host));
             }
         } catch (SQLException ex) {
             sLog.severe(sLoc.x("LDR143: Cannot connect to host [ {0} ]. Reason : {1}", host, ex.getMessage()));
@@ -129,7 +130,7 @@ public abstract class DBConnector implements DBConnection {
             String dbproductname = null;
             try {
                 dbproductname = this.connection.getMetaData().getDatabaseProductName();
-                sLog.infoNoloc("Database Product Name (Target MetaData)  :: " + dbproductname);
+                sLog.fine("Database Product Name (Target MetaData)  :: " + dbproductname);
             } catch (SQLException ex) {
                 sLog.severe(sLoc.x("LDR144:Error while connecting to DB : {0}", ex.getMessage()));
             }
