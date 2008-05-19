@@ -11,7 +11,7 @@ JAVA_PATH=<Set Java Home e.g. /usr/jdk/instances/jdk1.5.0/jre/bin>
 
 REM  Use sqlserverJdbcDriver.jar under lib for connecting with SQL Server
     DB_DRIVER_PATH=<./lib>
-    DB_DRIVER_NAME=<Set DB Driver Name e.g. sqlserverJdbcDriver.jar>
+    DB_DRIVER_NAME=<Set DB Driver Name e.g. sqlserverdriver-1.0.jar>
 
 	# **** SOURCE DATABASE ****
 SOURCE_LOC=<Specify Source Dir e.g. /bl_derbytest/DATA>
