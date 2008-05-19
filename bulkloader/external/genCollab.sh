@@ -8,8 +8,10 @@ clear
 	# **** NETBEANS AND JAVA ****
 NB_HOME=<Set Netbeans Home e.g. /openesb/netbeans-6.1-build-200803100002>
 JAVA_PATH=<Set Java Home e.g. /usr/jdk/instances/jdk1.5.0/jre/bin>
-DB_DRIVER_PATH=<Set DB Driver Path e.g. /openesb/glassfish-v2-ur1-b09d-patch-20080310/javadb/lib>
-DB_DRIVER_NAME=<Set DB Driver Name e.g. derbyclient.jar>
+
+REM  Use sqlserverJdbcDriver.jar under lib for connecting with SQL Server
+    DB_DRIVER_PATH=<./lib>
+    DB_DRIVER_NAME=<Set DB Driver Name e.g. sqlserverJdbcDriver.jar>
 
 	# **** SOURCE DATABASE ****
 SOURCE_LOC=<Specify Source Dir e.g. /bl_derbytest/DATA>

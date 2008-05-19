@@ -6,8 +6,10 @@ REM ********************************
 	REM #### NETBEANS AND JAVA ####
 set NB_HOME=<Set Netbeans Home e.g. D:\JavaCAPS6\netbeans>
 set JAVA_PATH=<Set Java Home e.g. D:\Software\jre1.5.0_11\bin>
-set DB_DRIVER_PATH=<Set DB Driver Path e.g. D:\Software-downloads\OJDBC1.4>
-set DB_DRIVER_NAME=<Set DB Driver Name e.g. ojdbc14-10.1.0.2.0.jar>
+
+REM  Use sqlserverJdbcDriver.jar under lib for connecting with SQL Server
+    set DB_DRIVER_PATH=<Set DB Driver Path e.g. .\lib>
+    set DB_DRIVER_NAME=<Set DB Driver Name e.g. sqlserverJdbcDriver.jar>
 
 	REM #### SOURCE DATABASE ####
 set SOURCE_LOC=<Specify Source Dir e.g. D:\temp\mural\masterindextest>
