@@ -46,7 +46,7 @@ public class ETLEngineFileGenerator {
     }
 
     public ETLEngineFileGenerator(String engineFileName) {
-        sLog.info(sLoc.x("LDR200: Initializing eTL Engine File Generator .."));
+        sLog.fine("LDR200: Initializing ETL Engine File Generator ..");
         if (engineFileName.indexOf(".") != -1) {
             this.gentargetfile = engineFileName.substring(0, engineFileName.indexOf(".")) + "_engine.xml";
         } else {
@@ -67,7 +67,7 @@ public class ETLEngineFileGenerator {
 
         String gentarget = BLConstants.artiTop + packagename;
         enginefile = new File(gentarget, gentargetfile);
-        sLog.info(sLoc.x("LDR201: Writing engine file to disk : {0}", enginefile.getAbsolutePath()));
+        sLog.info(sLoc.x("LDR201: Writing engine file to disk.\n Location : {0}", enginefile.getAbsolutePath()));
 
         try {
             fr = new FileWriter(enginefile);

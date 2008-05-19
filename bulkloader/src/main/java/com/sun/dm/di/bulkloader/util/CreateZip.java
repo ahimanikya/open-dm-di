@@ -57,7 +57,7 @@ public class CreateZip {
 
             //zipoutdir = (new File(cwd)).getParent();
             zipoutdir = cwd;
-            sLog.info(sLoc.x("LDR430: Zip output dir :: {0}", zipoutdir));
+            sLog.info(sLoc.x("LDR430: Zip output directory :: {0}", zipoutdir));
             zout = new ZipOutputStream(new FileOutputStream(zipoutdir + BLConstants.fs + BLConstants.zipname));
 
         } catch (FileNotFoundException ex) {
