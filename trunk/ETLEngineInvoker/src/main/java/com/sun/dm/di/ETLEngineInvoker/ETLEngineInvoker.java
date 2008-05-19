@@ -119,11 +119,11 @@ public class ETLEngineInvoker {
                 // Load Data
                 for (int i = 0; i < arrFiles.size(); i++) {
                     engineFileName = arrFiles.get(i);
-                    mLogger.info("Start executing Engine File :: " + engineFileName);
+                    mLogger.info("Start executing ETL Engine File :: " + engineFileName);
                     ETLEngineInvoker invoker = new ETLEngineInvoker();
 
                     invoker.startProcessing(new File(".\\ETLProcess\\" + arrFiles.get(i) + "\\DefaultETL_engine.xml"));
-                    mLogger.info("End executing Engine File :: " + engineFileName);
+                    mLogger.info("End executing ETL Engine File :: " + engineFileName);
                 }
 
                 // Enable Constraints for All the Tables Being processed
@@ -274,24 +274,24 @@ public class ETLEngineInvoker {
                     String tblName = it.next();
                     System.out.println("");
                     System.out.println("\t" + i++ + "." + tblName);
-                    System.out.println("\t\tRows Extracted: " + engine.getContext().getStatistics().getRowsExtractedCount(tblName));
+                    //System.out.println("\t\tRows Extracted: " + engine.getContext().getStatistics().getRowsExtractedCount(tblName));
                     System.out.println("\t\tRows Inserted: " + engine.getContext().getStatistics().getRowsInsertedCount(tblName));
-                    System.out.println("\t\tRows Rejected: " + engine.getContext().getStatistics().getRowsRejectedCount(tblName));
+                    //System.out.println("\t\tRows Rejected: " + engine.getContext().getStatistics().getRowsRejectedCount(tblName));
                     rowsExtracted += engine.getContext().getStatistics().getRowsExtractedCount(tblName);
                     rowsRejected += engine.getContext().getStatistics().getRowsRejectedCount(tblName);
                     rowsInserted += engine.getContext().getStatistics().getRowsInsertedCount(tblName);
                 }
                 System.out.println("");
-                System.out.println("Total Rows Extracted for " + (i - 1) + " table(s) :" + rowsExtracted);
+                //System.out.println("Total Rows Extracted for " + (i - 1) + " table(s) :" + rowsExtracted);
                 System.out.println("Total Rows Inserted for " + (i - 1) + " table(s) :" + rowsInserted);
-                System.out.println("Total Rows Rejected for " + (i - 1) + " table(s) :" + rowsRejected);
+                //System.out.println("Total Rows Rejected for " + (i - 1) + " table(s) :" + rowsRejected);
                 System.out.println("");
                 System.out.println("Start time:" + startTime.toString());
                 System.out.println("End time:" + endTime.toString());
                 System.out.println("");
                 long diff = endTime.getTime() - startTime.getTime();
                 float timeTaken = diff / 1000;
-                System.out.println("Total time taken:" + String.valueOf(diff) + " milli seconds");
+                //System.out.println("Total time taken:" + String.valueOf(diff) + " milli seconds");
                 System.out.println("Total time taken:" + String.valueOf(timeTaken) + " seconds");
                 System.out.println("");
                 System.out.println("Exiting ETL Engine...");
@@ -314,9 +314,9 @@ public class ETLEngineInvoker {
             File f = new File("./logs");
 
             if (f.exists() && f.isDirectory()) {
-                mLogger.info("logger dir exist");
+                //mLogger.info("logger dir exist");
             } else {
-                mLogger.info("creating new logger dir");
+                //mLogger.info("creating new logger dir");
                 f.mkdir();
             }
             if (logManager == null) {
