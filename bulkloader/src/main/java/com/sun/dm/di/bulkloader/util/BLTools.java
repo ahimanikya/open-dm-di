@@ -54,7 +54,7 @@ public class BLTools {
                     sLog.severe(sLoc.x("LDR400: Directory is not a valid dir : {0}", dirpath));
                 }
             } else {
-                sLog.severe(sLoc.x("LDR401: Directory does not exist : {0}", dirpath));
+                //sLog.severe(sLoc.x("LDR401: Directory does not exist : {0}", dirpath));
             }
         } else {
             sLog.severe(sLoc.x("LDR402: Path to Package is null"));

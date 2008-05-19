@@ -81,9 +81,8 @@ public class LoaderMain {
             File f = new File("./logs");
 
             if (f.exists() && f.isDirectory()) {
-                mLogger.info(sLoc.x("logger dir exist"));
             } else {
-                mLogger.info(sLoc.x("creating new logger dir"));
+                mLogger.fine("creating new logger dir");
                 f.mkdir();
             }
 
@@ -127,7 +126,7 @@ public class LoaderMain {
         StringBuilder param_debug = new StringBuilder();
         param_debug.append("Parameters passed to the Bulk Loader ::\n");
         param_debug.append("  [1] Data Source\n");
-        param_debug.append("\tSource DB Loation : " + System.getProperty("sourcedb.loc") + "\n");
+        param_debug.append("\tSource DB Location : " + System.getProperty("sourcedb.loc") + "\n");
         param_debug.append("\tSource Field Delimiter Type : " + System.getProperty("field.delimiter") + "\n");
         param_debug.append("\tSource Record Delimiter Type : " + System.getProperty("record.delimiter") + "\n");
         param_debug.append("  [2] Data Target\n");
@@ -135,29 +134,32 @@ public class LoaderMain {
         switch (target_type_code) {
             case 1:
                 param_debug.append("\tTarget Database Type : ORACLE (Code : " + target_type_code + ")\n");
+                param_debug.append("\tTarget URL : " + BLConstants.URI_ORACLE_PRIFIX + "thin:@"  + System.getProperty("target.host") + ":" + System.getProperty("target.port") + ":" + System.getProperty("target.id") + "\n");
                 break;
             case 2:
                 param_debug.append("\tTarget Database Type : DERBY (Code : " + target_type_code + ")\n");
+                param_debug.append("\tTarget Host name/ip : " + System.getProperty("target.host") + "\n");
                 break;
             case 3:
-                param_debug.append("\tTarget Database Type : SQL LOADER (Code : " + target_type_code + ")\n");
+                param_debug.append("\tTarget Database Type : SQL Server (Code : " + target_type_code + ")\n");
+                param_debug.append("\tTarget URL : " + BLConstants.URI_SQLSERVER_PRIFIX + "//" + System.getProperty("target.host") + ":" + System.getProperty("target.port") + ";databaseName=" + System.getProperty("target.id") + "\n");
                 break;
             default:
                 param_debug.append("\tTarget Database Type : UNKNOWN (Code : " + target_type_code + ")\n");
+                param_debug.append("\tTarget Host name/ip : " + System.getProperty("target.host") + "\n");
                 break;
         }
-        param_debug.append("\tTarget Host name/ip : " + System.getProperty("target.host") + "\n");
-        param_debug.append("\tTarget comm port : " + System.getProperty("target.port") + "\n");
-        switch (target_type_code) {
-            case 1:
-                param_debug.append("\tTarget SID : " + System.getProperty("target.id") + "\n");
-            case 2:
-                param_debug.append("\tTarget DB NAME : " + System.getProperty("target.id") + "\n");
-        }
+        //param_debug.append("\tTarget Connection port : " + System.getProperty("target.port") + "\n");
+        //switch (target_type_code) {
+        //    case 1:
+        //        param_debug.append("\tTarget SID : " + System.getProperty("target.id") + "\n");
+        //    case 2:
+        //        param_debug.append("\tTarget Database : " + System.getProperty("target.id") + "\n");
+        //}
         param_debug.append("\tTarget Schema : " + System.getProperty("target.schema") + "\n");
         param_debug.append("\tTarget Catalog : " + System.getProperty("target.catalog") + "\n");
         param_debug.append("\tTarget Login : " + System.getProperty("target.login") + "\n");
-        param_debug.append("\tTarget PW : " + getPWString(System.getProperty("target.pw")) + "\n");
+        param_debug.append("\tTarget Password : " + getPWString(System.getProperty("target.pw")) + "\n");
         param_debug.append("\tJava Path : " + System.getProperty("myjava.path") + "\n");
         param_debug.append("\tDatabase Driver : " + System.getProperty("dbdriver.name") + "\n");
         sLog.info(sLoc.x("LDR002: {0}", param_debug.toString()));
@@ -204,7 +206,7 @@ public class LoaderMain {
              */
 
             for (int i = 0; i < datafiles.length; i++) {
-                System.out.println(" \n\n\t\t*********** Processing Source [" + datafiles[i] + "] **************");
+                System.out.println(" \n\n Processing Source [" + datafiles[i] + "]");
                 ETLDefGenerator etldefgen = null;
                 DBConnection cc_target = null;
                 switch (target_type_code) {
@@ -279,7 +281,7 @@ public class LoaderMain {
             System.exit(0);
         }
 
-        sLog.info(sLoc.x("LDR010: Loader Ends."));
+        sLog.info(sLoc.x("LDR010: Portable ETL Loader Generated Successfully.\n Please unzip " + BLConstants.getCWD() + BLConstants.fs  + BLConstants.zipname + "to run the loader"));
     }
 
     public static List getTableSequence(Connection con, String schema, String catalog, List<String> tableNames) throws SQLException, IOException {
