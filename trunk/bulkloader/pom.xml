@@ -43,9 +43,26 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>install-sqlserver-jdbc-driver</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <generatePom>true</generatePom>
+                            <packaging>jar</packaging>
+                            <groupId>mural</groupId>
+                            <artifactId>sqlserverdriver</artifactId>
+                            <version>1.0</version>
+                            <file>${basedir}/external/sqlserverJdbcDriver.jar</file>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>install-i18n</id>
                         <phase>process-resources</phase>
-                        <goals><goal>install-file</goal></goals>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
                         <configuration>
                             <generatePom>true</generatePom>
                             <packaging>jar</packaging>
@@ -70,25 +87,8 @@
                             <file>${basedir}/external/org-netbeans-modules-etl-editor.jar</file>
                         </configuration>
                     </execution>
-                    <!--
-                    <execution>
-                        <id>install-org-netbeans-modules-db</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <generatePom>true</generatePom>
-                            <packaging>jar</packaging>
-                            <groupId>org-netbeans-modules-db</groupId>
-                            <artifactId>org-netbeans-modules-db</artifactId>
-                            <version>1.0</version>
-                            <file>${basedir}/external/org-netbeans-modules-db.jar</file>
-                        </configuration>
-                    </execution>
-					-->
                 </executions>
-            </plugin>            
+            </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
@@ -112,31 +112,34 @@
                     <execution>
                         <id>copy-bat-sh-file-to-package</id>
                         <phase>process-classes</phase>
-                        <goals><goal>run</goal></goals>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                         <configuration>
                             <tasks>
                                 <echo>Copying genCollab (bat and sh) file to target ...</echo>
                                 <copy file="${basedir}/external/genCollab.bat" todir="${project.build.directory}" preservelastmodified="true"></copy>
-								<copy file="${basedir}/external/genCollab.sh" todir="${project.build.directory}" preservelastmodified="true"></copy>
-                            </tasks> 
+                                <copy file="${basedir}/external/genCollab.sh" todir="${project.build.directory}" preservelastmodified="true"></copy>
+                            </tasks>
                         </configuration>
                     </execution>
                     <execution>
                         <id>extract-globalized-messages</id>
                         <phase>process-classes</phase>
-                        <goals><goal>run</goal></goals>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                         <configuration>
                             <tasks>
                                 <taskdef name="i18n" classname="net.java.hulp.i18n.buildtools.I18NTask" classpath="${basedir}/src/main/resources/globalization/net.java.hulp.i18ntask.jar"></taskdef>
                                 <i18n dir="${project.build.directory}/classes" file="${project.build.directory}/classes/com/sun/dm/di/bulkloader/util/msgs.properties" prefix="MDM-DI-" strict="false" pattern="([A-Z][A-Z][A-Z]\d\d\d)(: )(.*)"></i18n>
-                            </tasks> 
+                            </tasks>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>            
+            </plugin>
         </plugins>
     </build>
-    
     <profiles>
         <profile>
             <id>netbeans-public</id>
@@ -169,7 +172,7 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>                    
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-install-plugin</artifactId>
@@ -181,28 +184,32 @@
                             <execution>
                                 <id>copy-bat-sh-file-to-package</id>
                                 <phase>process-classes</phase>
-                                <goals><goal>run</goal></goals>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
                                 <configuration>
                                     <tasks>
                                         <echo>Copying genCollab (bat and sh) file to target ...</echo>
                                         <copy file="${basedir}/external/genCollab.bat" todir="${project.build.directory}" preservelastmodified="true"></copy>
                                         <copy file="${basedir}/external/genCollab.sh" todir="${project.build.directory}" preservelastmodified="true"></copy>
-                                    </tasks> 
+                                    </tasks>
                                 </configuration>
                             </execution>
                             <execution>
                                 <id>extract-globalized-messages</id>
                                 <phase>process-classes</phase>
-                                <goals><goal>run</goal></goals>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
                                 <configuration>
                                     <tasks>
                                         <taskdef name="i18n" classname="net.java.hulp.i18n.buildtools.I18NTask" classpath="${basedir}/src/main/resources/globalization/net.java.hulp.i18ntask.jar"></taskdef>
                                         <i18n dir="${project.build.directory}/classes" file="${project.build.directory}/classes/com/sun/dm/di/bulkloader/util/msgs.properties" prefix="MDM-DI-" strict="false" pattern="([A-Z][A-Z][A-Z]\d\d\d)(: )(.*)"></i18n>
-                                    </tasks> 
+                                    </tasks>
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>                    
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -255,6 +262,12 @@
             <artifactId>ETLEngineInvoker</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>mural</groupId>
+            <artifactId>sqlserverdriver</artifactId>
+            <version>1.0</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 </project>
