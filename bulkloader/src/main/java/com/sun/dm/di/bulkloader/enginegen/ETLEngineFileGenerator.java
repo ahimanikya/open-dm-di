@@ -67,7 +67,7 @@ public class ETLEngineFileGenerator {
 
         String gentarget = BLConstants.artiTop + packagename;
         enginefile = new File(gentarget, gentargetfile);
-        sLog.info(sLoc.x("LDR201: Writing engine file to disk.\n Location : {0}", enginefile.getAbsolutePath()));
+        sLog.info(sLoc.x("LDR201: Writing ETL Engine file to disk.\n Location : {0}", enginefile.getAbsolutePath()));
 
         try {
             fr = new FileWriter(enginefile);
