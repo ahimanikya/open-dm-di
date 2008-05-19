@@ -96,7 +96,7 @@ public class ETLDefGenerator {
     }
 
     public ETLDefGenerator(String displayName, Integer strategy) {
-        sLog.info(sLoc.x("LDR310: Initializing eTL Definition File Generator .."));
+        sLog.fine("Initializing eTL Definition File Generator ..");
 
         if (displayName.indexOf(".") != -1) {
             etldefname = displayName.substring(0, displayName.indexOf("."));
@@ -282,7 +282,7 @@ public class ETLDefGenerator {
      * @param etlModelName
      */
     public void writeModelToPackage(String etlModelName) {
-        sLog.info(sLoc.x("LDR311: Writing [ {0} ] Model to Package ...", etlModelName));
+        sLog.fine("Writing [ {0} ] Model to Package : " + etlModelName);
         FileWriter fwriter = null;
         try {
             String etl_def_name = null;
@@ -301,7 +301,7 @@ public class ETLDefGenerator {
                 sourcepackage = this.sourcefilename.toUpperCase();
             }
             setSourcePackage(sourcepackage);
-            sLog.info(sLoc.x("LDR312: ETL Def File will be generated into : {0}", sourcepackage));
+            sLog.fine("LDR312: ETL Def File will be generated into : " + sourcepackage);
 
 
             File dumpfile = new File(BLConstants.artiTop + sourcepackage + BLConstants.fs + etl_def_name);
@@ -461,11 +461,11 @@ public class ETLDefGenerator {
                 if (currTable[DBMetaDataFactory.NAME].equals(tableName)) {
                     switch (type) {
                         case BLConstants.SOURCE_TABLE_TYPE:
-                            sLog.info(sLoc.x("Match Found for Source Table : " + tableName));
+                            sLog.info(sLoc.x("LDR701:Match Found for Source Table : " + tableName));
                             aTable = new SourceTableImpl(currTable[DBMetaDataFactory.NAME].trim(), currTable[DBMetaDataFactory.SCHEMA], currTable[DBMetaDataFactory.CATALOG]);
                             break;
                         case BLConstants.TARGET_TABLE_TYPE:
-                            sLog.info(sLoc.x("Match Found for Target Table : " + tableName));
+                            sLog.info(sLoc.x("LDR702:Match Found for Target Table : " + tableName));
                             aTable = new TargetTableImpl(currTable[DBMetaDataFactory.NAME].trim(), currTable[DBMetaDataFactory.SCHEMA], currTable[DBMetaDataFactory.CATALOG]);
                             break;
                     }

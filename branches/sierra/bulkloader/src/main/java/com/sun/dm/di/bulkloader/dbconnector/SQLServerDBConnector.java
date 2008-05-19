@@ -46,7 +46,7 @@ public class SQLServerDBConnector extends DBConnector {
 
     public SQLServerDBConnector() {
         try {
-            sLog.info(sLoc.x("LDR170: Initializing SQL Server DB Connector ..."));
+            sLog.fine("LDR170: Initializing SQL Server DB Connector ...");
             Class.forName(BLConstants.DB_SQLSERVER_DRIVER);
         } catch (ClassNotFoundException ex) {
             sLog.severe(sLoc.x("LDR171 : SQL Server Driver Class Not Found : {0}", ex.getMessage()));

@@ -45,7 +45,7 @@ public class FlatFileDBConnector extends DBConnector {
 
     public FlatFileDBConnector() {
         try {
-            sLog.info(sLoc.x("LDR150: Initializing FlatFile DB Connector ..."));
+            sLog.fine("Initializing FlatFile DB Connector ...");
             Class.forName(BLConstants.DB_AXION_DRIVER);
         } catch (ClassNotFoundException ex) {
             sLog.severe(sLoc.x("LDR151 : Axion Driver Class Not Found : {0}", ex.getMessage()));
@@ -56,11 +56,12 @@ public class FlatFileDBConnector extends DBConnector {
     public FlatFileDBConnector(ETLDefGenerator etldefgen, String fileloc, String filename, String fld_delimiter, String rec_delimiter, String schema, String catalog, DBConnection target_inf, int trgt_type, int type) {
         this();
         etldef = etldefgen;
-        if (trgt_type == 1){
+        if (trgt_type == 1) {
             // Handle Oracle target for upper case
             filename = filename.toUpperCase();
         }
         etldef.setSourceFileDBName(filename); //Set the source file db name
+
         sourceTableQName = getSourceTableQualifiedName(filename);
         ConnectToDB(fileloc, sourceTableQName);
         createExternalFlatFileTable(fileloc, filename, fld_delimiter, rec_delimiter, schema, catalog, target_inf, trgt_type);
@@ -86,54 +87,69 @@ public class FlatFileDBConnector extends DBConnector {
                 TableMetaDataObject mdobj = (TableMetaDataObject) mdlist.get(i);
                 String colname = mdobj.getColumnName();
                 String coltype = mdobj.getColumnDataType();
+                String trgtcoltype = coltype; // This is to retain target db col type in case it changes in the case stmts below.
+
                 int collen = mdobj.getColumnLength();
 
                 //Handling special cases
                 switch (trgt_type) {
-                    
+
                     case 1:
                         //ORACLE Target
                         //1. Column with type and name TIMESTAMP
                         if (colname.equalsIgnoreCase("TIMESTAMP")) {
-                            colname = "IGNORED_TIMESTAMP";
-                            coltype = "VARCHAR2";
-                            collen = 32;
-                            sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
+                            colname = "\"TIMESTAMP\"";
+                        //coltype = "TIMESTAMP";
+                        //collen = 32;
+                        //sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
                         }
                         //2. BLOB type columns
                         if (coltype.equalsIgnoreCase("BLOB")) {
                             colname = "IGNORED_" + colname;
                             coltype = "VARCHAR2";
                             collen = 32;
-                            sLog.warn(sLoc.x("LDR155 : Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                            sLog.warn(sLoc.x("LDR155: Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                        }
+                        //3. LONGVARBINARY type columns
+                        if (coltype.equalsIgnoreCase("LONGVARBINARY")) {
+                            colname = "IGNORED_" + colname;
+                            coltype = "VARCHAR2";
+                            collen = 32;
+                            sLog.warn(sLoc.x("LDR156: Excluding Column Type LONGVARBINARY from the BULK LOADER. Unsupported Data Type for External Source Tables"));
                         }
 
-                        if (coltype.equalsIgnoreCase("VARCHAR2")) {
-                            sb.append(colname + " " + coltype + "(" + collen + ")");
+                        // Master Index Project does not generate data for following col types.
+                        if (trgtcoltype.equalsIgnoreCase("BLOB") || trgtcoltype.equalsIgnoreCase("LONGVARBINARY")) {
+                            System.out.println("Ignoring col as its of type : " + trgtcoltype);
                         } else {
-                            sb.append(colname + " " + coltype);
+                            if (coltype.equalsIgnoreCase("VARCHAR2")) {
+                                sb.append(colname + " " + coltype + "(" + collen + ")");
+                            } else {
+                                sb.append(colname + " " + coltype);
+                            }
+                            if (i + 1 < mdlist.size()) {
+                                sb.append(", ");
+                            }
                         }
-                        if (i + 1 < mdlist.size()) {
-                            sb.append(", ");
-                        }
+
                         break;
-                        
-                        
+
+
                     case 2:
                         //Derby Target
                         //1. Column with type and name TIMESTAMP
                         if (colname.equalsIgnoreCase("TIMESTAMP")) {
-                            colname = "IGNORED_TIMESTAMP";
-                            coltype = "VARCHAR2";
-                            collen = 32;
-                            sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
+                            colname = "\"TIMESTAMP\"";
+                        //coltype = "VARCHAR2";
+                        //collen = 32;
+                        //sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
                         }
                         //2. BLOB type columns
                         if (coltype.equalsIgnoreCase("BLOB")) {
                             colname = "IGNORED_" + colname;
                             coltype = "VARCHAR2";
                             collen = 32;
-                            sLog.warn(sLoc.x("LDR155 : Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                            sLog.warn(sLoc.x("LDR155: Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
                         }
 
                         if (coltype.equalsIgnoreCase("VARCHAR")) {
@@ -145,48 +161,60 @@ public class FlatFileDBConnector extends DBConnector {
                             sb.append(", ");
                         }
                         break;
-                        
-                        
+
+
                     case 3:
                         //SQL Server Target
                         //1. Column with type and name TIMESTAMP
                         if (colname.equalsIgnoreCase("TIMESTAMP")) {
-                            colname = "IGNORED_TIMESTAMP";
-                            coltype = "VARCHAR";
-                            collen = 32;
-                            sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
+                            colname = "\"TIMESTAMP\"";
+                        //coltype = "VARCHAR";
+                        //collen = 32;
+                        //sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
                         }
                         //2. BLOB type columns
                         if (coltype.equalsIgnoreCase("BLOB")) {
                             colname = "IGNORED_" + colname;
                             coltype = "VARCHAR";
                             collen = 32;
-                            sLog.warn(sLoc.x("LDR155 : Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                            sLog.warn(sLoc.x("LDR155: Excluding Column Type BLOB from the BULK LOADER. Unsupported Data Type for External Source Tables."));
                         }
                         //3. datetime column
                         if (coltype.equalsIgnoreCase("datetime")) {
                             coltype = "VARCHAR";
                             collen = 32;
-                            sLog.warn(sLoc.x("LDR155 : Excluding Column Type datetime from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                            sLog.warn(sLoc.x("LDR157: Excluding Column Type datetime from the BULK LOADER. Unsupported Data Type for External Source Tables."));
                         }
                         //4. image column type
                         if (coltype.equalsIgnoreCase("image")) {
                             coltype = "VARCHAR";
                             collen = 32;
-                            sLog.warn(sLoc.x("LDR155 : Excluding Column Type image from the BULK LOADER. Unsupported Data Type for External Source Tables."));
-                        }                        
+                            sLog.warn(sLoc.x("LDR158: Excluding Column Type image from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                        }
+                        //5. LONGVARBINARY type columns
+                        if (coltype.equalsIgnoreCase("LONGVARBINARY")) {
+                            colname = "IGNORED_" + colname;
+                            coltype = "VARCHAR";
+                            collen = 32;
+                            sLog.warn(sLoc.x("LDR159: Excluding Column Type LONGVARBINARY from the BULK LOADER. Unsupported Data Type for External Source Tables."));
+                        }
 
-                        if (coltype.equalsIgnoreCase("VARCHAR")) {
-                            sb.append(colname + " " + "VARCHAR2" + "(" + collen + ")");
+                        // Master Index Project does not generate data for following col types.
+                        if (trgtcoltype.equalsIgnoreCase("BLOB") || trgtcoltype.equalsIgnoreCase("LONGVARBINARY")) {
+                            System.out.println("Ignoring col as its of type : " + trgtcoltype);
                         } else {
-                            sb.append(colname + " " + coltype);
+                            if (coltype.equalsIgnoreCase("VARCHAR")) {
+                                sb.append(colname + " " + "VARCHAR2" + "(" + collen + ")");
+                            } else {
+                                sb.append(colname + " " + coltype);
+                            }
+                            if (i + 1 < mdlist.size()) {
+                                sb.append(", ");
+                            }
                         }
-                        if (i + 1 < mdlist.size()) {
-                            sb.append(", ");
-                        }
-                        break;                        
-                        
-                        
+                        break;
+
+
                     default:
                         System.out.println("DB not defined");
                 }

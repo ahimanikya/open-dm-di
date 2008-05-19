@@ -38,7 +38,8 @@ public class CreateTriggers {
     private static Localizer sLoc = Localizer.get();
 
     public CreateTriggers() {
-        sLog.info(sLoc.x("LDR421: Creating eTL Invoker Triggers ..."));
+        System.out.println("\n");
+        sLog.info(sLoc.x("LDR421: Creating ETL Invoker Scripts ..."));
         dumppath = BLConstants.getCWD() + BLConstants.fs + BLConstants.toplevelpkg;
     }
 
@@ -73,8 +74,8 @@ public class CreateTriggers {
         String fs = BLConstants.fs;
         sb.append("REM  *********** DO NOT EDIT TEXT BELOW ***********\n");
         sb.append("@echo off\n");
-        sb.append("RMDIR ..\\usrdir /s/q\n");
-        sb.append("RMDIR ..\\BulkLoaderWorkDir /s/q\n");
+        sb.append("if exist ..\\usrdir  RMDIR ..\\usrdir /s/q\n");
+        sb.append("if exist ..\\BulkLoaderWorkDir RMDIR ..\\BulkLoaderWorkDir /s/q\n");
         sb.append("cls\n");
         sb.append("set LIB=.\\lib\n");
         sb.append("set AXION_JAR=%LIB%" + fs + "axion-1.0.jar\n");
@@ -116,8 +117,8 @@ public class CreateTriggers {
         // Place contents here
         String fs = BLConstants.fs;
         sb.append("#!/bin/sh\n");
-        sb.append("rm -rf ../usrdir");
-        sb.append("rm -fr ../BulkLoaderWorkDir");
+        sb.append("if [ -d ../usrdir ] rm -rf ../usrdir");
+        sb.append("if [ -d ../BulkLoaderWorkDir ] rm -rf ../BulkLoaderWorkDir");
         sb.append("clear\n\n");
         sb.append("#  *********** DO NOT EDIT TEXT BELOW ***********\n");
         sb.append("LIB=./lib\n");

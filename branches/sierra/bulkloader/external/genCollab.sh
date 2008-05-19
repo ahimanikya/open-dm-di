@@ -37,6 +37,12 @@ TARGET_PW=<Specify Target DB Passwd>
 #   DO NOT EDIT THIS [START]
 # *****************************
 
+echo Pre-execution cleanup ...
+if [ -f ./etl-loader.zip ] rm -rf ./etl-loader.zip
+if [ -d ./BulkLoaderWorkDir ] rm -rf ./BulkLoaderWorkDir
+if [ -d ./usrdir ] rm -rf ./usrdir
+echo Completed.
+
 DB_DRIVER_JAR="$DB_DRIVER_PATH/$DB_DRIVER_NAME";
 if [ -f $DB_DRIVER_JAR ] ; then
 
@@ -62,12 +68,11 @@ if [ -f $DB_DRIVER_JAR ] ; then
 	exit;
 fi
 
-//Cleanup
-rm -rf ./ETLLoader
-rm -rf ./ETLProcess
-rm -rf ./etl-loader.zip
-rm -rf ./BulkLoaderWorkDir
-rm -rf ./usrdir
+# Cleanup
+echo Cleaning up temporary files and artifacts ...
+if [ -d ./ETLLoader ] rm -rf ./ETLLoader
+if [ -d ./ETLProcess ] rm -rf ./ETLProcess
+echo Completed.
 
 # *****************************
 #   DO NOT EDIT THIS [END]

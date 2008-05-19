@@ -34,10 +34,18 @@ REM ********************************
 REM *****************************
 REM   DO NOT EDIT THIS [START]
 REM *****************************
+echo Pre-execution cleanup ...
+if exist .\\etl-loader.zip DEL .\\etl-loader.zip /s/q
+if exist .\\BulkLoaderWorkDir RMDIR .\\BulkLoaderWorkDir /s/q
+if exist .\\usrdir RMDIR .\\usrdir /s/q
+echo Completed.
+
 set RUNSTAT=START
 set DB_DRIVER_JAR=%DB_DRIVER_PATH%\%DB_DRIVER_NAME%
 if NOT exist %DB_DRIVER_JAR% GOTO GetExit
-copy %DB_DRIVER_JAR% .\lib\%DB_DRIVER_NAME%
+
+if NOT exist .\lib\%DB_DRIVER_NAME% copy %DB_DRIVER_JAR% .\lib\%DB_DRIVER_NAME%
+
 set BLK=%CD%
 set USER_LIBS=%BLK%\lib\avalon-framework-4.1.3.jar;%BLK%\lib\axion-1.0.jar;%BLK%\lib\etl-editor-1.0.jar;%BLK%\lib\etl-engine-1.0.jar;%BLK%\lib\ETLEngineInvoker-1.0.jar;%BLK%\lib\i18n-1.0.jar;%BLK%\lib\ojdbc14-10.1.0.2.0.jar;%BLK%\lib\org-netbeans-modules-db-1.0.jar;%BLK%\lib\velocity-1.4.jar;%BLK%\lib\velocity-dep-1.4.jar;%BLK%\lib\bulkloader-1.0.jar
 set OPENIDE_LIB_MODULE=%NB_HOME%\platform8\modules
@@ -53,12 +61,11 @@ REM Execution
 	"%JAVA_PATH%"\java -Xms128m -Xmx512m -Dsourcedb.loc=%SOURCE_LOC% -Dfield.delimiter=%FIELD_DELIMITER% -Drecord.delimiter=%RECORD_DELIMITER% -Dtarget.type=%TARGET_DB_TYPE% -Dtarget.host=%TARGET_LOC% -Dtarget.port=%TARGET_PORT% -Dtarget.id=%TARGET_ID% -Dtarget.schema=%TARGET_SCHEMA% -Dtarget.catalog=%TARGET_CATALOG% -Dtarget.login=%TARGET_LOGIN% -Dtarget.pw=%TARGET_PW% -Dmyjava.path=%JAVA_PATH% -Ddbdriver.name=%DB_DRIVER_NAME% -cp %ALL_LIBS% com.sun.dm.di.bulkloader.LoaderMain
 REM Execution
 
-//Cleanup
-RMDIR .\\ETLLoader /s/q
-RMDIR .\\ETLProcess /s/q
-RMDIR .\\etl-loader.zip /s/q
-RMDIR .\\BulkLoaderWorkDir /s/q
-RMDIR .\\usrdir /s/q
+REM Cleanup
+echo Cleaning up temporary files and artifacts ...
+if exist .\\ETLLoader RMDIR .\\ETLLoader /s/q
+if exist .\\ETLProcess RMDIR .\\ETLProcess /s/q
+echo Completed.
 
 set RUNSTAT=SUCCESS
 :GetExit
