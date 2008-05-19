@@ -99,7 +99,7 @@ public class FlatFileDBConnector extends DBConnector {
                         //1. Column with type and name TIMESTAMP
                         if (colname.equalsIgnoreCase("TIMESTAMP")) {
                             colname = "\"TIMESTAMP\"";
-                        //coltype = "TIMESTAMP";
+                            //coltype = "VARCHAR2";
                         //collen = 32;
                         //sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
                         }
@@ -140,7 +140,7 @@ public class FlatFileDBConnector extends DBConnector {
                         //1. Column with type and name TIMESTAMP
                         if (colname.equalsIgnoreCase("TIMESTAMP")) {
                             colname = "\"TIMESTAMP\"";
-                        //coltype = "VARCHAR2";
+                            coltype = "VARCHAR2";
                         //collen = 32;
                         //sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
                         }
@@ -168,7 +168,7 @@ public class FlatFileDBConnector extends DBConnector {
                         //1. Column with type and name TIMESTAMP
                         if (colname.equalsIgnoreCase("TIMESTAMP")) {
                             colname = "\"TIMESTAMP\"";
-                        //coltype = "VARCHAR";
+                            coltype = "VARCHAR";
                         //collen = 32;
                         //sLog.warn(sLoc.x("LDR154 : Excluding Column name TIMESTAMP from the BULK LOADER. Name is a reserved Keyword."));
                         }
@@ -200,7 +200,7 @@ public class FlatFileDBConnector extends DBConnector {
                         }
 
                         // Master Index Project does not generate data for following col types.
-                        if (trgtcoltype.equalsIgnoreCase("BLOB") || trgtcoltype.equalsIgnoreCase("LONGVARBINARY")) {
+                        if (trgtcoltype.equalsIgnoreCase("BLOB") || trgtcoltype.equalsIgnoreCase("LONGVARBINARY") || trgtcoltype.equalsIgnoreCase("IMAGE")) {
                             System.out.println("Ignoring col as its of type : " + trgtcoltype);
                         } else {
                             if (coltype.equalsIgnoreCase("VARCHAR")) {

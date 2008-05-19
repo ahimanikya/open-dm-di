@@ -55,7 +55,7 @@ set OPENIDE_LIB_IDE9_MOD=%NB_HOME%\ide9\modules
 set OPENIDE_LIB_XML2_MOD=%NB_HOME%\xml2\modules
 set OPENIDE_LIB_SOA2_MOD=%NB_HOME%\soa2\modules
 set OPENIDE_LIBS=%OPENIDE_LIB_MODULE%\org-openide-nodes.jar;%OPENIDE_LIB_MODULE%\org-openide-text.jar;%OPENIDE_LIB_MODULE%\org-openide-loaders.jar;%OPENIDE_LIB_MODULE%\org-openide-windows.jar;%OPENIDE_LIB_MODULE%\org-openide-dialogs.jar;%OPENIDE_LIB_MODULE%\org-openide-awt.jar;%OPENIDE_LIB_CORE%\org-openide-filesystems.jar;%OPENIDE_LIB_LIB%\org-openide-util.jar;%OPENIDE_LIB_IDE9_MOD%\org-netbeans-modules-db.jar;%OPENIDE_LIB_XML2_MOD%\org-netbeans-modules-xml-validation.jar;%OPENIDE_LIB_IDE9_MOD%\org-netbeans-api-xml.jar;%OPENIDE_LIB_SOA2_MOD%\org-netbeans-modules-soa-ui.jar;%OPENIDE_LIB_XML2_MOD%\org-netbeans-modules-xml-xam-ui.jar
-set ALL_LIBS=%USER_LIBS%;%OPENIDE_LIBS%;%DB_DRIVER_JAR%;%CLASSPATH%
+set ALL_LIBS=%USER_LIBS%;%OPENIDE_LIBS%;%DB_DRIVER_JAR%;
 
 REM Execution
 	"%JAVA_PATH%"\java -Xms128m -Xmx512m -Dsourcedb.loc=%SOURCE_LOC% -Dfield.delimiter=%FIELD_DELIMITER% -Drecord.delimiter=%RECORD_DELIMITER% -Dtarget.type=%TARGET_DB_TYPE% -Dtarget.host=%TARGET_LOC% -Dtarget.port=%TARGET_PORT% -Dtarget.id=%TARGET_ID% -Dtarget.schema=%TARGET_SCHEMA% -Dtarget.catalog=%TARGET_CATALOG% -Dtarget.login=%TARGET_LOGIN% -Dtarget.pw=%TARGET_PW% -Dmyjava.path=%JAVA_PATH% -Ddbdriver.name=%DB_DRIVER_NAME% -cp %ALL_LIBS% com.sun.dm.di.bulkloader.LoaderMain
