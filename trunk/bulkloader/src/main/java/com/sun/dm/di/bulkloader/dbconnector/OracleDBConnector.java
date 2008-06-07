@@ -69,7 +69,7 @@ public class OracleDBConnector extends DBConnector {
         targetTableQName = getTargetTableQualifiedName(tablename);
         // Add this connection to ETLDefinition Generator
         if (checkIfTableExistsInDB(schema, catalog, targetTableQName)) {
-            etldef.addDBModel(conn, "ORACLE", targetTableQName, dbtype, login, pw);
+            etldef.addDBModel(conn, "ORACLE", schema, catalog, targetTableQName, dbtype, login, pw);
         }
     }
     

@@ -4,15 +4,15 @@ REM ********************************
 REM * BULK LOADER SETTINGS [START] *
 REM ********************************
 	REM #### NETBEANS AND JAVA ####
-set NB_HOME=<Set Netbeans Home e.g. D:\JavaCAPS6\netbeans>
-set JAVA_PATH=<Set Java Home e.g. D:\Software\jre1.5.0_11\bin>
+set NB_HOME="<Set Netbeans Home e.g. D:\JavaCAPS6\netbeans>"
+set JAVA_PATH="<Set Java Home e.g. D:\Software\jre1.5.0_11\bin>"
 
 REM  Use sqlserverJdbcDriver.jar under lib for connecting with SQL Server
-    set DB_DRIVER_PATH=<Set DB Driver Path e.g. .\lib>
+    set DB_DRIVER_PATH="<Set DB Driver Path e.g. .\lib>"
     set DB_DRIVER_NAME=<Set DB Driver Name e.g. sqlserverdriver-1.0.jar>
 
 	REM #### SOURCE DATABASE ####
-set SOURCE_LOC=<Specify Source Dir e.g. D:\temp\mural\masterindextest>
+set SOURCE_LOC="<Specify Source Dir e.g. D:\temp\mural\masterindextest>"
 set FIELD_DELIMITER="|"
 set RECORD_DELIMITER="$$$"
 
@@ -60,7 +60,7 @@ set OPENIDE_LIBS=%OPENIDE_LIB_MODULE%\org-openide-nodes.jar;%OPENIDE_LIB_MODULE%
 set ALL_LIBS=%USER_LIBS%;%OPENIDE_LIBS%;%DB_DRIVER_JAR%;
 
 REM Execution
-	"%JAVA_PATH%"\java -Xms128m -Xmx512m -Dsourcedb.loc=%SOURCE_LOC% -Dfield.delimiter=%FIELD_DELIMITER% -Drecord.delimiter=%RECORD_DELIMITER% -Dtarget.type=%TARGET_DB_TYPE% -Dtarget.host=%TARGET_LOC% -Dtarget.port=%TARGET_PORT% -Dtarget.id=%TARGET_ID% -Dtarget.schema=%TARGET_SCHEMA% -Dtarget.catalog=%TARGET_CATALOG% -Dtarget.login=%TARGET_LOGIN% -Dtarget.pw=%TARGET_PW% -Dmyjava.path=%JAVA_PATH% -Ddbdriver.name=%DB_DRIVER_NAME% -cp %ALL_LIBS% com.sun.dm.di.bulkloader.LoaderMain
+	%JAVA_PATH%\java -Xms128m -Xmx512m -Dsourcedb.loc=%SOURCE_LOC% -Dfield.delimiter=%FIELD_DELIMITER% -Drecord.delimiter=%RECORD_DELIMITER% -Dtarget.type=%TARGET_DB_TYPE% -Dtarget.host=%TARGET_LOC% -Dtarget.port=%TARGET_PORT% -Dtarget.id=%TARGET_ID% -Dtarget.schema=%TARGET_SCHEMA% -Dtarget.catalog=%TARGET_CATALOG% -Dtarget.login=%TARGET_LOGIN% -Dtarget.pw=%TARGET_PW% -Dmyjava.path=%JAVA_PATH% -Ddbdriver.name=%DB_DRIVER_NAME% -cp %ALL_LIBS% com.sun.dm.di.bulkloader.LoaderMain
 REM Execution
 
 REM Cleanup

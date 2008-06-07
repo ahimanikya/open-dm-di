@@ -108,7 +108,7 @@ public class ETLDefGenerator {
         etldef.setExecutionStrategyCode(strategy);
     }
 
-    public void addDBModel(Connection conn, String db, String user_table_name, int type, String login, String pw) {
+    public void addDBModel(Connection conn, String db, String schema, String catalog, String user_table_name, int type, String login, String pw) {
         SQLDBModel model = null;
         try {
             DBMetaDataFactory meta = new DBMetaDataFactory();
@@ -141,8 +141,8 @@ public class ETLDefGenerator {
                     break;
             }
             model.setConnectionDefinition(def);
-
-            SQLDBTable ffTable = getTable(meta, "", "", user_table_name, type);
+            
+            SQLDBTable ffTable = getTable(meta, schema, catalog, user_table_name, type);
             PrimaryKeyImpl pks = meta.getPrimaryKeys(ffTable.getCatalog(), ffTable.getSchema(), ffTable.getName());
             Map<String, ForeignKey> fksmap = meta.getForeignKeys(ffTable);
             meta.populateColumns(ffTable);
