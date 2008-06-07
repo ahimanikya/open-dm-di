@@ -47,7 +47,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.LogManager;
 import net.java.hulp.i18n.Logger;
 import org.netbeans.modules.etl.codegen.ETLStrategyBuilder;
@@ -65,49 +64,12 @@ public class LoaderMain {
     public LoaderMain() {
     }
 
-    private static String getPWString(String pw) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < pw.length(); i++) {
-            sb.append("*");
-        }
-        return sb.toString();
-    }
-
-    private static void confiugreLogger() {
-        FileInputStream ins = null;
-        try {
-            LogManager logManager;
-            String config = "config/logger.properties";
-            File f = new File("./logs");
-
-            if (f.exists() && f.isDirectory()) {
-            } else {
-                mLogger.fine("creating new logger dir");
-                f.mkdir();
-            }
-
-            logManager = LogManager.getLogManager();
-            ins = new FileInputStream(config);
-            logManager.readConfiguration(ins);
-        } catch (IOException ex) {
-            mLogger.infoNoloc(ex.getLocalizedMessage());
-        } catch (SecurityException ex) {
-            mLogger.infoNoloc(ex.getLocalizedMessage());
-        } finally {
-            try {
-                ins.close();
-            } catch (IOException ex) {
-                mLogger.infoNoloc(ex.getLocalizedMessage());
-            }
-        }
-    }
-
     public static void main(String[] args) {
 
         sLog.info(sLoc.x("LDR001: Loader Start ..."));
         confiugreLogger();
 
-        // This is to test locally
+        // keep this to enable local testing
         /*
         // Set the System Variables (Source)
         System.setProperty("sourcedb.loc", "D:\\temp\\mural\\masterindextest");
@@ -122,47 +84,42 @@ public class LoaderMain {
         System.setProperty("target.pw", "oe");
          */
 
-        //Building up debug logs for parameters passed
-        StringBuilder param_debug = new StringBuilder();
-        param_debug.append("Parameters passed to the Bulk Loader ::\n");
-        param_debug.append("  [1] Data Source\n");
-        param_debug.append("\tSource DB Location : " + System.getProperty("sourcedb.loc") + "\n");
-        param_debug.append("\tSource Field Delimiter Type : " + System.getProperty("field.delimiter") + "\n");
-        param_debug.append("\tSource Record Delimiter Type : " + System.getProperty("record.delimiter") + "\n");
-        param_debug.append("  [2] Data Target\n");
+        //Printing the information passed
+        StringBuilder paraminfo = new StringBuilder();
+        paraminfo.append("Parameters passed to the Bulk Loader :\n");
+        paraminfo.append("  [1] Data Source\n");
+        paraminfo.append("\tSource DB Location : " + System.getProperty("sourcedb.loc") + "\n");
+        paraminfo.append("\tSource Field Delimiter Type : " + System.getProperty("field.delimiter") + "\n");
+        paraminfo.append("\tSource Record Delimiter Type : " + System.getProperty("record.delimiter") + "\n");
+        paraminfo.append("  [2] Data Target\n");
         int target_type_code = Integer.parseInt(System.getProperty("target.type"));
+        
         switch (target_type_code) {
             case 1:
-                param_debug.append("\tTarget Database Type : ORACLE (Code : " + target_type_code + ")\n");
-                param_debug.append("\tTarget URL : " + BLConstants.URI_ORACLE_PRIFIX + "thin:@"  + System.getProperty("target.host") + ":" + System.getProperty("target.port") + ":" + System.getProperty("target.id") + "\n");
+                paraminfo.append("\tTarget Database Type : ORACLE (Code : " + target_type_code + ")\n");
+                paraminfo.append("\tTarget URL : " + BLConstants.URI_ORACLE_PRIFIX + "thin:@" + System.getProperty("target.host") + ":" + System.getProperty("target.port") + ":" + System.getProperty("target.id") + "\n");
                 break;
             case 2:
-                param_debug.append("\tTarget Database Type : DERBY (Code : " + target_type_code + ")\n");
-                param_debug.append("\tTarget Host name/ip : " + System.getProperty("target.host") + "\n");
+                paraminfo.append("\tTarget Database Type : DERBY (Code : " + target_type_code + ")\n");
+                paraminfo.append("\tTarget Host name/ip : " + System.getProperty("target.host") + "\n");
                 break;
             case 3:
-                param_debug.append("\tTarget Database Type : SQL Server (Code : " + target_type_code + ")\n");
-                param_debug.append("\tTarget URL : " + BLConstants.URI_SQLSERVER_PRIFIX + "//" + System.getProperty("target.host") + ":" + System.getProperty("target.port") + ";databaseName=" + System.getProperty("target.id") + "\n");
+                paraminfo.append("\tTarget Database Type : SQL Server (Code : " + target_type_code + ")\n");
+                paraminfo.append("\tTarget URL : " + BLConstants.URI_SQLSERVER_PRIFIX + "//" + System.getProperty("target.host") + ":" + System.getProperty("target.port") + ";databaseName=" + System.getProperty("target.id") + "\n");
                 break;
             default:
-                param_debug.append("\tTarget Database Type : UNKNOWN (Code : " + target_type_code + ")\n");
-                param_debug.append("\tTarget Host name/ip : " + System.getProperty("target.host") + "\n");
+                paraminfo.append("\tTarget Database Type : UNKNOWN (Code : " + target_type_code + ")\n");
+                paraminfo.append("\tTarget Host name/ip : " + System.getProperty("target.host") + "\n");
                 break;
         }
-        //param_debug.append("\tTarget Connection port : " + System.getProperty("target.port") + "\n");
-        //switch (target_type_code) {
-        //    case 1:
-        //        param_debug.append("\tTarget SID : " + System.getProperty("target.id") + "\n");
-        //    case 2:
-        //        param_debug.append("\tTarget Database : " + System.getProperty("target.id") + "\n");
-        //}
-        param_debug.append("\tTarget Schema : " + System.getProperty("target.schema") + "\n");
-        param_debug.append("\tTarget Catalog : " + System.getProperty("target.catalog") + "\n");
-        param_debug.append("\tTarget Login : " + System.getProperty("target.login") + "\n");
-        param_debug.append("\tTarget Password : " + getPWString(System.getProperty("target.pw")) + "\n");
-        param_debug.append("\tJava Path : " + System.getProperty("myjava.path") + "\n");
-        param_debug.append("\tDatabase Driver : " + System.getProperty("dbdriver.name") + "\n");
-        sLog.info(sLoc.x("LDR002: {0}", param_debug.toString()));
+
+        paraminfo.append("\tTarget Schema : " + System.getProperty("target.schema") + "\n");
+        paraminfo.append("\tTarget Catalog : " + System.getProperty("target.catalog") + "\n");
+        paraminfo.append("\tTarget DB Username : " + System.getProperty("target.login") + "\n");
+        paraminfo.append("\tTarget Password : " + getPWString(System.getProperty("target.pw")) + "\n");
+        paraminfo.append("\tJava Path : " + System.getProperty("myjava.path") + "\n");
+        paraminfo.append("\tDatabase Driver : " + System.getProperty("dbdriver.name") + "\n");
+        sLog.info(sLoc.x("LDR002: {0}", paraminfo.toString()));
 
 
         ConnectionFactory cfact = ConnectionFactory.getConnectionFactory();
@@ -170,6 +127,17 @@ public class LoaderMain {
             File f = new File(System.getProperty("sourcedb.loc"));
             String[] datafiles = f.list();
 
+            // If Schema name supplied is null, treat user name as the schema name for oracle
+            // Schema has to be uppercase
+            String trgtdbschema = System.getProperty("target.schema");
+            if (target_type_code == 1) {
+                if ((trgtdbschema == null) || (trgtdbschema.length() == 0)) {
+                    trgtdbschema = System.getProperty("target.login").toUpperCase();
+                    sLog.info(sLoc.x("LDR012:Using target db user name [{0}] for the schema as it was not supplied.", trgtdbschema));
+                } else {
+                    trgtdbschema = trgtdbschema.toUpperCase();
+                }
+            }
 
             /*
             //Sequencing Database Loading based on Table relationships - Start
@@ -205,83 +173,85 @@ public class LoaderMain {
             //Sequencing Database Loading based on Table relationships - End
              */
 
-            for (int i = 0; i < datafiles.length; i++) {
-                System.out.println(" \n\n Processing Source [" + datafiles[i] + "]");
-                ETLDefGenerator etldefgen = null;
-                DBConnection cc_target = null;
-                switch (target_type_code) {
-                    case 1:
-                        etldefgen = new ETLDefGenerator(datafiles[i].toUpperCase(), ETLStrategyBuilder.EXEC_MODE_STAGING);
-                        String dbschemaT = System.getProperty("target.schema").toUpperCase(); //Schema has to be uppercase
+            if ((trgtdbschema != null) && (trgtdbschema.length() > 0)) {
 
-                        cc_target = cfact.createTrgtOracleConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), dbschemaT, System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
-                        break;
-                    case 2:
-                        etldefgen = new ETLDefGenerator(datafiles[i], ETLStrategyBuilder.EXEC_MODE_STAGING);
-                        cc_target = cfact.createTrgtDerbyConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
-                        break;
-                    case 3:
-                        etldefgen = new ETLDefGenerator(datafiles[i], ETLStrategyBuilder.EXEC_MODE_STAGING);
-                        cc_target = cfact.createTrgtSQLServerConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
-                        break;
-                    default:
-                        cc_target = null;
-                        break;
-                }
+                for (int i = 0; i < datafiles.length; i++) {
+                    sLog.info(sLoc.x("\n\n LDR011: Processing Source [ {0} ] ", datafiles[i]));
+                    ETLDefGenerator etldefgen = null;
+                    DBConnection cc_target = null;
+                    switch (target_type_code) {
+                        case 1:
+                            etldefgen = new ETLDefGenerator(datafiles[i].toUpperCase(), ETLStrategyBuilder.EXEC_MODE_STAGING);
+                            cc_target = cfact.createTrgtOracleConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), trgtdbschema, System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
+                            break;
+                        case 2:
+                            etldefgen = new ETLDefGenerator(datafiles[i], ETLStrategyBuilder.EXEC_MODE_STAGING);
+                            cc_target = cfact.createTrgtDerbyConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
+                            break;
+                        case 3:
+                            etldefgen = new ETLDefGenerator(datafiles[i], ETLStrategyBuilder.EXEC_MODE_STAGING);
+                            cc_target = cfact.createTrgtSQLServerConn(System.getProperty("target.host"), Integer.parseInt(System.getProperty("target.port")), System.getProperty("target.id"), System.getProperty("target.schema"), System.getProperty("target.catalog"), System.getProperty("target.login"), System.getProperty("target.pw"), datafiles[i], etldefgen);
+                            break;
+                        default:
+                            cc_target = null;
+                            break;
+                    }
 
-                if (BLConstants.getTrgtConnInfo() == null) {
-                    BLConstants.setTrgtConnInfo(cc_target.getDBConnectionURI());
-                }
+                    if (BLConstants.getTrgtConnInfo() == null) {
+                        BLConstants.setTrgtConnInfo(cc_target.getDBConnectionURI());
+                    }
 
-                DBConnection cc_source = null;
-                if (cc_target != null) {
-                    if (cc_target.getDataBaseConnection() != null) {
-                        switch (target_type_code) {
-                            case 1:
-                                String dbschemaT = System.getProperty("target.schema").toUpperCase(); //Schema has to be uppercase
-
-                                cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), dbschemaT, System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
-                                break;
-                            case 2:
-                                cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), System.getProperty("target.schema"), System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
-                                break;
-                            case 3:
-                                cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), System.getProperty("target.schema"), System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
-                                break;
-                            default:
-                                cc_target = null;
-                                break;
+                    DBConnection cc_source = null;
+                    if (cc_target != null) {
+                        if (cc_target.getDataBaseConnection() != null) {
+                            switch (target_type_code) {
+                                case 1:
+                                    cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), trgtdbschema, System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
+                                    break;
+                                case 2:
+                                    cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), System.getProperty("target.schema"), System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
+                                    break;
+                                case 3:
+                                    cc_source = cfact.createSrcConn(System.getProperty("sourcedb.loc"), datafiles[i], System.getProperty("field.delimiter"), System.getProperty("record.delimiter"), System.getProperty("target.schema"), System.getProperty("target.catalog"), cc_target, target_type_code, etldefgen);
+                                    break;
+                                default:
+                                    cc_target = null;
+                                    break;
+                            }
                         }
                     }
-                }
 
-                if (cc_source != null) {
-                    // Generate ETL Engine File
-                    ETLEngineFileGenerator defgen = new ETLEngineFileGenerator();
-                    defgen.generateETLEngineFile(etldefgen);
-                    //CLose the soutce conn when done
-                    try {
-                        cc_source.getDataBaseConnection().close();
-                    } catch (SQLException ex) {
-                        sLog.infoNoloc("Failed to close source conn after use : " + ex.getMessage());
+                    if (cc_source != null) {
+                        // Generate ETL Engine File
+                        ETLEngineFileGenerator defgen = new ETLEngineFileGenerator();
+                        defgen.generateETLEngineFile(etldefgen);
+                        //CLose the soutce conn when done
+                        try {
+                            cc_source.getDataBaseConnection().close();
+                        } catch (SQLException ex) {
+                            sLog.infoNoloc("Failed to close source conn after use : " + ex.getMessage());
+                        }
+                    } else {
+                        sLog.severe(sLoc.x("LDR008: Source connection is null. Engine file generation aborted"));
                     }
-                } else {
-                    sLog.severe(sLoc.x("LDR008: Source connection is null. Engine file gen aborted"));
                 }
 
-            }
+                //Generate loader bat/sc scripts and zip
+                CreateTriggers gentriggers = new CreateTriggers();
+                CreateZip ziputil = new CreateZip();
+                gentriggers.createTriggers(trgtdbschema, System.getProperty("target.type"));
+                ziputil.createZipPackage(BLConstants.getCWD());
 
-            //Generate loader triggers and zip
-            CreateTriggers gentriggers = new CreateTriggers();
-            CreateZip ziputil = new CreateZip();
-            gentriggers.createTriggers();
-            ziputil.createZipPackage(BLConstants.getCWD());
+            } else {
+                sLog.severe(sLoc.x("LDR013: Target Database schema is not supplied."));
+                System.exit(0);
+            }
         } else {
             sLog.severe(sLoc.x("LDR009: Loader will exit abnormally"));
             System.exit(0);
         }
 
-        sLog.info(sLoc.x("LDR010: Portable ETL Loader Generated Successfully.\n Please unzip " + BLConstants.getCWD() + BLConstants.fs  + BLConstants.zipname + "to run the loader"));
+        sLog.info(sLoc.x("LDR010: Portable ETL Loader Generated Successfully.\n Please unzip " + BLConstants.getCWD() + BLConstants.fs + BLConstants.zipname + "to run the loader"));
     }
 
     public static List getTableSequence(Connection con, String schema, String catalog, List<String> tableNames) throws SQLException, IOException {
@@ -336,5 +306,42 @@ public class LoaderMain {
         fout.flush();
         fout.close();
         return Collections.EMPTY_LIST;
+    }
+
+    private static void confiugreLogger() {
+        FileInputStream ins = null;
+        try {
+            LogManager logManager;
+            String config = "config/logger.properties";
+            File f = new File("./logs");
+
+            if (f.exists() && f.isDirectory()) {
+            } else {
+                mLogger.fine("creating new logger dir");
+                f.mkdir();
+            }
+
+            logManager = LogManager.getLogManager();
+            ins = new FileInputStream(config);
+            logManager.readConfiguration(ins);
+        } catch (IOException ex) {
+            mLogger.infoNoloc(ex.getLocalizedMessage());
+        } catch (SecurityException ex) {
+            mLogger.infoNoloc(ex.getLocalizedMessage());
+        } finally {
+            try {
+                ins.close();
+            } catch (IOException ex) {
+                mLogger.infoNoloc(ex.getLocalizedMessage());
+            }
+        }
+    }
+
+    private static String getPWString(String pw) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < pw.length(); i++) {
+            sb.append("*");
+        }
+        return sb.toString();
     }
 }
