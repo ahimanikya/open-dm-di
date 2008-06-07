@@ -63,6 +63,7 @@ public class ETLEngineInvoker {
     private static String TRGT_DB_LOGIN = null;
     private static String TRGT_DB_PW = null;
     private static String ENGINE_FILE = "C:\\ETL\\ETLEngineInvoker\\engine.xml";
+    public static  String fs = System.getProperty("file.separator"); //File Separator
     private static TargetDBOperations trgtdbopr = null;
     private static Connection trgtconn = null;
     private static int dbtype = 0;
@@ -94,9 +95,9 @@ public class ETLEngineInvoker {
                 TRGT_DB_PW = args[3];
                 ENGINE_FILE = args[4];
             }
-
+            
             trgtconn = connectToDB(TRGT_DB_CONN, TRGT_DB_LOGIN, TRGT_DB_PW);
-
+            
             if (trgtconn != null) {
                 trgtdbopr = new TargetDBOperations();
 
@@ -122,7 +123,7 @@ public class ETLEngineInvoker {
                     mLogger.info("Start executing ETL Engine File :: " + engineFileName);
                     ETLEngineInvoker invoker = new ETLEngineInvoker();
 
-                    invoker.startProcessing(new File(".\\ETLProcess\\" + arrFiles.get(i) + "\\DefaultETL_engine.xml"));
+                    invoker.startProcessing(new File("." + fs + "ETLProcess" + fs + arrFiles.get(i) + fs + "DefaultETL_engine.xml"));
                     mLogger.info("End executing ETL Engine File :: " + engineFileName);
                 }
 
