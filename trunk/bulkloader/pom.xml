@@ -222,8 +222,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>etl-engine</groupId>
-            <artifactId>etl-engine</artifactId>
+            <groupId>mural</groupId>
+            <artifactId>etlengine</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
