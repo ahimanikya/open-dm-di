@@ -9,7 +9,8 @@
     <name>Open Data Management Data Integration</name>
     <url>http://maven.apache.org</url>
     <modules>
-        <module>ETLEngineInvoker</module>
+        <module>runtime</module>
+		<module>ETLEngineInvoker</module>
         <module>plugin</module>
         <module>bulkloader</module>
     </modules>
@@ -29,7 +30,7 @@
         <mural.currentVersion>1.0</mural.currentVersion>
         <localRepository>${maven.repo.local}</localRepository>
         <netbeans.version>RELEASE60-BETA1</netbeans.version>
-        <netbeans.cluster>soa1</netbeans.cluster>
+        <netbeans.cluster>soa2</netbeans.cluster>
     </properties>
     <repositories>
         <repository>

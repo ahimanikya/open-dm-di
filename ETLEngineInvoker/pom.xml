@@ -34,7 +34,7 @@
                             <file>${basedir}/src/main/resources/globalization/net.java.hulp.i18n.jar</file>
                         </configuration>
                     </execution-->
-                    <execution>
+                    <!--execution>
                         <id>install-etl-engine</id>
                         <phase>process-resources</phase>
                         <goals>
@@ -48,7 +48,7 @@
                             <version>1.0</version>
                             <file>${basedir}/lib/etlengine.jar</file>
                         </configuration>
-                    </execution>
+                    </execution-->
                 </executions>
             </plugin>            
         </plugins>
@@ -107,8 +107,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>etl-engine</groupId>
-            <artifactId>etl-engine</artifactId>
+            <groupId>mural</groupId>
+            <artifactId>etlengine</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
