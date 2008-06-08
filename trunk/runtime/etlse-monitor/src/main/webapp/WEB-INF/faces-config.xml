@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+<faces-config version="1.2" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd">
+    
+    
+    <lifecycle>
+        <phase-listener>
+            com.sun.jbi.cam.plugin.etlse.model.MonitorPhaseListener
+        </phase-listener>
+    </lifecycle>
+    <managed-bean>
+        <managed-bean-name>mbeanlist</managed-bean-name>
+        <managed-bean-class>com.sun.jbi.cam.plugin.etlse.model.CollabList</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>
+            list of mbeanSummary
+        </description>
+        <managed-bean-name>MbeanSummaryList</managed-bean-name>
+        <managed-bean-class>com.sun.jbi.cam.plugin.etlse.model.CollabSummaryList</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>filter</managed-bean-name>
+        <managed-bean-class>com.sun.jbi.cam.plugin.etlse.model.FilterDate</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>
+            backing bean which represents the system and user info
+        </description>
+        <managed-bean-name>SystemInfo</managed-bean-name>
+        <managed-bean-class>com.sun.jbi.cam.plugin.etlse.model.SystemInfo</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <description>
+            this represents the SUMMARY DETAILS table in case of rejected rows of a given ETL collaboration
+        </description>
+        <managed-bean-name>CollabSummaryDetails</managed-bean-name>
+        <managed-bean-class>com.sun.jbi.cam.plugin.etlse.model.CollabSummaryDetails</managed-bean-class>
+        <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>summary</from-outcome>
+            <to-view-id>/collabSummary.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>mbeanlist</from-outcome>
+            <to-view-id>/collabMbeanlist.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>error</from-outcome>
+            <to-view-id>/error.jsp</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    
+    
+    
+</faces-config>

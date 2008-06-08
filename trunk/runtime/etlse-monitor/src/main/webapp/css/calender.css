@@ -1,0 +1,645 @@
+/*
+///////////////////////////////////////////////////////
+// Copyright (c) 2002, SeeBeyond Technology Corporation.
+// All Rights Reserved
+//
+// This program, and all routines referenced herein,
+// are the proprietary properties and trade secrets of
+// SEEBEYOND TECHNOLOGY CORPORATION
+//
+// Except as provided for by license agreement, this
+// program shall not be duplicated, used or disclosed
+// without the written consent, signed by an officer of
+// SEEBEYOND TECHNOLOGY CORPORATION.
+////////////////////////////////////////////////////////
+*/
+/*background-color: #FFFFFF; Added for tree*/
+/*holds tab gifs and titles; transparent background*/
+
+a:link, a:visited {
+	color: #003163;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a.menu:link, a.menu:visited {
+	color: #003163;
+}
+
+body{
+	background-color: #FFFFFF;
+	margin: 0px;
+}
+
+button.hidbtn {
+	background-color: transparent;
+	border: 0px solid #FF0000;
+	font-family: MS Sans Serif;
+	font-size: 1pt;
+	height: 1px;
+	width: 1px;
+}
+
+table.listview {
+	margin: 0px;
+	width: 100%;
+}
+
+td {
+	color: #003163;
+	font-family: "MS Sans Serif", Geneva, sans-serif;
+	font-size: 70%;
+}
+
+th.listview table tr td {
+    background-color: #003163;
+    color: #FFFFFF;
+    font-size: 75%;
+    font-weight: bold;
+    margin: 0px;
+    padding: 3px 3px 3px 3px;
+}
+
+
+td.listview {
+	background-color: #FFFFFF;
+	border-bottom: 1px solid #E7EFF7;
+	cursor: pointer;
+	font-size: 75%;
+	margin: 0px;
+	padding-left: 5px;
+}
+
+td.listviewAlert {
+	background-color: #FFCCCC;
+    border-bottom: 1px solid #E7EFF7;
+	cursor: pointer;
+	font-size: 75%;
+	margin: 0px;
+	padding-left: 5px;
+}
+
+td.selectedRow {
+	background-color: #FBE797;
+    border-bottom: 1px solid #E7EFF7;
+	cursor: pointer;
+	font-size: 75%;
+	margin: 0px;
+	padding-left: 5px;
+}
+
+td.slide{
+	background-color: #FFFFFF;
+	color: #003366;
+	cursor: hand;
+	cursor: pointer;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	height: 25px;
+}
+
+textarea {
+	background-color: transparent;
+	border: 0px solid #FFFFFF;
+	font-family: "MS Sans Serif", Geneva, sans-serif;
+	overflow: visible;
+}
+
+th {
+	background-color: #FFFFFF;
+	color: #FFFFFF;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 70%;
+	font-weight: 800;
+}
+
+th.listview {
+	background-color: #003163;
+	color: #FFFFFF;
+	font-size: 70%;
+	margin: 0px;
+	padding: 3px 3px 3px 3px;
+}
+
+th.slide{
+	background-color: #E7EEF7;
+	color: #003366;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-weight: normal;
+}
+
+
+/*background for active "up" tabs*/
+.alert {
+	background-color: #CC3300;
+	color: #FFFFFF;
+	cursor: hand;
+	cursor: pointer;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-decoration: none;
+}
+
+.alertopen {
+	background-color: #FFFFCC;
+	color: ##003163;
+	cursor: hand;
+	cursor: pointer;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-decoration: none;
+}
+
+.btn, .btndsbl, btn, .btndsbl, .btn, .btndsbl {
+	color: #003163;
+	font-size: 75%;
+	font-weight: normal;
+	margin-left: 3px;
+	vertical-align: top;
+}
+
+.btnlabel {
+	color: #003163;
+	font-family: "MS Sans Serif", Geneva, sans-serif;
+	font-size: 85%;
+}
+
+.componenttabdiv {
+	margin-left: 0px;
+	margin-top: 10px;
+	overflow: visible;
+	width: 100%;
+}
+
+.componenttablehead {
+	background-color: #E7EFF7;
+	border-bottom: 1px solid #E7EFF7;
+}
+
+.contexttitle, .treetitle, .contexttitle {
+	background-color: #E7EFF7;
+	border-bottom: 1px solid #CCCCCC;
+	margin-bottom: 10px;
+	width: 100%;
+}
+
+.explorertree{
+	overflow: visible;
+	padding: 4px;
+	width: 100px;
+}
+
+.header {
+	color: #003163;
+}
+
+.headerth {
+	background-color: #FFFFFF;
+	color: #003163;
+	width: 100%;
+}
+
+.iconbar{
+	border-bottom: 2px solid #E7EFF7;
+	padding: 2px;
+	text-align: left;
+}
+
+.iconbarfirst{
+	border-bottom: 2px solid #003163;
+	border-left: 2px solid #003163;
+	color: #003163;
+	font-weight: normal;
+	padding: 2px;
+	text-align: left;
+}
+
+.iconbarlast{
+	border-bottom: 2px solid #003163;
+	border-right: 2px solid #003163;
+	padding: 2px;
+	text-align: left;
+}
+
+.inactiveback {
+	background-color: #CCCCCC;
+	border-top: 1px #003366 solid;
+	color: #003163;
+}
+
+.inst {
+	background-color: #FFFFFF;
+	cursor: hand;
+	cursor: pointer;
+}
+
+/*tree header title*/
+.instsel {
+	background-color: #FFCC00;
+	cursor: hand;
+	cursor: pointer;
+}
+
+/* changed from: background-color: #FFFFFF; for homogeneous result
+	padding was 3px originally	 */
+.label {
+	background-color: transparent;
+	color: ##003163;
+	cursor: hand;
+	cursor: pointer;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-decoration: none;
+}
+
+.listview {
+	font-size: 110%;
+}
+
+.logfiletable{
+	background-color: #FFFFFF;
+	height: 100%;
+	margin-left: 10px;
+	margin-right: 10px;
+	width: 100%;
+}
+
+.logged, .message {
+	color: #003163
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+
+.loginfooter{
+	color: #003163;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 65%;
+	margin-left: 20px;
+}
+
+.logintable{
+	margin-bottom: 100px;
+}
+
+.logintable td {
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 85%;
+	margin-left: 20px;
+	padding: 4px;
+}
+
+.logmessage {
+	color: #FFFFFF;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+
+.logoutbutton{
+	vertical-align: bottom;
+}
+
+/** padding changed from 6px for treeview **/
+.lselect {
+	background-color: #003163;
+	color: #FFFFFF;
+	cursor: hand;
+	cursor: pointer;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-decoration: none;
+}
+
+.maintable {
+	background-color: #003163;
+	overflow: visible;
+	overflow: visible;
+	width: 96%;
+	width: 96%;
+}
+
+.maintable table {
+	border: 0px;
+	margin: 0px;
+}
+
+.maintable td {
+	border: 1px solid #CCCCCC;
+}
+
+.maintable th {
+	background: url(hdr_wht.gif) repeat-x;
+	background-color: #003163;
+	border: 0px;
+	color: #FFFFFF;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 70%;
+	font-weight: 800;
+	margin: 0px;
+}
+
+.maintable tr {
+	border-left: 1px solid #CCCCCC;
+	border-right: 1px solid #CCCCCC;
+}
+
+.maintable, table:after {
+	margin: 10px;
+}
+
+.msgbutton {
+	font-size: 75%;
+	margin-left: 5px;
+}
+
+.navbtn {
+	color: #003163;
+	font-size: 75%;
+	font-weight: normal;
+	vertical-align: top;
+}
+
+.noalert {
+	background-color: #FFFFFF;
+	color: #003163;
+	cursor: hand;
+	text-decoration: none;
+}
+
+.noalertselect {
+	background-color: #003163;
+	color: #FFFFFF;
+	cursor: hand;
+	text-decoration: none;
+}
+
+.selfolder {
+	background-color: transparent;
+	color: #003163;
+	font-weight: bold;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-decoration: none;
+}
+
+.sepbar{
+	background-image: url(enterprise_manager.gif);
+	background-position: left;
+	background-repeat: no-repeat;
+	height: 40px;
+}
+
+.sepbarbottom{
+	background-image: url(bar.gif);
+	background-position: left;
+	background-repeat: repeat-x;
+	border-bottom: 1px solid #003163;
+	height: 26px;
+}
+
+.sepbarlast{
+	background-image: url(Bar_end.gif);
+	background-position: left;
+	background-repeat: no-repeat;
+	border-bottom: 1px solid #003163;
+	height: 26px;
+	width: 60px;
+}
+
+.sepbarnext{
+	border-bottom: 1px solid #003163;
+	height: 66px;
+}
+
+.sepbartable{
+	background-color: #003163;
+}
+
+.sort {
+	cursor: hand;
+}
+
+.statusbar{
+	margin-left: 10px;
+	margin-right: 10px;
+	width: 100%;
+}
+
+.statusbarcenter{
+	background-image: url(statusBarCenter.gif);
+	background-repeat: repeat-x;
+	height: 26px;
+}
+
+.statusbarleft{
+	background-image: url(statusBarLeft.gif);
+	background-repeat: no-repeat;
+	height: 26px;
+	width: 11px;
+}
+
+.statusbarright{
+	background-image: url(statusBarRight.gif);
+	background-repeat: no-repeat;
+	height: 26px;
+	width: 11px;
+}
+
+.toplevel{
+	background-image: url(TopLevel.gif);
+	background-position: right;
+	background-repeat: no-repeat;
+	height: 24px;
+	vertical-align: bottom;
+	width: 100%;
+}
+
+.txt{
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-weight: normal;
+}
+
+.whiteth {
+	background-color: transparent;
+}
+
+.whitethback {
+	background-color: transparent;
+	border-bottom: 1px solid #003163;
+	margin-bottom: 1px;
+}
+
+.whitethtitle, .whitethtop {
+	background-color: transparent;
+	color: #003163;
+	text-align: left;
+	text-indent: 12px;
+}
+
+.sRed {
+	color: #990000;
+}
+
+.graphTitle {
+	color: #003163;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	padding-bottom:6px;
+}
+
+.stbutton {
+	margin-left: 5px;
+}
+
+td.listnoselect {
+	background-color: #FFFFFF;
+	border-bottom: 1px solid #E7EFF7;
+	font-size: 75%;
+	margin: 0px;
+	padding-left: 5px;
+}
+
+.filterpopup{
+	background-color: #F1F0E3;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color:#001363;
+	font-size: 75%;
+}
+.unknown {
+	background-color: #FFCC99;
+	color: #003163;
+	cursor: hand;
+	cursor: pointer;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-decoration: none;
+}
+.stopped {
+	background-color: #CC3300;
+	color: #FFFFFF;
+	cursor: hand;
+	cursor: pointer;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-decoration: none;
+}
+.suspended {
+	background-color: #FFCCCC;
+	color: #003163;
+	cursor: hand;
+	cursor: pointer;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-decoration: none;
+}
+.not_available {
+	background-color: #CCCCFF;
+	color: #003163;
+	cursor: hand;
+	cursor: pointer;
+	padding-left: 3px;
+	padding-right: 3px;
+	text-decoration: none;
+}
+.topicqueuebody{
+    margin:0px;
+    background-color:#FFFFFF;
+    border:1px solid #003163;
+}
+.topicqueuetitle{
+    background-color:#006699;
+    border-bottom:1px solid #003163;
+    width:100%;
+    padding:2px 2px 2px 2px;
+}
+.topicqueuetitlecell{
+    background-color:transparent;
+    color:white;
+    text-align:left;
+    text-indent:12px;
+}
+.firsttabcell{
+	border-bottom: 1px solid #001363;
+	white-space: nowrap;
+	width: 10px;
+}
+
+.lasttabcell{
+	border-bottom: 1px solid #001363;
+	white-space: nowrap;
+	width: 99%;
+}
+
+.tabcellback{
+	background-color:#EFEFED;
+	border-left: 1px ridge #00198A;
+	border-right: 1px solid #000000;
+	border-top: 1px ridge #00198A;
+	border-bottom:1px solid #001363;
+	margin-bottom: 0px;
+	padding-left: 5px;
+	padding-right: 5px;
+	white-space: nowrap;
+}
+
+.tabcellup{
+	background-color: #FFFFFF;
+	border-left: 1px solid #001363;
+	border-right: 1px solid #000000;
+	border-top: 1px ridge #00198A;
+	margin-bottom: 0px;
+	padding-left: 5px;
+	padding-right: 5px;
+	white-space: nowrap;
+	font-weight:bold;
+}
+
+.tabtable{
+	background-color: #336699;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 70%;
+	padding: 0px;
+	vertical-align: bottom;
+	margin-bottom:4px;
+}
+
+.tweenspace{
+	border-bottom: 1px solid #001363;
+	border-left: 1px solid inherit;
+	border-right: 1px solid inherit;
+}
+.messagetabbody{
+	margin:0px;
+	height:100%;
+	border-left:1px solid #003163;
+	border-top:1px solid #003163;
+	background-color:#FFFFFF;
+}
+.messagetabheader{
+	background-color:#006699;
+	border-bottom:1px solid #FFFFFF;
+	width:100%;padding:2px 2px 2px 2px;
+	font-size:100%;
+}
+.messagetabheadercell{
+	color:white;
+	text-align:left;
+	text-indent:12px;
+}
+.messageinput{
+	margin-left: 5px;
+	margin-bottom:3px;
+	border:0px;
+	height:18px;
+	vertical-align: bottom;
+}
+.iconbtn {
+	font-size: 80%;
+	background-color: transparent;
+	border: 0px;
+	margin-left: 5px;
+	padding: 0px;
+	font-size: 1px;
+	cursor: hand;
+}

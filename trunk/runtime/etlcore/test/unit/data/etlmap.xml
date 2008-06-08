@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<etlmap  xmlns:tns="http://com.sun.jbi/etl/etlengine" 
+	 targetNamespace="http://com.sun.jbi/etl/etlengine" > 
+	 <etl partnerLink="{http://com.sun.jbi/etl/etlengine}collab1_engine_etlPartnerLink"
+	 	 partnerLinkType="{http://com.sun.jbi/etl/etlengine}collab1_engine_etlPartnerLinkType"
+	 	 roleName="{http://com.sun.jbi/etl/etlengine}collab1_engine_myrole"
+	 	 portType="{http://com.sun.jbi/etl/etlengine}collab1_engine_etlPortType"
+	 	 operation= "execute" 
+	 	 file="collab1_engine.xml"
+	 	 type= "requestReplyService" /> 
+</etlmap>

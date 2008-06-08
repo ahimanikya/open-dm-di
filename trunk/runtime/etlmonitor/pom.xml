@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <parent>
+		<artifactId>open-dm-di</artifactId>
+        <groupId>mural</groupId>
+        <version>1.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>mural</groupId>
+    <artifactId>etlmonitor</artifactId>
+    <name>etlmonitor</name>
+    <version>${mural.currentVersion}</version>
+    <description>etlmonitor description</description>
+    <build>
+        <plugins>
+			<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+				<executions>
+				<!-- Follownig execution tasks should be removed once these artifacts are available
+					     in public maven repositories (nilesh_apte 6/8/2008)-->
+					<execution>
+                        <id>install-crl</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <generatePom>true</generatePom>
+                            <packaging>jar</packaging>
+                            <groupId>open-jbi-components</groupId>
+                            <artifactId>crl</artifactId>
+                            <version>2.3-SNAPSHOT</version>
+                            <file>${basedir}/../external/crl-2.3-SNAPSHOT.jar</file>
+                        </configuration>
+                    </execution>
+					<!-- (nilesh_apte 6/8/2008) -->
+				</executions>
+			</plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>${artifactId}-extract-globalized-messages</id>
+                        <phase>process-classes</phase>
+                        <goals><goal>run</goal></goals>
+                        <configuration>
+                            <tasks>
+                                <taskdef name="i18n" classname="${I18NTASK_CLASS}" classpath="${maven.repo.local}/net/java/hulp/i18ntask/net.java.hulp.i18ntask/${I18NTASK_VERSION}/net.java.hulp.i18ntask-${I18NTASK_VERSION}.jar" />
+                                <i18n dir="${project.build.outputDirectory}"
+                                    file="${project.build.sourceDirectory}/${msgs.package}/msgs.properties"
+                                    strict="true"
+                                    prefix="DM-DI-SE-"
+                                    pattern="([A-Z][A-Z][A-Z][A-Z]\d\d\d)(: )(.*)" />
+                                <!-- copy file to classes dir: -->
+                                <copy file="${project.build.sourceDirectory}/${msgs.package}/msgs.properties"
+                                     todir="${project.build.outputDirectory}/${msgs.package}" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>mural</groupId>
+            <artifactId>axiondb</artifactId>
+            <version>${mural.currentVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>open-jbi-components</groupId>
+            <artifactId>crl</artifactId>
+            <version>2.3-SNAPSHOT</version>
+        </dependency>
+        <!--dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency-->
+    </dependencies>
+    <properties>
+        <msgs.package>com/sun/jbi/engine/etl/monitor/mbeans</msgs.package>
+		<I18NTASK_CLASS>net.java.hulp.i18n.buildtools.I18NTask</I18NTASK_CLASS> 
+		<I18N_XML_TASK_CLASS>net.java.hulp.i18n.buildtools.I18nXmlTask</I18N_XML_TASK_CLASS> 
+		<I18NTASK_VERSION>2.1-SNAPSHOT</I18NTASK_VERSION>
+    </properties>
+</project>

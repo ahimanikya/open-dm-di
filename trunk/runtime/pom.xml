@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <parent>
+		<artifactId>open-dm-di</artifactId>
+        <groupId>mural</groupId>
+        <version>1.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>mural</groupId>
+    <artifactId>etlse-top</artifactId>
+    <packaging>pom</packaging>
+    <name>etlse-top</name>
+    <version>${mural.currentVersion}</version>
+    <description>Top-level Build for etlse-top</description>
+    <modules>
+        <!-- components: -->
+        <module>etlengine</module>
+        <module>etlmonitor</module>
+        <module>etlcore</module>
+        <module>etlse-monitor</module>
+        <!-- disabling until we can externalize maverick dependency.  MYK 11/22/06
+        <module>etlmonitor-client</module>
+        -->
+        <module>packaging</module>
+    </modules>
+</project>
