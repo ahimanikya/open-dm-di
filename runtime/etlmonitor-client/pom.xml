@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <parent>
+        <artifactId>build-common</artifactId>
+        <groupId>open-jbi-components</groupId>
+        <version>1.0</version>
+        <relativePath>../../build-common</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>open-jbi-components</groupId>
+    <artifactId>etlmonitor-client</artifactId>
+    <name>etlmonitor-client</name>
+    <version>${jbicomps.currentVersion}</version>
+    <description>etlmonitor client description</description>
+    <dependencies>
+        <dependency>
+            <groupId>open-jbi-components</groupId>
+            <artifactId>etlmonitor</artifactId>
+            <version>${jbicomps.currentVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>infohazard</groupId>
+            <artifactId>maverick</artifactId>
+            <version>unknown</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant-junit</artifactId>
+        </dependency>
+    </dependencies>
+</project>

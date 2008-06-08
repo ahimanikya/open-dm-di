@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!-- jbi.xml descriptor for the service engine -->
+<jbi
+    version="1.0"
+    xmlns="http://java.sun.com/xml/ns/jbi"
+    xmlns:identification="http://www.sun.com/jbi/descriptor/identification"    
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:config='http://www.sun.com/jbi/Configuration'
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xsi:schemaLocation='http://www.sun.com/jbi/Configuration ./componentConfiguration.xsd'
+    xsi:schemaLocation="http://java.sun.com/xml/ns/jbi ./jbi.xsd">
+
+    <component type="service-engine">
+        <identification>
+            <name>sun-etl-engine</name>
+            <description>ETL Service Engine</description>
+            <identification:VersionInfo specification-version="${JBI_SPEC_VERSION}" build-number="${BUILD_NUMBER}"/>            
+        </identification>
+        ......
+        ......
+        <config:Configuration>
+          <config:Property name="MaxThreadCount"
+                         displayName="Number of Threads"
+                         displayDescription="# of threads to proccess requests and Message Exchange responses concurrentlty"
+                         type="xsd:positiveInteger"
+                         value="10"
+          <!-- This is only example, no component should need component restart for this change -->
+                         isComponentRestartRequired="true"  
+                         onChangeMessage="Please restart component">
+            <config:Constraint facet="minInclusive" value="1"/>
+            <config:Constraint facet="maxInclusive" value="100"/>
+          </config:Property>
+          <config:ApplicationConfiguration name="sun-etl-engine"
+                          displayName="ETL Application Configuration" displayDescription="Describes ETL connection properties"
+                          isApplicationRestartRequired="true"
+                          onChangeMessage="Restart of application is required after changing this property" 
+                          hideDisplay="install">
+            <config:Property name="Axiondb Instance Name"
+                         displayName="Axiondb Instance Name"
+                         displayDescription="Axiondb Instance Name"
+                         type="xsd:string"
+                         required="true"/>
+			<config:Property name="Axiondb Working Dir"
+                         displayName="Axiondb Working Dir"
+                         displayDescription="Axiondb Working Dir"
+                         type="xsd:string"
+                         required="true"/>
+            <config:Property name="Proxy User ID"
+                         displayName="Proxy User ID"
+                         displayDescription="If proxy protocol is SOCKS5 and proxyUserID is not specified in Proxy URL, this is the user ID for proxy login"
+                         type="xsd:string"
+                         required="true"/>
+            <config:Property name="Proxy User Password"
+                         displayName="Proxy User Password"
+                         displayDescription="if proxy protocol is SOCKS5 and ProxyPassword not specified in Proxy URL, this is the user password for proxy login"
+                         type="xsd:string"
+                         required="true"
+                         encrypted="true"/>            
+	    </config:ApplicationConfiguration>
+          </config:ApplicationConfiguration>
+	  </config:Configuration>
+    </component>
+</jbi>

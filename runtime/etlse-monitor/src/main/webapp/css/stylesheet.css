@@ -1,0 +1,275 @@
+/*
+ * $Id: stylesheet.css,v 1.1 2008/01/30 15:49:48 srengara Exp $
+ * $Source: /cvs/open-jbi-components/ojc-core/etlse/etlse-monitor/src/main/webapp/css/stylesheet.css,v $
+ */
+
+a:link		{ color: blue; }
+a:visited	{ color: mediumblue; }
+a:hover		{ color: red; }
+
+a.nav:link		{ color: gold; }
+a.nav:visited	{ color: gold; }
+a.nav:hover		{ color: red; }
+
+body {
+    font-size: 10pt;
+    color: black;
+    font-family: lucida, verdana;
+    background-color: white
+}
+
+table {
+    font-size: 10pt;
+    color: black;
+    font-family: lucida, verdana;
+    background-color: white
+}
+
+td.dataColumn {
+    background-color: white;
+    border-top-width: 0;
+    border-bottom-width: 1px;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-color: #E7EFF7;
+    text-align: left;
+    vertical-align: top;
+}
+
+.dataTable {
+    background-color: white;
+    border-style: solid;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-color: #336699;
+}
+
+th.friendTitle {
+    background-color: gray;
+    text-align: left;
+    vertical-align: middle;
+    color:white;
+    font-weight: bold;
+}
+
+th.headerColumn {
+    background-color: #003163;
+    text-align: center;
+    vertical-align: middle;
+    color:#FFFFFF;
+    font-weight: bold;
+}
+
+.errorText {
+    color: red;
+    background-color: white;
+}
+
+.pageTitle {
+    font-weight: bold;
+    letter-spacing: 0.25em;
+    text-align: left;
+    color: blue;
+    background-color: #000066;
+}
+
+
+.navigationAll {
+    color: white;
+    background-color: #000066;
+}
+
+.navigationTop {
+    color: white;
+    background-color: #336699;
+    border-top-width: 1px;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-style: solid;
+    border-color: white;
+}
+
+.editTitle {
+    font-weight: bold;
+    text-align: right;
+}
+
+.firsttabcell{
+    border-bottom: 1px solid #001363;
+    white-space: nowrap;
+    width: 10px;
+}
+
+.lasttabcell{
+    border-bottom: 1px solid #001363;
+    white-space: nowrap;
+    width: 99%;
+}
+.monHdr1{
+    border-bottom: 1px solid #001363;
+    white-space: nowrap;
+    height:6px;
+    color:#FFFFFF;
+    vertical-align:bottom;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size:10pt;
+}
+
+.monHdr2{
+    font-size: 10pt;
+    color: black;
+    background-color:#A4C0E3;
+    font-family: Tahoma;
+}
+
+.tabcellback{
+    background-color:#EFEFED;
+    border-left: 1px ridge #00198A;
+    border-right: 1px solid #000000;
+    border-top: 1px ridge #00198A;
+    border-bottom:1px solid #001363;
+    margin-bottom: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+    white-space: nowrap;
+}
+
+.tabcellup{
+    background-color: #FFFFFF;
+    border-left: 1px solid #001363;
+    border-right: 1px solid #000000;
+    border-top: 1px ridge #00198A;
+    margin-bottom: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+    white-space: nowrap;
+    font-weight:bold;
+}
+
+.tabtable{
+    background-color: #336699;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size: 70%;
+    padding: 0px;
+    vertical-align: bottom;
+    margin-bottom:4px;
+}
+
+.tweenspace{
+    border-bottom: 1px solid #001363;
+    border-left: 1px solid inherit;
+    border-right: 1px solid inherit;
+}
+
+.btn, .btndsbl, btn, .btndsbl, .btn, .btndsbl {
+    color: #003163;
+    font-size: 75%;
+    font-weight: normal;
+    margin-left: 3px;
+    vertical-align: top;
+}
+
+.btnff {
+	background-color: transparent;
+	border: 0px;
+	height: 22px;
+	width: 25px;
+	background: url(../config/btn_ff.gif) no-repeat center;
+	vertical-align: middle;
+	margin-right:15px;
+}
+.btnf {
+	background-color: transparent;
+	border: 0px;
+	height: 22px;
+	width: 25px;
+	background: url(../config/btn_f.gif) no-repeat center;
+	vertical-align: middle;
+}
+
+.btnr {
+	background-color: #336699;
+	border: 0px;
+	height: 22px;
+	width: 25px;
+	vertical-align: middle;
+	background: url(../config/btn_r.gif) no-repeat center;
+}
+.btnrr {
+	background-color: #336699;
+	border: 0px;
+	height: 22px;
+	width: 25px;
+	vertical-align: middle;
+	background: url(../config/btn_rr.gif) no-repeat center;
+}
+
+.btngo {
+	background-color: #336699;
+	border: 0px;
+	height: 22px;
+	width: 25px;
+	vertical-align: middle;
+	margin-right:15px;
+	margin-left:5px;
+}
+
+.btnlabel {
+    color: #003163;
+    font-family: "MS Sans Serif", Geneva, sans-serif;
+    font-size: 85%;
+}
+
+.messageinput{
+    margin-left: 5px;
+    margin-bottom:3px;
+    border:0px;
+    height:18px;
+    vertical-align: bottom;
+}
+
+.secHeader1 {
+    font-size: 12pt;
+    color: black;
+    font-family: Tahoma;
+}
+
+.secHeader3 {
+    padding-top: 2px;
+    padding-right: 2px;
+    padding-left: 2px;
+    padding-bottom: 2px;
+    width: 100%;
+    border-bottom: #003163 1px solid;
+    background-color: #efefed
+}
+
+.elButton a  {
+    color: #000000;
+    font-size:12px;
+    font-family:verdana;
+    font-weight:bold;
+    text-decoration: none;
+    border:1px outset #2862A2;
+    background-color: #A4C0E3;
+    width: 82px;
+    height: 24px;
+    padding: 3px 5px;
+    margin: 1px;
+
+}
+.elButton a:hover {
+    background-color: #E7EEF7;
+    color:#000000;
+    padding-left:4px;
+    border:1px inset #2862A2;
+}
+
+.labelText1 {
+    font-size: 10pt;
+    color: black;
+    font-family: Tahoma;
+}
