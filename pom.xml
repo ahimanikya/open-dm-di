@@ -9,7 +9,6 @@
     <name>Open Data Management Data Integration</name>
     <url>http://maven.apache.org</url>
     <modules>
-        <module>runtime</module>
 		<module>ETLEngineInvoker</module>
         <module>plugin</module>
         <module>bulkloader</module>
