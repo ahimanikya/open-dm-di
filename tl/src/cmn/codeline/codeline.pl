@@ -19,6 +19,7 @@
 # your own identifying information: Portions Copyright
 # [year] [name of copyright owner]
 #
+#
 
 #
 # @(#)codeline.pl - ver 1.1 - 01/04/2006
@@ -39,7 +40,7 @@ $TESTING = 0;
 #what is the release management codeline name?
 #warning - don't read this from the environment, as all
 #values in this file apply to a specific RE codeline.
-$CODELINE = "main";
+$CODELINE = "sierra";
 
 #official name of the product. Same comments as above:
 $PRODUCT = "odmdi";
@@ -62,7 +63,7 @@ $PRODUCT = "odmdi";
 
 #this is the current release number:
 %MILESTONE_VERSION = (
-    'odmdi', 'SM09',
+    'odmdi', 'SM10',
 );
 
 #this is the milestone date this release is based on.

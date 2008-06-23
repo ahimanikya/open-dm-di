@@ -39,7 +39,7 @@ public class TargetDBOperations {
         StringBuilder query = new StringBuilder();
         switch (dbtype) {
             case 1:
-                System.out.print("  [Oracle] Collecting constraints for table " + table + " ...");
+                System.out.print("[Oracle] Collecting constraints for table " + table + " ...");
                 query.append("SELECT CONSTRAINT_NAME FROM USER_CONSTRAINTS WHERE ");
                 query.append("TABLE_NAME='" + table + "' ");
                 if (schema != null) {
@@ -47,7 +47,7 @@ public class TargetDBOperations {
                 }
                 break;
             case 3:
-                System.out.print("  [SQL Server] Collecting constraints for table " + table + " ...");
+                System.out.print("[SQL Server] Collecting constraints for table " + table + " ...");
 
                 query.append("SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.CONSTRAINT_TABLE_USAGE WHERE ");
                 query.append("TABLE_NAME='" + table + "' ");
@@ -93,7 +93,7 @@ public class TargetDBOperations {
                                 enablesql.append(table_name);
                             }
                             enablesql.append(" ENABLE CONSTRAINT " + cons_names.get(i));
-                            System.out.println("        Enabling Constraint [" + cons_names.get(i) + "] on table : " + table_name);
+                            System.out.println("[Oracle] Enabling Constraint [" + cons_names.get(i) + "] on table : " + table_name);
                             break;
                         case 3:
                             enablesql.append("ALTER TABLE ");
@@ -103,7 +103,7 @@ public class TargetDBOperations {
                                 enablesql.append(table_name);
                             }
                             enablesql.append(" CHECK CONSTRAINT " + cons_names.get(i));
-                            System.out.println("        Enabling Constraint [" + cons_names.get(i) + "] on table : " + table_name);
+                            System.out.println("[SQLServer] Enabling Constraint [" + cons_names.get(i) + "] on table : " + table_name);
                             break;
                         default:
                     }
@@ -140,8 +140,8 @@ public class TargetDBOperations {
                             } else {
                                 disablesql.append(table_name);
                             }
-                            disablesql.append(" DISABLE CONSTRAINT " + cons_names.get(i) + " CASCADE");
-                            System.out.println("        Disableing Constraint [" + cons_names.get(i) + "] on table : " + table_name);
+                            disablesql.append(" DISABLE CONSTRAINT " + cons_names.get(i));
+                            System.out.println("[Oracle ] Disableing Constraint [" + cons_names.get(i) + "] on table : " + table_name);
                             break;
                         case 3:
                             disablesql.append("ALTER TABLE ");
@@ -151,7 +151,7 @@ public class TargetDBOperations {
                                 disablesql.append(table_name);
                             }
                             disablesql.append(" NOCHECK CONSTRAINT " + cons_names.get(i));
-                            System.out.println("        Disableing Constraint [" + cons_names.get(i) + "] on table : " + table_name);
+                            System.out.println("[SQLServer] Disableing Constraint [" + cons_names.get(i) + "] on table : " + table_name);
                             break;
                         default:
                     }

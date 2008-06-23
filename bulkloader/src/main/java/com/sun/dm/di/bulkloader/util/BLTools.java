@@ -154,7 +154,7 @@ public class BLTools {
 
     private static void copy(File source, File dest) throws IOException {
         sLog.fine("Copying file [" + source.getAbsolutePath() + "] to [" + dest.getAbsolutePath() + "]");
-        FileChannel in = null, out = null;
+        FileChannel in = null,out  = null;
         try {
             in = new FileInputStream(source).getChannel();
             out = new FileOutputStream(dest).getChannel();
@@ -173,7 +173,6 @@ public class BLTools {
         }
     }
 
-    
     public static void writeIntoFile(String packagename, String filename, String fileContents) {
 
         FileWriter fr = null;
@@ -195,11 +194,11 @@ public class BLTools {
             }
         }
     }
-
-    public static boolean deleteDir(File dir) {
+    
+    public static boolean deleteDir(File dir){
         if (dir.isDirectory()) {
             String[] children = dir.list();
-            for (int i = 0; i < children.length; i++) {
+            for (int i=0; i<children.length; i++) {
                 boolean success = deleteDir(new File(dir, children[i]));
                 if (!success) {
                     return false;
@@ -209,4 +208,5 @@ public class BLTools {
         // The directory is now empty so delete it
         return dir.delete();
     }
+    
 }

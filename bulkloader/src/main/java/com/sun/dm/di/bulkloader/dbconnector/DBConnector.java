@@ -106,7 +106,7 @@ public abstract class DBConnector implements DBConnection {
     public void addDBModelToETLDef(String db, String schema, String catalog, int dbtype, String targetTableQName, String login, String pw) {
         // Add this connection to ETLDefinition Generator
         if (checkIfTableExistsInDB(schema, catalog, targetTableQName)) {
-            etldef.addDBModel(this.connection, db, schema, catalog, targetTableQName, dbtype, login, pw);
+            etldef.addDBModel(this.connection, db, targetTableQName, dbtype, login, pw);
         } else {
             sLog.infoNoloc("System will exit. Pls correct the problem and rerun the script");
             System.exit(0);
@@ -115,7 +115,7 @@ public abstract class DBConnector implements DBConnection {
 
     public void addDBModelToETLDef(String db, String tableName, int dbtype) {
         // Add this connection to ETLDefinition Generator
-        etldef.addDBModel(this.connection, db, "", "", tableName, dbtype, "sa", "sa");
+        etldef.addDBModel(this.connection, db, tableName, dbtype, "sa", "sa");
     }
 
     public void addDBModelToDEF(ETLDefGenerator etldefgen, Connection conn, String schema, String catalog, int dbtype, String login, String pw, String targetTableQName) {

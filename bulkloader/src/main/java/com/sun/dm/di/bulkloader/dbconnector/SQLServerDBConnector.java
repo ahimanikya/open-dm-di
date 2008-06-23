@@ -69,7 +69,7 @@ public class SQLServerDBConnector extends DBConnector {
         targetTableQName = getTargetTableQualifiedName(tablename);
         // Add this connection to ETLDefinition Generator
         if (checkIfTableExistsInDB(schema, catalog, targetTableQName)) {
-            etldef.addDBModel(conn, "SQLSERVER", schema, catalog, targetTableQName, dbtype, login, pw);
+            etldef.addDBModel(conn, "SQLSERVER", targetTableQName, dbtype, login, pw);
         }
     }
     

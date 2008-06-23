@@ -220,7 +220,9 @@ public class FlatFileDBConnector extends DBConnector {
                 }
             }
             sb.append(") ORGANIZATION(LOADTYPE=\'DELIMITED\' filename=\'" + filename + "\'");
-            sb.append(" RECORDDELIMITER=\'" + rec_delimiter + "\'");
+            if (rec_delimiter != null) {
+                sb.append(" RECORDDELIMITER=\'" + rec_delimiter + "\'");
+            }
             sb.append(" FIELDDELIMITER=\'" + fld_delimiter + "\')");
 
             sLog.fine("LDR152: Creating external table :" + sb.toString());
