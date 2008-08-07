@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<etlDefinition>
+	<attr name="displayName" type="java.lang.String" value="newuntitled" />
+	<attr name="version" type="java.lang.String" value="5.2" />
+	<sqlDefinition displayName="newuntitled" >
+		<attr name="version" type="java.lang.String" value="5.2" />
+		<attr name="executionStrategyCode" type="java.lang.Integer" value="0" />
+		<attr name="containsJavaOperators" type="java.lang.Boolean" value="false" />
+ 		<dbModel name="jdbc:axiondb:temp:C:\Shankari\Manish\temp [sa on Default schema]" id="sqlObject_0" type="source">
+			<attr name="refKey" type="java.lang.String" value="{6de5cdac-b99c-4483-9029-1759bb509c42}" />
+			<dbTable name="SBYN_ADDRESS" id="sqlObject_0" displayName="SBYN_ADDRESS">
+				<attr name="userDefinedSchemaName" type="java.lang.String" value="" />
+				<attr name="stagingTableName" type="java.lang.String" value="" />
+				<attr name="flatFileLocationRuntimeInputName" type="java.lang.String" value="FILE_LOC_S1_SBYN_ADDRESS" />
+				<attr name="aliasName" type="java.lang.String" value="S1" />
+				<attr name="distinct" type="java.lang.Boolean" value="false" />
+				<attr name="userDefinedCatalogName" type="java.lang.String" value="" />
+				<attr name="extractionType" type="java.lang.String" value="conditional" />
+				<attr name="fullyQualifiedName" type="java.lang.Boolean" value="true" />
+				<attr name="tablePrefix" type="java.lang.String" value="" />
+				<attr name="batchSize" type="java.lang.Integer" value="5000" />
+				<attr name="deleteTemporaryTable" type="java.lang.Boolean" value="true" />
+				<attr name="temporaryTableName" type="java.lang.String" value="RAW_5099c96_SBYN_A" />
+				<attr name="userDefinedTableName" type="java.lang.String" value="" />
+				<dbColumn id="sqlObject_12" displayName="" name="ADDRESSID" type="12" scale="0" precision="32" ordinalPosition="12" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="false" >
+				</dbColumn>
+				<dbColumn id="sqlObject_6" displayName="" name="ADDRESSLINE" type="12" scale="0" precision="32" ordinalPosition="6" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_2" displayName="" name="ADDRESSLINE_HOUSENO" type="12" scale="0" precision="10" ordinalPosition="2" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_4" displayName="" name="ADDRESSLINE_STDIR" type="12" scale="0" precision="5" ordinalPosition="4" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_5" displayName="" name="ADDRESSLINE_STNAME" type="12" scale="0" precision="40" ordinalPosition="5" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_10" displayName="" name="ADDRESSLINE_STPHON" type="12" scale="0" precision="8" ordinalPosition="10" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_1" displayName="" name="ADDRESSLINE_STTYPE" type="12" scale="0" precision="5" ordinalPosition="1" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_7" displayName="" name="ADDRESSTYPE" type="12" scale="0" precision="32" ordinalPosition="7" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_8" displayName="" name="CITY" type="12" scale="0" precision="32" ordinalPosition="8" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_11" displayName="" name="PATIENTVIEWID" type="12" scale="0" precision="20" ordinalPosition="11" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_3" displayName="" name="STATE" type="12" scale="0" precision="32" ordinalPosition="3" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_9" displayName="" name="ZIP" type="12" scale="0" precision="32" ordinalPosition="9" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<sqlCondition displayName="extractionCondition">
+ 					<guiInfo>
+					</guiInfo>
+				</sqlCondition>
+				<sqlCondition displayName="dataValidationCondition">
+ 					<guiInfo>
+					</guiInfo>
+				</sqlCondition>
+				<guiInfo>
+					<attr name="width" type="java.lang.Integer" value="154" />
+					<attr name="height" type="java.lang.Integer" value="274" />
+					<attr name="expanded" type="java.lang.Boolean" value="true" />
+					<attr name="y" type="java.lang.Integer" value="471" />
+					<attr name="x" type="java.lang.Integer" value="14" />
+				</guiInfo>
+			</dbTable>
+	<connectiondef name="jdbc:axiondb:temp:C:\Shankari\Manish\temp [sa on Default schema]" description="Descriptive info here" driverName="org.axiondb.jdbc.AxionDriver" dbName="AXION" dbUrl="jdbc:axiondb:temp:C:\Shankari\Manish\temp" userName="sa" password="02C820">
+	</connectiondef>
+		</dbModel>
+
+		<dbModel name="jdbc:axiondb:temp:C:\Shankari\Manish\temp [sa on Default schema]" id="sqlObject_16" type="target">
+			<attr name="refKey" type="java.lang.String" value="{f92d429d-076e-4647-b2d5-b9e9b97c1bc2}" />
+			<dbTable name="SBYN_PATIENTVIEW" id="sqlObject_16" displayName="SBYN_PATIENTVIEW">
+				<attr name="userDefinedCatalogName" type="java.lang.String" value="" />
+				<attr name="userDefinedSchemaName" type="java.lang.String" value="" />
+				<attr name="flatFileLocationRuntimeInputName" type="java.lang.String" value="FILE_LOC_T1_SBYN_PATIENTVIEW" />
+				<attr name="stagingTableName" type="java.lang.String" value="" />
+				<attr name="fullyQualifiedName" type="java.lang.Boolean" value="true" />
+				<attr name="aliasName" type="java.lang.String" value="T1" />
+				<attr name="tablePrefix" type="java.lang.String" value="" />
+				<attr name="batchSize" type="java.lang.Integer" value="-1" />
+				<attr name="statementType" type="java.lang.Integer" value="0" />
+				<attr name="createTargetTable" type="java.lang.Boolean" value="true" />
+				<attr name="userDefinedTableName" type="java.lang.String" value="" />
+
+				<dbColumn id="sqlObject_24" displayName="" name="AGE" type="12" scale="0" precision="32" ordinalPosition="8" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_20" displayName="" name="FIRSTNAME" type="12" scale="0" precision="32" ordinalPosition="4" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_21" displayName="" name="FIRSTNAME_PHON" type="12" scale="0" precision="32" ordinalPosition="5" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_17" displayName="" name="FIRSTNAME_STD" type="12" scale="0" precision="32" ordinalPosition="1" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_19" displayName="" name="GENDER" type="12" scale="0" precision="32" ordinalPosition="3" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_25" displayName="" name="LASTNAME" type="12" scale="0" precision="32" ordinalPosition="9" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_23" displayName="" name="LASTNAME_PHON" type="12" scale="0" precision="32" ordinalPosition="7" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_22" displayName="" name="LASTNAME_STD" type="12" scale="0" precision="32" ordinalPosition="6" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_26" displayName="" name="PATIENTVIEWID" type="12" scale="0" precision="32" ordinalPosition="10" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="false" >
+					<objectRef refId="sqlObject_11" type="source_column" />
+				</dbColumn>
+				<dbColumn id="sqlObject_18" displayName="" name="SSN" type="12" scale="0" precision="9" ordinalPosition="2" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<sqlCondition displayName="condition">
+ 					<guiInfo>
+					</guiInfo>
+				</sqlCondition>
+				<sqlCondition displayName="filterCondition">
+ 					<guiInfo>
+					</guiInfo>
+				</sqlCondition>
+				<guiInfo>
+					<attr name="width" type="java.lang.Integer" value="170" />
+					<attr name="height" type="java.lang.Integer" value="232" />
+					<attr name="expanded" type="java.lang.Boolean" value="true" />
+					<attr name="y" type="java.lang.Integer" value="476" />
+					<attr name="x" type="java.lang.Integer" value="470" />
+				</guiInfo>
+			</dbTable>
+	<connectiondef name="jdbc:axiondb:temp:C:\Shankari\Manish\temp [sa on Default schema]" description="Descriptive info here" driverName="org.axiondb.jdbc.AxionDriver" dbName="AXION" dbUrl="jdbc:axiondb:temp:C:\Shankari\Manish\temp" userName="sa" password="02C820">
+	</connectiondef>
+		</dbModel>
+
+		<runtimeModel name="RuntimeDbModel" id="sqlObject_13" displayName="Runtime DbModel" type="runtime">
+			<runtimeInput name="RuntimeInput" id="sqlObject_14">
+				<attr name="userDefinedCatalogName" type="java.lang.String" value="" />
+				<attr name="userDefinedSchemaName" type="java.lang.String" value="" />
+				<attr name="extractionType" type="java.lang.String" value="conditional" />
+				<attr name="stagingTableName" type="java.lang.String" value="" />
+				<attr name="fullyQualifiedName" type="java.lang.Boolean" value="true" />
+				<attr name="aliasName" type="java.lang.String" value="" />
+				<attr name="distinct" type="java.lang.Boolean" value="false" />
+				<attr name="tablePrefix" type="java.lang.String" value="" />
+				<attr name="batchSize" type="java.lang.Integer" value="5000" />
+				<attr name="temporaryTableName" type="java.lang.String" value="RAW_a57ee9_Runtime" />
+				<attr name="deleteTemporaryTable" type="java.lang.Boolean" value="true" />
+				<attr name="userDefinedTableName" type="java.lang.String" value="" />
+				<dbColumn id="sqlObject_15" displayName="" name="FILE_LOC_S1_SBYN_ADDRESS" type="12" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+					<attr name="visible" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<dbColumn id="sqlObject_27" displayName="" name="FILE_LOC_T1_SBYN_PATIENTVIEW" type="12" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+					<attr name="visible" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<guiInfo>
+					<attr name="width" type="java.lang.Integer" value="114" />
+					<attr name="height" type="java.lang.Integer" value="22" />
+					<attr name="expanded" type="java.lang.Boolean" value="true" />
+					<attr name="y" type="java.lang.Integer" value="47" />
+					<attr name="x" type="java.lang.Integer" value="56" />
+				</guiInfo>
+			</runtimeInput>
+			<runtimeOutput name="runtimeOutput" id="sqlObject_28">
+				<attr name="userDefinedCatalogName" type="java.lang.String" value="" />
+				<attr name="userDefinedSchemaName" type="java.lang.String" value="" />
+				<attr name="stagingTableName" type="java.lang.String" value="" />
+				<attr name="fullyQualifiedName" type="java.lang.Boolean" value="true" />
+				<attr name="aliasName" type="java.lang.String" value="" />
+				<attr name="tablePrefix" type="java.lang.String" value="" />
+				<attr name="batchSize" type="java.lang.Integer" value="-1" />
+				<attr name="statementType" type="java.lang.Integer" value="0" />
+				<attr name="createTargetTable" type="java.lang.Boolean" value="true" />
+				<attr name="userDefinedTableName" type="java.lang.String" value="" />
+				<dbColumn id="sqlObject_32" displayName="" name="Count_T1_SBYN_PATIENTVIEW" type="4" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<dbColumn id="sqlObject_31" displayName="" name="ENDTIME" type="93" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<dbColumn id="sqlObject_30" displayName="" name="STARTTIME" type="93" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<dbColumn id="sqlObject_29" displayName="" name="STATUS" type="12" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<guiInfo>
+					<attr name="width" type="java.lang.Integer" value="182" />
+					<attr name="height" type="java.lang.Integer" value="106" />
+					<attr name="expanded" type="java.lang.Boolean" value="true" />
+					<attr name="y" type="java.lang.Integer" value="11" />
+					<attr name="x" type="java.lang.Integer" value="207" />
+				</guiInfo>
+			</runtimeOutput>
+		</runtimeModel>
+	</sqlDefinition>
+</etlDefinition>
