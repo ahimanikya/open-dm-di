@@ -43,46 +43,52 @@
 <a name="top"></a>
 <h1>My First Data Integrator Collaboration - A Quick Start Guide</h1>
 <div class="articledate" style="margin-left: 0px;font-style:italic;">
-  <p> <em>February 2008</em> </p>
+  <p> <em>August 2008</em> </p>
 </div>
 
 
 <a name="top"></a>
-
-<p> In this tutorial, you create a Data Integrator Collaboration called <b>firstETL.etl</b> that extracts the data from two source tables, PRODUCT_DETAILS and PURCHASE_ORDER (JAVA DB). This Collaboration transforms and loads the data into one target table named ORDER_DEFICIT (ORACLE). </p>
+<hr/>
+<p><b>Pre-requisite:</b> This tutorial assumes that you have followed the Installation Steps to download/install Data Integrator (Part of Mural).
+<ul><li><a href="https://open-dm-di.dev.java.net/docs/dev_tools/HowToInstall.html">Data
+             Integrator - Installation Steps</a></li></ul></p>
+<hr/>
+<p> In this tutorial, you create a Data Integrator Collaboration called <b>firstCollab.etl</b> that extracts the data from two source tables, PRODUCT_DETAILS and PURCHASE_ORDER (JAVA DB). This Collaboration then transforms and loads the data into one target table named ORDER_DEFICIT (Oracle).
+<br/>
+</p>
 <p>When creating the Data Integrator application that will extract data from source tables, transform the data, and load the data into target tables, you will create the following components:</strong></p>
 <ul>
-<li>A Data Integrator Project named DataIntegratorApp.</li>
-<li>A Data Integrator Collaboration named firstETL.etl in the Project DataIntegratorApp.</li>
+<li>A Data Integrator Project named DataIntegratorModule.</li>
+<li>A Data Integrator Collaboration named firstCollab.etl in the Project DataIntegratorModule.</li>
 <li>A Composite Application Project named DeploymentCompApp to deploy the Data Integrator Application into the application server.</li>
 </ul>
-<p>Finally, you can use the Composite Application test framework to invoke the deployed Data Integrator Service and see the response. </p><br>
+<p>Finally, you can use the Composite Application test framework to invoke the deployed Data Integrator Service and verify the response. </p><br>
 
 <a name="database"></a><h2>Creating the Databases</h2>
 <p>To create the databases, you first need to add the database connection for each database (JAVA DB and ORACLE). Then you can create the database tables.<p>
 
 <a name="database"></a><h4>To Add a Database Connection</h4>
 <ol>
-<li><b>On the Services window in NetBeans, expand Databases.</b></li>
-<li><b>If you do not see the database driver for your platform, right-click Drivers and select New Driver.</b></li>
-<li><b>Browse to the driver location, select the class.</b></li>
-<li><b>Create a new connection by right-clicking the new driver and selecting Connect Using. You need to provide the JDBC URL, user name, and password.</b></li>
+<li>On the Services window in Netbeans, expand Databases.</li>
+<li>If you do not see the database driver for your platform, right-click Drivers and select New Driver.</li>
+<li>Browse to the driver location, select the class.</li>
+<li>Create a new connection by right-clicking the new driver and selecting Connect Using. You need to provide the JDBC URL, user name, and password.</li>
 </ol>
 
 <a name="table"></a><h4>To Create a New Table</h4>
 <p> This step creates the database tables that you will use in the Data Integrator Collaboration. The table names, column names, and data types you need to define are listed following these instructions.
 <ol>
-<li><b>Right click on the JDBC Connection available under Databases and select Connect.</b></li>
-<li><b>Enter user name and password.</b></li>
-<li><b>Expand Connection.</b></li>
-<li><b>Right-click Tables and select Create Table.</b></li>
-<li><b>Enter the required details and click OK.</b></li>
+<li>Right click on the JDBC Connection available under Databases and select Connect.</li>
+<li>Enter user name and password.</li>
+<li>Expand Connection.</li>
+<li>Right-click Tables and select Create Table.</li>
+<li>Enter the required details and click OK.</li>
 </ol>
 
 <p> The metadata for the tables is:</p>
 <br>
-<strong>PRODUCT_DETAILS (in JAVA DB)</strong>
-<table><col width="30%"><col width="30%">
+<strong>PRODUCT_DETAILS (JAVA DB)</strong> <tt> [Download SQL script: <a href="http://open-dm-di.dev.java.net/docs/dev_tools/sqlscripts/product_details.sql" target="_blank"> product_details.sql</a>]</tt>
+<table border="1"><col width="30%"><col width="30%">
 <tr>
 <th align="left" valign="top" scope="column"><p>Columns</p></th>
 <th align="left" valign="top" scope="column"><p>Type</p></th>
@@ -98,8 +104,8 @@
 </tr>
 </table>
 <br>
-<strong>PURCHASE_ORDER (in JAVA DB)</strong>
-<table><col width="30%"><col width="30%">
+<strong>PURCHASE_ORDER (JAVA DB)</strong> <tt> [Download SQL script: <a href="http://open-dm-di.dev.java.net/docs/dev_tools/sqlscripts/purchase_order.sql" target="_blank"> purchase_order.sql</a>]</tt>
+<table border="1"><col width="30%"><col width="30%">
 <tr>
 <th align="left" valign="top" scope="column"><p>Columns</p></th>
 <th align="left" valign="top" scope="column"><p>Type</p></th>
@@ -115,8 +121,8 @@
 </tr>
 </table>
 <br>
-<strong>ORDER_DEFICIT (ORACLE)</strong>
-<table><col width="30%"><col width="30%">
+<strong>ORDER_DEFICIT (ORACLE)</strong>	<tt> [Download SQL script: <a href="http://open-dm-di.dev.java.net/docs/dev_tools/sqlscripts/order_deficit.sql" target="_blank"> order_deficit.sql</a>]</tt>
+<table border="1"><col width="30%"><col width="30%">
 <tr>
 <th align="left" valign="top" scope="column"><p>Columns</p></th>
 <th align="left" valign="top" scope="column"><p>Type</p></th>
@@ -137,27 +143,27 @@
 <a name="starting"></a><h2>Starting NetBeans and Servers</h2>
 <p>To complete this tutorial, you need to start NetBeans, the application server, and the ETL Service Engine</p>
 
-<a name="netbeans"></a><h4>To Start the NetBeans IDE (Bundled With Sierra)</h4>
+<a name="netbeans"></a><h4>To Start the NetBeans IDE</h4>
 <ol>
-<li><b>Navigate to the Java CAPS 6 installation root directory, and then to <tt>netbeans/bin</tt>.</b></li>
-<li><b>Run the NetBeans executable file (<tt>netbeans.exe</tt>, for example).</b></li>
+<li>Navigate to the Mural installation directory, and then to <tt>NetBeans6.1-sierra-&lt;build-date&gt;/bin</tt>.</li>
+<li>Run the NetBeans executable file (<tt>netbeans.exe</tt>, for example).</b></li>
 </ol>
 
 <a name="sjsas"></a><h4>To Start the Sun Java System Application Server</h4>
 <ol>
-<li><b>Display the Services window. </b></li>
-<li><b>In the Services window, expand Servers.</b>
-<p>The Servers node should contain a GlassFish Application Server node. </p></li>
-<li><b>If the application server is not started, right-click GlassFish and select Start.</b>
+<li>Display the Services window.</li>
+<li>In the Services window, expand Servers.
+<p><b>The Servers node should contain a GlassFish Application Server node.</b></p></li>
+<li>If the application server is not started, right-click GlassFish and select Start.
 <p>The following message appears when startup is complete:
-<p><tt>Application server startup complete.</tt></p> </li>
+<p><b>Application server startup complete.</b></p></li>
 </ol>
 
 <a name="sjsas"></a><h4>To Start the ETL Service Engine</h4>
 <ol>
-<li><b>Display the Services window.</b></li>
-<li><b>Under the application server, expand JBI and then expand Service Engines.</b></li>
-<li><b>Right-click sun-etl-engine, and select Start.</b></li>
+<li>Display the Services window.</li>
+<li>Under the application server, expand JBI and then expand Service Engines.</li>
+<li>Right-click sun-etl-engine, and select Start.</li>
 </ol>
 <br>
 <p align="center"><a href=#top>Back to Top</a></p>
@@ -167,44 +173,44 @@
 
 <a name="project"></a><h4>To Create a Data Integrator Module Project</h4>
 <ol>
-<li><b>Right-click in the Project window and select New Project.</b></li>
-<li><b>Select SOA from Categories.</b></li>
-<li><b>Select 'ETL Module' from Projects, and then click Next.</b></li>
-<li><b>Enter <tt>DataIntegratorApp</tt> for the Project Name.</b>
+<li>Right-click in the Project window and select New Project.</li>
+<li>Select SOA from Categories.</li>
+<li>Select 'Data Integrator Module' from Projects, and then click Next.</li>
+<li>Enter <tt><b>DataIntegratorModule</b></tt> for the Project Name.
     <p>If necessary, browse to the desired directory to save the Project.</p></li>
-<li><b>Click Finish.</b></li>
-<li><b>In the Projects window, expand the DataIntegratorApp Project, right-click Process Files, and select New &gt; ETL.</b></li>
-<li><b>Enter firstETL for the File Name field, and click Next.</b></li>
-<li><b>Choose the required Source Tables (PURCHASE_ORDER, PRODUCT_DETAILS) from the list of Connections available and click Next.</b></li>
-<li><b>Add the source tables that will be used in the join to the tables list on the right and choose the type of join and Click Next.</b></li>
-<li><b>Choose the required target tables (ORDER_DEFICIT) from the list of available connections and click Finish.</b>
+<li>Click Finish.</li>
+<li>In the Projects window, expand the DataIntegratorModule Project, right-click "Collaborations", and select New -&gt; ETL.</li>
+<li>Enter firstCollab for the File Name field, and click Next.</li>
+<li>Choose the required Source Tables (PURCHASE_ORDER, PRODUCT_DETAILS) from the list of Connections available and click Next.</li>
+<li>Add the source tables that will be used in the join to the tables list on the right and choose the type of join and Click Next.</li>
+<li>Choose the required target tables (ORDER_DEFICIT) from the list of available connections and click Finish.
 <p>The IDE does the following:</p>
-   <ul>
-   <li>Creates firstETL.etl under the &quot;collaborations&quot; folder/node.</li>
-   <li>Opens the firstETL.etl file in the ETL Editor.</li>
-   </ul>
+   <ul><b>
+   <li>Creates firstCollab.etl under the &quot;Collaborations&quot; folder/node.</li>
+   <li>Opens the firstCollab.etl file in the Data Integrator Editor.</li>
+   </b></ul>
 </li>
 </ol>
-<a name="collab"></a><h4>To Create an ETL Collaboration</h4>
+<a name="collab"></a><h4>To Modify the Data Integrator Collaboration (Create Join, Map columns etc.)</h4>
 <ol>
-<li><b>Right click on the Join View in the design view canvas area.</b>
+<li>Right click on the Join View in the design view canvas area.
 <p>The Join Builder window appears.</p></li>
-<li><b>In the graphical view area, double-click the condition icon of the join node.</b>
+<li>In the graphical view area, double-click the condition icon of the join node.
 <p>The Condition Builder window appears.</p></li>
-<li><b> To build the condition for the join, drag and drop the table columns and operators into the condition builder canvas and construct the condition as PURCHASE_ORDER.PRODUCT_ID = PRODUCT_DETAILS.PRODUCT_ID.</b></li>
-<li><b>Click OK in the Condition Builder window to set the join condition.</b></li>
-<li><b>Click OK in the Join Builder window to accept the changes. </b></li>
-<li><b>Drag and create a connection from PURCHASE_ORDER.CUSTOMER_ID to ORDER_DEFICIT.CUSTOMER_ID.</b>
+<li>To build the condition for the join, drag and drop the table columns and operators into the condition builder canvas and construct the condition as PURCHASE_ORDER.PRODUCT_ID = PRODUCT_DETAILS.PRODUCT_ID.</li>
+<li>Click OK in the Condition Builder window to set the join condition.</li>
+<li>Click OK in the Join Builder window to accept the changes.</li>
+<li>Drag and create a connection from PURCHASE_ORDER.CUSTOMER_ID to ORDER_DEFICIT.CUSTOMER_ID.
 <p>This causes the Data Integrator Editor to map the input from PURCHASE_ORDER.CUSTOMER_ID columns to be inserted into ORDER_DEFICIT.CUSTOMER_ID.</p> </li>
-<li><b>Drag and create a connection from PRODUCT_DETAILS.PRODUCT_NAME TO ORDER_DEFICIT.PRODUCT_NAME. </b></li>
-<li><b>Drag and drop a subtraction operator from Number Operators menu. </b></li>
-<li><b>Drag and create a connection from PURCHASE_ORDER.ORDER_QUANT to the Minuend Field of the Subtraction operator. </b></li>
-<li><b>Drag and create a connection from PRODUCT_DETAILS.AVAILABLE_QUANT to the Subrahend Field of the Subtraction operator. </b></li>
-<li><b>Drag and create a connection from the result field of the Subtraction operator to the ORDER_DEFICIT.QUANT_DEFICIT Column. </b></li>
-<li><b>Click the Runtime Input arguments button in the tool bar and Click OK. </b></li>
-<li><b>Save the collaboration. </b></li>
-<li><b>Right-click the DataIntegratorApp Project and select Build Project.</b>
-<p>This generates the WSDL for the orchestrated Data Integrator Collaboration. <p></li>
+<li>Drag and create a connection from PRODUCT_DETAILS.PRODUCT_NAME TO ORDER_DEFICIT.PRODUCT_NAME.</li>
+<li>Drag and drop a subtraction operator from Number Operators menu.</li>
+<li>Drag and create a connection from PURCHASE_ORDER.ORDER_QUANT to the Minuend Field of the Subtraction operator.</li>
+<li>Drag and create a connection from PRODUCT_DETAILS.AVAILABLE_QUANT to the Subrahend Field of the Subtraction operator.</li>
+<li>Drag and create a connection from the result field of the Subtraction operator to the ORDER_DEFICIT.QUANT_DEFICIT Column.</li>
+<li>Click the Runtime Input arguments button in the tool bar and Click OK.</li>
+<li>Save the collaboration.</li>
+<li>Right-click the DataIntegratorModule Project and select Build Project.
+<p>This generates the WSDL for the Data Integrator Collaboration. <p></li>
 </ol>
 <br>
 <p align="center"><a href=#top>Back to Top</a></p>
@@ -214,39 +220,39 @@
 
 <a name="compapp"></a><h4>To Create and Deploy the Composite Application</h4>
 <ol>
-<li><b>Right-click in the Projects window, and select New Project. </b></li>
-<li><b>Select SOA from Categories. </b></li>
-<li><b>Select Composite Application from Projects and click Next. </b></li>
-<li><b>Enter <tt>DeploymentCompApp</tt> for the Project Name and click Finish.</b>
+<li>Right-click in the Projects window, and select New Project. </li>
+<li>Select SOA from Categories. </li>
+<li>Select Composite Application from Projects and click Next. </li>
+<li>Enter <tt>DeploymentCompApp</tt> for the Project Name and click Finish.
 <p>If necessary, browse to the directory in which you want to save the project.</p> </li>
-<li><b>Right-click the DeploymentCompApp node, and select Add JBI Module. </b></li>
-<li><b>Navigate to the directory in which you created the DataIntegratorApp Project, select the folder DataIntegratorApp, and then click Add Project JAR Files. </b></li>
-<li><b>Right-click the DeploymentCompApp node, and select Deploy Project. </b></li>
+<li>Right-click the DeploymentCompApp node, and select Add JBI Module. </li>
+<li>Navigate to the directory in which you created the DataIntegratorModule Project, select the folder DataIntegratorModule, and then click Add Project JAR Files. </li>
+<li>Right-click the DeploymentCompApp node, and select Deploy Project. </li>
 </ol>
 
 <a name="bpel"></a><h4>To Create a BPEL Module</h4>
 <ol>
-<li><b>Right-click in the Projects window, and select New Project. </b></li>
-<li><b>Select SOA from Categories. </b></li>
-<li><b>Select BPEL Module from Projects and click Next. </b></li>
-<li><b>Enter <tt>BpelModule</tt> for the Project Name and click Finish.</b>
+<li>Right-click in the Projects window, and select New Project. </li>
+<li>Select SOA from Categories. </li>
+<li>Select BPEL Module from Projects and click Next. </li>
+<li>Enter <tt>BpelModule</tt> for the Project Name and click Finish.
 <p>If necessary, browse to the directory in which you want to save the project.</p></li>
-<li><b>Under BpelModule, right-click Process Files and select New WSDL Document.</b></li>
-<li><b>Enter a name for the WSDL document.</b>
+<li>Under BpelModule, right-click Process Files and select New WSDL Document.</li>
+<li>Enter a name for the WSDL document.
 <p>This is the WSDL definition for the Business Process (BPEL) itself.</p></li>
-<li><b>Click Next. </b></li>
-<li><b>Enter the PortType Name, Operation Name, and remaining fields.</b>
+<li>Click Next. </li>
+<li>Enter the PortType Name, Operation Name, and remaining fields.
 <p>The Input and Output should map to the Runtime Input Arguments and Runtime Output Arguments of the Data Integrator Collaboration.</p></li>
-<li><b>Click Next. </b></li>
-<li><b>Enter the Binding Name, Type, Service Name, and remaining fields.</b></li>
-<li><b>Click Finish. </b></li>
-<li><b>Copy the WSDL definition for the Data Integrator Collaboration from DataIntegratorApp above to BpelModule-Process Files. </b></li>
-<li><b>Right-click Process Files and select New BPEL Process.</b></li>
-<li><b>Provide a name for the BPEL process and click Finish. </b></li>
-<li><b>On the BPEL Editor canvas, drag and drop the WSDL for the BPEL process (created in earlier step).</b>
+<li>Click Next. </li>
+<li>Enter the Binding Name, Type, Service Name, and remaining fields.</li>
+<li>Click Finish. </li>
+<li>Copy the WSDL definition for the Data Integrator Collaboration from DataIntegratorModule above to BpelModule-Process Files. </li>
+<li>Right-click Process Files and select New BPEL Process.</li>
+<li>Provide a name for the BPEL process and click Finish. </li>
+<li>On the BPEL Editor canvas, drag and drop the WSDL for the BPEL process (created in earlier step).
 <p>This creates a partner link.</p></li>
-<li><b>Create one more partner link for the Data Integrator WSDL (drag and drop). </b></li>
-<li><b>Orchestrate the Business Process, using Receive, Assign, Invoke, and Reply activities.</b>
+<li>Create one more partner link for the Data Integrator WSDL (drag and drop). </li>
+<li>Orchestrate the Business Process, using Receive, Assign, Invoke, and Reply activities.
 <p> For more information about the BPEL Service Engine, see the <a href="http://wiki.open-esb.java.net/Wiki.jsp?page=BPELSE">BPEL SE Wiki</a>.</p></li>
 </ol>
 <br>
