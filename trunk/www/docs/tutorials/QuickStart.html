@@ -140,34 +140,13 @@
 <br>
 <p align="center"><a href=#top>Back to Top</a></p>
 <br>
-<a name="starting"></a><h2>Starting NetBeans and Servers</h2>
-<p>To complete this tutorial, you need to start NetBeans, the application server, and the ETL Service Engine</p>
-
+<a name="starting"></a><h2>Starting NetBeans</h2>
 <a name="netbeans"></a><h4>To Start the NetBeans IDE</h4>
 <ol>
 <li>Navigate to the Mural installation directory, and then to <tt>NetBeans6.1-sierra-&lt;build-date&gt;/bin</tt>.</li>
 <li>Run the NetBeans executable file (<tt>netbeans.exe</tt>, for example).</b></li>
 </ol>
 
-<a name="sjsas"></a><h4>To Start the Sun Java System Application Server</h4>
-<ol>
-<li>Display the Services window.</li>
-<li>In the Services window, expand Servers.
-<p><b>The Servers node should contain a GlassFish Application Server node.</b></p></li>
-<li>If the application server is not started, right-click GlassFish and select Start.
-<p>The following message appears when startup is complete:
-<p><b>Application server startup complete.</b></p></li>
-</ol>
-
-<a name="sjsas"></a><h4>To Start the ETL Service Engine</h4>
-<ol>
-<li>Display the Services window.</li>
-<li>Under the application server, expand JBI and then expand Service Engines.</li>
-<li>Right-click sun-etl-engine, and select Start.</li>
-</ol>
-<br>
-<p align="center"><a href=#top>Back to Top</a></p>
-<br>
 <a name="di"></a><h2>Creating the Data Integrator Project and Collaboration</h2>
 <p>Before you can create the Data Integrator Collaboration, you must create a new Data Integrator project.</p>
 
@@ -215,6 +194,44 @@
 <br>
 <p align="center"><a href=#top>Back to Top</a></p>
 <br>
+
+<a name="collab"></a><h4>"Test Run" the Data Integrator Collaboration</h4>
+<p>After creating the Data Integrator Collaboration (with required Join conditions, Column Mappings etc.), you can verify if the collaboration is running and producing expected result (inserting data in the target table).</p>
+<ol>
+<li>Open the Data Integrator collaboration created earlier (firstCollab.etl)
+<p><tt>The collaborations is displayed in the Data Integrator Editor.</tt></p></li>
+<li>Validate the collaboration by clicking on "Validate Collaboration" button on the Data Integrator Editor's toolbar.
+<p><tt>The Collaboration is validated and any warnings (unused/un-mapped columns etc.), errors (Missing Database Driver, etc.) are displayed in the Data Integrator Output panel.</tt><p></li>
+<li>In the graphical view area, click on "Run Collaboration" button (Last button on the Data Integrator Toolbar).</li>
+<p><tt>The Collaboration is exuecuted, and the output of the execution is displayed in the Data Integrator Output panel.</tt></p>
+<p><tt>Any exceptions, warnings are also displayed in the Data Integrator Output panel.</tt></p></li>
+</ol>
+<br>
+<p align="center"><a href=#top>Back to Top</a></p>
+<br>
+
+<p>The Data Integrator Collaboration created above, can be deployed as a JBI service in the JBI container. To do this, one need to create a Composite Application project, build-deploy the project in Sun Java System Application Server (Glassfish). The Mural installer bundles the Glassfish, which has Sun Data Integrator Service Engine (sun-etl-engine) pre-installed.</p>
+<br>
+<a name="sjsas"></a><h4>To Start the Sun Java System Application Server</h4>
+<ol>
+<li>Display the Services window.</li>
+<li>In the Services window, expand Servers.
+<p><b>The Servers node should contain a GlassFish Application Server node.</b></p></li>
+<li>If the application server is not started, right-click GlassFish and select Start.
+<p>The following message appears when startup is complete:
+<p><b>Application server startup complete.</b></p></li>
+</ol>
+
+<a name="sjsas"></a><h4>To Start the ETL Service Engine</h4>
+<ol>
+<li>Display the Services window.</li>
+<li>Under the application server, expand JBI and then expand Service Engines.</li>
+<li>Right-click sun-etl-engine, and select Start.</li>
+</ol>
+<br>
+<p align="center"><a href=#top>Back to Top</a></p>
+<br>
+
 <a name="invoke"></a><h2>Creating a Composite Application or BPEL Process</h2>
 <p>You can either create a Composite Application to run the Data Integrator Collaboration, or you can invoke the Collaboration from a BPEL business process.</p>
 
