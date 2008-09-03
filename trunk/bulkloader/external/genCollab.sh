@@ -19,12 +19,12 @@ FIELD_DELIMITER="|"
 RECORD_DELIMITER="\$\$\$"
 
 	# **** TARGET DATABASE ****
-# Specify from following options (ORACLE=1, DERBY=2, SQLSERVER=3)
+# Specify from following options (ORACLE=1, MYSQL=2, SQLSERVER=3)
     TARGET_DB_TYPE=<Set Database Type e.g. 3>
     TARGET_LOC=<DataBase Host/IP e.g. localhost>
-# Note : 1521 (Oracle), 1527 (Derby), 1433 (SQLServer)
+# Note : 1521 (Oracle), 3306 (MYSQL), 1433 (SQLServer)
     TARGET_PORT=<Specify Port No e.g. 1433>
-# Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for Derby, 'Database Name' for SQL Server
+# Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for MYSQL, 'Database Name' for SQL Server
     TARGET_ID=<Specify Sid/DBname/databaseName e.g. orcl or eindex etc.>
 # Note: SCHEMA name is case-sersitive for all other databases supported except Oracle
     TARGET_SCHEMA=<Specify Schema e.g. APP, Blank for null>

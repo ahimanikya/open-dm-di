@@ -17,12 +17,12 @@ set FIELD_DELIMITER="|"
 set RECORD_DELIMITER="$$$"
 
 	REM #### TARGET DATABASE ####
-REM Specify from following options (ORACLE=1, DERBY=2, SQLSERVER=3)
+REM Specify from following options (ORACLE=1, MYSQL=2, SQLSERVER=3)
     set TARGET_DB_TYPE=<Set Database Type e.g. 1>
     set TARGET_LOC=<DataBase Host/IP e.g. localhost>
-REM Note : 1521 (Oracle), 1527 (Derby), 1433 (SQLServer)
+REM Note : 1521 (Oracle), 3306 (MYSQL), 1433 (SQLServer)
     set TARGET_PORT=<Specify Port No e.g. 1521>
-REM Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for Derby, 'Database Name' for SQL Server
+REM Note : Specify ID as 'SID'(SystemId) for Oracle, 'DB Name' for MySQL, 'Database Name' for SQL Server
     set TARGET_ID=<Specify Sid/DBname/databaseName e.g. orcl or type4 etc.>
 REM Note: SCHEMA name is case-sersitive for all other databases supported except Oracle
     set TARGET_SCHEMA=<Specify Schema e.g. OE, Blank for null>
