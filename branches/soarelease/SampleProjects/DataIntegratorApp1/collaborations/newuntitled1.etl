@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<etlDefinition>
+	<attr name="version" type="java.lang.String" value="5.2" />
+	<attr name="displayName" type="java.lang.String" value="newuntitled1" />
+	<sqlDefinition displayName="newuntitled1" >
+		<attr name="version" type="java.lang.String" value="5.2" />
+		<attr name="executionStrategyCode" type="java.lang.Integer" value="0" />
+ 		<dbModel name="jdbc:axiondb:ffdbPipe_1144465356760:D:\eTL520\CAPSETLSuite\build\testuserdir\eTL\flatfiles/ffdbPipe_1144465356760 [ on Default schema]" id="sqlObject_0" type="source">
+			<attr name="refKey" type="java.lang.String" value="{5a3ebb87-0106-4662-8239-94d1cb82a928}" />
+			<dbTable name="FFPIPEDELIMS_CSV" id="sqlObject_0" displayName="FFPIPEDELIMS_CSV">
+				<attr name="userDefinedSchemaName" type="java.lang.String" value="" />
+				<attr name="stagingTableName" type="java.lang.String" value="" />
+				<attr name="flatFileLocationRuntimeInputName" type="java.lang.String" value="FILE_LOC_S1_FFPIPEDELIMS_CSV" />
+				<attr name="aliasName" type="java.lang.String" value="S1" />
+				<attr name="distinct" type="java.lang.Boolean" value="false" />
+				<attr name="userDefinedCatalogName" type="java.lang.String" value="" />
+				<attr name="extractionType" type="java.lang.String" value="conditional" />
+				<attr name="fullyQualifiedName" type="java.lang.Boolean" value="true" />
+				<attr name="tablePrefix" type="java.lang.String" value="" />
+				<attr name="batchSize" type="java.lang.Integer" value="5000" />
+				<attr name="deleteTemporaryTable" type="java.lang.Boolean" value="true" />
+				<attr name="temporaryTableName" type="java.lang.String" value="RAW_fb7ed_FFPIPEDE" />
+				<attr name="userDefinedTableName" type="java.lang.String" value="" />
+				<dbColumn id="sqlObject_5" displayName="" name="ADDRESS1" type="12" scale="0" precision="60" ordinalPosition="5" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_6" displayName="" name="ADDRESS2" type="12" scale="0" precision="30" ordinalPosition="6" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_7" displayName="" name="ADDRESS3" type="12" scale="0" precision="30" ordinalPosition="7" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_4" displayName="" name="COMPANY" type="12" scale="0" precision="60" ordinalPosition="4" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_1" displayName="" name="EMP_ID" type="2" scale="0" precision="9" ordinalPosition="1" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_2" displayName="" name="FNAME" type="12" scale="0" precision="30" ordinalPosition="2" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_9" displayName="" name="LAST_UPDATED" type="93" scale="0" precision="29" ordinalPosition="9" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_3" displayName="" name="LNAME" type="12" scale="0" precision="30" ordinalPosition="3" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_8" displayName="" name="POSTAL_CODE" type="12" scale="0" precision="30" ordinalPosition="8" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<sqlCondition displayName="extractionCondition">
+ 					<guiInfo>
+					</guiInfo>
+				</sqlCondition>
+				<sqlCondition displayName="dataValidationCondition">
+ 					<guiInfo>
+					</guiInfo>
+				</sqlCondition>
+				<guiInfo>
+					<attr name="width" type="java.lang.Integer" value="168" />
+					<attr name="height" type="java.lang.Integer" value="211" />
+					<attr name="y" type="java.lang.Integer" value="198" />
+					<attr name="x" type="java.lang.Integer" value="80" />
+				</guiInfo>
+			</dbTable>
+	<connectiondef name="jdbc:axiondb:ffdbPipe_1144465356760:D:\eTL520\CAPSETLSuite\build\testuserdir\eTL\flatfiles/ffdbPipe_1144465356760 [ on Default schema]" description="Descriptive info here" driverName="org.axiondb.jdbc.AxionDriver" dbName="AXION" dbUrl="jdbc:axiondb:ffdbPipe_1144465356760:D:\eTL520\CAPSETLSuite\build\testuserdir\eTL\flatfiles/ffdbPipe_1144465356760">
+	</connectiondef>
+		</dbModel>
+
+		<dbModel name="jdbc:axiondb:ffdbPipe_1144465356760:D:\eTL520\CAPSETLSuite\build\testuserdir\eTL\flatfiles/ffdbPipe_1144465356760 [ on Default schema]" id="sqlObject_13" type="target">
+			<attr name="refKey" type="java.lang.String" value="{40e16bb2-27e4-4cd7-9b1b-c18c919a141d}" />
+			<dbTable name="FFPIPEDELIMT_CSV" id="sqlObject_13" displayName="FFPIPEDELIMT_CSV">
+				<attr name="userDefinedCatalogName" type="java.lang.String" value="" />
+				<attr name="userDefinedSchemaName" type="java.lang.String" value="" />
+				<attr name="flatFileLocationRuntimeInputName" type="java.lang.String" value="FILE_LOC_T1_FFPIPEDELIMT_CSV" />
+				<attr name="stagingTableName" type="java.lang.String" value="" />
+				<attr name="fullyQualifiedName" type="java.lang.Boolean" value="true" />
+				<attr name="aliasName" type="java.lang.String" value="T1" />
+				<attr name="tablePrefix" type="java.lang.String" value="" />
+				<attr name="batchSize" type="java.lang.Integer" value="-1" />
+				<attr name="statementType" type="java.lang.Integer" value="0" />
+				<attr name="createTargetTable" type="java.lang.Boolean" value="true" />
+				<attr name="userDefinedTableName" type="java.lang.String" value="" />
+
+				<dbColumn id="sqlObject_14" displayName="" name="EMP_ID" type="2" scale="0" precision="29" ordinalPosition="1" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<objectRef refId="sqlObject_1" type="source_column" />
+				</dbColumn>
+				<dbColumn id="sqlObject_19" displayName="" name="FIRMNAME" type="12" scale="0" precision="60" ordinalPosition="6" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_20" displayName="" name="FIRMTYPE" type="12" scale="0" precision="30" ordinalPosition="7" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_16" displayName="" name="FNAME" type="12" scale="0" precision="30" ordinalPosition="3" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<objectRef refId="sqlObject_2" type="source_column" />
+				</dbColumn>
+				<dbColumn id="sqlObject_22" displayName="" name="HOUSENUM" type="12" scale="0" precision="30" ordinalPosition="9" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_17" displayName="" name="LNAME" type="12" scale="0" precision="30" ordinalPosition="4" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<objectRef refId="sqlObject_3" type="source_column" />
+				</dbColumn>
+				<dbColumn id="sqlObject_21" displayName="" name="ORIGADDRESS" type="12" scale="0" precision="60" ordinalPosition="8" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_18" displayName="" name="ORIGFIRM" type="12" scale="0" precision="60" ordinalPosition="5" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_15" displayName="" name="ORIGNAME" type="12" scale="0" precision="60" ordinalPosition="2" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_25" displayName="" name="SDIR" type="12" scale="0" precision="30" ordinalPosition="12" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_23" displayName="" name="SNAME" type="12" scale="0" precision="30" ordinalPosition="10" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_24" displayName="" name="STYPE1" type="12" scale="0" precision="30" ordinalPosition="11" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_27" displayName="" name="UNUM" type="12" scale="0" precision="30" ordinalPosition="14" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<dbColumn id="sqlObject_26" displayName="" name="UTYPE" type="12" scale="0" precision="30" ordinalPosition="13" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+				</dbColumn>
+				<sqlCondition displayName="condition">
+ 					<guiInfo>
+					</guiInfo>
+				</sqlCondition>
+				<sqlCondition displayName="filterCondition">
+ 					<guiInfo>
+					</guiInfo>
+				</sqlCondition>
+				<guiInfo>
+					<attr name="width" type="java.lang.Integer" value="168" />
+					<attr name="height" type="java.lang.Integer" value="316" />
+					<attr name="y" type="java.lang.Integer" value="166" />
+					<attr name="x" type="java.lang.Integer" value="400" />
+				</guiInfo>
+			</dbTable>
+	<connectiondef name="jdbc:axiondb:ffdbPipe_1144465356760:D:\eTL520\CAPSETLSuite\build\testuserdir\eTL\flatfiles/ffdbPipe_1144465356760 [ on Default schema]" description="Descriptive info here" driverName="org.axiondb.jdbc.AxionDriver" dbName="AXION" dbUrl="jdbc:axiondb:ffdbPipe_1144465356760:D:\eTL520\CAPSETLSuite\build\testuserdir\eTL\flatfiles/ffdbPipe_1144465356760">
+	</connectiondef>
+		</dbModel>
+
+		<runtimeModel name="RuntimeDbModel" id="sqlObject_10" displayName="Runtime DbModel" type="runtime">
+			<runtimeInput name="RuntimeInput" id="sqlObject_11">
+				<attr name="userDefinedCatalogName" type="java.lang.String" value="" />
+				<attr name="userDefinedSchemaName" type="java.lang.String" value="" />
+				<attr name="extractionType" type="java.lang.String" value="conditional" />
+				<attr name="stagingTableName" type="java.lang.String" value="" />
+				<attr name="fullyQualifiedName" type="java.lang.Boolean" value="true" />
+				<attr name="aliasName" type="java.lang.String" value="" />
+				<attr name="distinct" type="java.lang.Boolean" value="false" />
+				<attr name="tablePrefix" type="java.lang.String" value="" />
+				<attr name="batchSize" type="java.lang.Integer" value="5000" />
+				<attr name="temporaryTableName" type="java.lang.String" value="RAW_3e21a2d_Runtim" />
+				<attr name="deleteTemporaryTable" type="java.lang.Boolean" value="true" />
+				<attr name="userDefinedTableName" type="java.lang.String" value="" />
+				<dbColumn id="sqlObject_12" displayName="" name="FILE_LOC_S1_FFPIPEDELIMS_CSV" defaultValue="ffPipeDelimS.csv" type="12" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+					<attr name="visible" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<dbColumn id="sqlObject_28" displayName="" name="FILE_LOC_T1_FFPIPEDELIMT_CSV" defaultValue="ffPipeDelimT.csv" type="12" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+					<attr name="visible" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<guiInfo>
+					<attr name="width" type="java.lang.Integer" value="114" />
+					<attr name="height" type="java.lang.Integer" value="22" />
+					<attr name="y" type="java.lang.Integer" value="50" />
+					<attr name="x" type="java.lang.Integer" value="80" />
+				</guiInfo>
+			</runtimeInput>
+			<runtimeOutput name="runtimeOutput" id="sqlObject_29">
+				<attr name="userDefinedCatalogName" type="java.lang.String" value="" />
+				<attr name="userDefinedSchemaName" type="java.lang.String" value="" />
+				<attr name="stagingTableName" type="java.lang.String" value="" />
+				<attr name="fullyQualifiedName" type="java.lang.Boolean" value="true" />
+				<attr name="aliasName" type="java.lang.String" value="" />
+				<attr name="tablePrefix" type="java.lang.String" value="" />
+				<attr name="batchSize" type="java.lang.Integer" value="-1" />
+				<attr name="statementType" type="java.lang.Integer" value="0" />
+				<attr name="createTargetTable" type="java.lang.Boolean" value="true" />
+				<attr name="userDefinedTableName" type="java.lang.String" value="" />
+				<dbColumn id="sqlObject_33" displayName="" name="Count_T1_FFPIPEDELIMT_CSV" type="4" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<dbColumn id="sqlObject_32" displayName="" name="ENDTIME" type="93" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<dbColumn id="sqlObject_31" displayName="" name="STARTTIME" type="93" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<dbColumn id="sqlObject_30" displayName="" name="STATUS" type="12" scale="0" precision="0" ordinalPosition="-2147483648" isPrimaryKey="false" isForeignKey="false" indexed="false" nullable="true" >
+					<attr name="editable" type="java.lang.Boolean" value="false" />
+				</dbColumn>
+				<guiInfo>
+					<attr name="width" type="java.lang.Integer" value="175" />
+					<attr name="height" type="java.lang.Integer" value="106" />
+					<attr name="y" type="java.lang.Integer" value="50" />
+					<attr name="x" type="java.lang.Integer" value="400" />
+				</guiInfo>
+			</runtimeOutput>
+		</runtimeModel>
+	</sqlDefinition>
+</etlDefinition>
