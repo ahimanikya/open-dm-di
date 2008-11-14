@@ -29,7 +29,7 @@ import com.sun.etl.engine.ETLEngineExecEvent;
 import com.sun.etl.engine.ETLEngineListener;
 import com.sun.etl.engine.ETLEngineLogEvent;
 import com.sun.etl.engine.impl.ETLEngineImpl;
-import com.sun.sql.framework.utils.ScEncrypt;
+import com.sun.etl.utils.ScEncrypt;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
