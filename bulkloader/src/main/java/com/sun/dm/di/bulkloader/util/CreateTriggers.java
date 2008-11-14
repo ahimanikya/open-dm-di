@@ -22,10 +22,10 @@
  */
 package com.sun.dm.di.bulkloader.util;
 
+import com.sun.etl.utils.ScEncrypt;
 import java.io.File;
 import net.java.hulp.i18n.Logger;
-import com.sun.sql.framework.utils.ScEncrypt;
-
+ 
 /**
  *
  * @author Manish

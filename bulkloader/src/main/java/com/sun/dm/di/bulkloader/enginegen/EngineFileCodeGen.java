@@ -26,7 +26,7 @@ import com.sun.dm.di.bulkloader.util.Localizer;
 import com.sun.dm.di.bulkloader.util.LogUtil;
 import com.sun.etl.engine.ETLEngine;
 import com.sun.etl.exception.BaseException;
-import com.sun.sql.framework.utils.StringUtil;
+import com.sun.etl.utils.StringUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -22,11 +22,11 @@
  */
 package com.sun.dm.di.bulkloader.modelgen;
 
-import com.sun.sql.framework.utils.StringUtil;
 import com.sun.dm.di.bulkloader.util.BLConstants;
 import com.sun.dm.di.bulkloader.util.Localizer;
 import com.sun.dm.di.bulkloader.util.LogUtil;
 import com.sun.etl.exception.BaseException;
+import com.sun.etl.utils.StringUtil;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
