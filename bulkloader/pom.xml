@@ -87,6 +87,21 @@
                             <file>${basedir}/external/org-netbeans-modules-etl-editor.jar</file>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>install-virutualdb</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                        <configuration>
+                            <generatePom>true</generatePom>
+                            <packaging>jar</packaging>
+                            <groupId>virtualdb</groupId>
+                            <artifactId>virtualdb</artifactId>
+                            <version>1.0</version>
+                            <file>${basedir}/external/org-netbeans-modules-dm-virtual-db.jar</file>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -118,8 +133,10 @@
                         <configuration>
                             <tasks>
                                 <echo>Copying genCollab (bat and sh) file to target ...</echo>
-                                <copy file="${basedir}/external/genCollab.bat" todir="${project.build.directory}" preservelastmodified="true"></copy>
-                                <copy file="${basedir}/external/genCollab.sh" todir="${project.build.directory}" preservelastmodified="true"></copy>
+                                <copy file="${basedir}/external/genCollab.bat" todir="${project.build.directory}" preservelastmodified="true">
+                                </copy>
+                                <copy file="${basedir}/external/genCollab.sh" todir="${project.build.directory}" preservelastmodified="true">
+                                </copy>
                             </tasks>
                         </configuration>
                     </execution>
@@ -131,8 +148,10 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <taskdef name="i18n" classname="net.java.hulp.i18n.buildtools.I18NTask" classpath="${basedir}/src/main/resources/globalization/net.java.hulp.i18ntask.jar"></taskdef>
-                                <i18n dir="${project.build.directory}/classes" file="${project.build.directory}/classes/com/sun/dm/di/bulkloader/util/msgs.properties" prefix="MDM-DI-" strict="false" pattern="([A-Z][A-Z][A-Z]\d\d\d)(: )(.*)"></i18n>
+                                <taskdef name="i18n" classname="net.java.hulp.i18n.buildtools.I18NTask" classpath="${basedir}/src/main/resources/globalization/net.java.hulp.i18ntask.jar">
+                                </taskdef>
+                                <i18n dir="${project.build.directory}/classes" file="${project.build.directory}/classes/com/sun/dm/di/bulkloader/util/msgs.properties" prefix="MDM-DI-" strict="false" pattern="([A-Z][A-Z][A-Z]\d\d\d)(: )(.*)">
+                                </i18n>
                             </tasks>
                         </configuration>
                     </execution>
@@ -190,8 +209,10 @@
                                 <configuration>
                                     <tasks>
                                         <echo>Copying genCollab (bat and sh) file to target ...</echo>
-                                        <copy file="${basedir}/external/genCollab.bat" todir="${project.build.directory}" preservelastmodified="true"></copy>
-                                        <copy file="${basedir}/external/genCollab.sh" todir="${project.build.directory}" preservelastmodified="true"></copy>
+                                        <copy file="${basedir}/external/genCollab.bat" todir="${project.build.directory}" preservelastmodified="true">
+                                        </copy>
+                                        <copy file="${basedir}/external/genCollab.sh" todir="${project.build.directory}" preservelastmodified="true">
+                                        </copy>
                                     </tasks>
                                 </configuration>
                             </execution>
@@ -203,8 +224,10 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <taskdef name="i18n" classname="net.java.hulp.i18n.buildtools.I18NTask" classpath="${basedir}/src/main/resources/globalization/net.java.hulp.i18ntask.jar"></taskdef>
-                                        <i18n dir="${project.build.directory}/classes" file="${project.build.directory}/classes/com/sun/dm/di/bulkloader/util/msgs.properties" prefix="MDM-DI-" strict="false" pattern="([A-Z][A-Z][A-Z]\d\d\d)(: )(.*)"></i18n>
+                                        <taskdef name="i18n" classname="net.java.hulp.i18n.buildtools.I18NTask" classpath="${basedir}/src/main/resources/globalization/net.java.hulp.i18ntask.jar">
+                                        </taskdef>
+                                        <i18n dir="${project.build.directory}/classes" file="${project.build.directory}/classes/com/sun/dm/di/bulkloader/util/msgs.properties" prefix="MDM-DI-" strict="false" pattern="([A-Z][A-Z][A-Z]\d\d\d)(: )(.*)">
+                                        </i18n>
                                     </tasks>
                                 </configuration>
                             </execution>
@@ -254,6 +277,12 @@
         <dependency>
             <groupId>etl-editor</groupId>
             <artifactId>etl-editor</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>virtualdb</groupId>
+            <artifactId>virtualdb</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
