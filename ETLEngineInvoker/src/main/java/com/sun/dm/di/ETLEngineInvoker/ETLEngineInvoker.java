@@ -71,6 +71,10 @@ public class ETLEngineInvoker {
     private ETLEngineListener listener = null;
     static LogManager logManager = null;
 
+    static {
+        System.setProperty("JAVACAPS_DATAINTEGRATOR_DISABLE_MONITOR", "true");
+    }
+    
     public ETLEngineInvoker() {
     }
 
