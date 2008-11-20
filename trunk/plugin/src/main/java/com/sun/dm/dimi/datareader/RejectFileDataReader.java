@@ -160,4 +160,8 @@ public class RejectFileDataReader extends BaseFileDataReader {
         String rejectfile = "62614|MANISH|||BHARANI|||||00000002#$STD|00000002|2506 Callan Vale Apt 103|||||||||00002|{ Executing Rule Step Name = DataLength :Failure Reason = isMore = false::}";
         System.out.println(trimErrorField(rejectfile));
     }
+    
+    public void reset() throws Exception {
+
+    }
 }

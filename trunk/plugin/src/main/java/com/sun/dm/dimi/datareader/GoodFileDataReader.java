@@ -252,4 +252,8 @@ public class GoodFileDataReader extends BaseFileDataReader {
         return -1;
     }
     */
+
+    public void reset() throws Exception {
+
+    }
 }
