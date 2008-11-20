@@ -387,4 +387,8 @@ public class DatabaseDataReader extends BaseDBDataReader {
         }
         return uri;
     }
+
+    public void reset() throws Exception {
+	
+	}
 }
