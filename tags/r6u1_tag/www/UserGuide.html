@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Data Integrator User Guide</title><base href="https://open-dm-di.dev.java.net/alm-process/"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link href="/branding/css/super.css" rel="stylesheet" type="text/css"></head><body>                                <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />                                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />                                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />                                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />                                <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+ <body>
+<b>Sun Data Integrator - Quick Start Guide</b>
+<p>
+In this tutorial, you create an Data Integrator Collaboration called "firstETL.etl" that extracts the data from two source tables (JAVA DB) "PRODUCT_DETAILS" and "PURCHASE_ORDER", does transformations and loads the data into one target table "ORDER_DEFICIT"(ORACLE).
+</p>
+<p>
+Table MetaData:<br>
+<b>1. PRODUCT_DETAILS</b><br>
+COLUMNS:<br>
+PRODUCT_ID    VARCHAR<br>
+PRODUCT_NAME   VARCHAR<br>
+AVAILABLE_QUANT NUMERIC<br>
+</p>
+<b>2. PURCHASE_ORDER</b><br>
+COLUMNS:<br>
+CUSTOMER_ID    VARCHAR<br>
+PRODUCT_ID   VARCHAR<br>
+ORDER_QUANT   NUMERIC<br>
+<p>
+<b>3. ORDER_DEFICIT</b><br>
+COLUMNS:<br>
+CUSTOMER_ID   VARCHAR<br>
+PRODUCT_NAME  VARCHAR<br>
+QUANT_DEFICIT NUMERIC<br>
+<p>
+<b>To create an Data Integrator Application for extract (from source table(s)), transform the data and load the data (into target table(s)), you have to create the following.</b><br>
+<p>
+<ul>
+	<li>An Data Integrator project (called DataIntegratorApp)
+	<li>A Data Integrator collaboration, firstETL.etl, under the project DataIntegratorApp.
+	<li>A Composite Application project, DeploymentCompApp, to deploy the Data Integrator Application into the application server.
+	<li>Finally, you can use the Composite Application test framework to invoke the deployed Data Integrator Service and see the response.
+</ul>
+<br>
+
+[<b>Note: </b>This tutorial also assumes that the above said tables are pre-created.]
+
+<br>
+<p>
+<b>To Add a Database connection</b> <br>
+Go to Runtime Tab. Expand the Databases Node, right click on the Drivers node and choose "New Driver...". Then point to the driver location. Then create a new connection using the uploaded driver by providing the JDBC Url, user name and password. 
+<br>
+<b>To Create new table</b>
+Right click on the JDBC Connection available under the Databases node and choose Connect. Enter user name and password. Expand the connection node. Right Click on the Tables node and Click Create Table. Enter the required details and click Ok.
+<br>
+<b>Contents</b><br>
+<ul>
+<li>Starting Netbeans IDE (bundled with Sierra)
+<li>Starting/configuring Glassfish instance
+<li>Creating an Data Integrator Module Project
+<li>Creating the Composite Application (DeploymentCompApp)
+<li>Creating a BPEL Module to orchestrate Data Integrator Collaboration(s)
+<li>Running the Composite App or BPEL Module
+<li>Summary
+</ul><br>
+<p>
+<b>Starting Netbeans IDE (bundled with Sierra)</b><br>
+Go to Sierra install root, C:\CAPS52, --> nebteans\bin and launch Netbeans.exe
+<br>
+<b>To check the status of the Sun Java System Application Server:</b><br>
+<ul>
+<li>If the Runtime window is not visible, choose Window > Runtime.
+<li>In the Runtime window, expand the Servers node.
+<li>The Servers node should contain a Glassfish Application Server node.
+<li>Check if the Glassfish is started. If not, start it now.
+<li>Wait until the following message appears in the Output window:<br>
+      Application server startup complete.
+</ul> <br> <p>     
+#Before you create an Data Integrator Module Project, make sure the ETL Service Engine (sun-etl-engine) is started.<br>
+##Navigate to the Runtime window.<br>
+##Expand the JBI node until you can select the sun-etl-engine node.<br>
+##Right-click, and choose Start.<br></p>
+<p>
+<b>Creating a Data Integrator Module Project</b><br>
+You must create a new Data Integrator project to create an Data Integrator Collaboration.<br>
+To Create an Data Integrator Project:<br>
+1. Choose File > New Project..<br>
+2. Select SOA from Categories.
+3. Select 'ETL Module' from Projects, and click the Next button<br>
+4. Input DataIntegratorApp for the Project Name entry. If necessary, browse to the desired directory to save the Project. Then click Finish.<br>
+5. In the Projects window, expand the DataIntegratorApp project node, right-click the Process Files node and choose New > ETL.<br>
+6. Enter firstETL for the File Name field, and click Next.<br>
+7. Choose the required Source Tables (PURCHASE_ORDER, PRODUCT_DETAILS) from the list of Connections available and Click Next.<br>
+8. Add the source tables that will be used in the join to the tables list on the right and choose the type of join and Click Next.<br>
+9. Choose the required target tables (ORDER_DEFICIT) from the list of available Connections and Click Finish.<br>
+10.The IDE does the following:<br>
+	a. Creates firstETL.etl under the "collaborations" folder/node.<br>
+	b. Opens the firstETL.etl file in the ETL Editor.<br>
+<br><p>
+<b>To design ETL Collaboration.</b>
+<ul>
+<li>Right click on the Join View in the design view canvas area. 
+<li>Join Builder window pops up. In the graphical view area, double click on the condition icon of the join node.
+<li>Condition Builder window opens up. Build the condition for the join. Drag and drop the table columns and operators into the condition builder canvas and construct the condition as PURCHASE_ORDER.PRODUCT_ID = PRODUCT_DETAILS.PRODUCT_ID
+<li>Click Ok in the Condition builder window to set the join condition.
+<li>Click Ok in the Join Builder window to accept the changes.
+<li>Drag and create a connection from PURCHASE_ORDER.CUSTOMER_ID to ORDER_DEFICIT.CUSTOMER_ID. This causes the Data Integrator Editor to map the input from PURCHASE_ORDER.CUSTOMER_ID columns to be inserted into ORDER_DEFICIT.CUSTOMER_ID
+<li>Drag and create a connection from PRODUCT_DETAILS.PRODUCT_NAME TO ORDER_DEFICIT.PRODUCT_NAME.
+<li>Drag and drop a subtraction operator from Number Operators drop down menu.
+<li>Drag and create a connection from PURCHASE_ORDER.ORDER_QUANT to minuend Field of the Subtraction operator.
+<li>Drag and create a connection from PRODUCT_DETAILS.AVAILABLE_QUANT to Subrahend Field of the Subtraction operator.
+<li>Drag and create a connection from result field of the Subtraction operator to the ORDER_DEFICIT.QUANT_DEFICIT Column.
+<li>Click on the Runtime Input arguments button in the tool bar and Click Ok.
+<li>Save the collaboration.
+<li>Right click on the DataIntegratorApp project node and select Build Project. This generates the wsdl for the orchestrated Data Integrator Collaboration.
+</ul><br><p>
+<b>Creating and Deploying the Composite Application</b>
+<ul>
+<li>Choose File > New Project.
+<li>Select SOA from Categories.
+<li>Select Composite Application from Projects and click Next.
+<li>Input DeploymentCompApp for the Project Name and click Finish. If necessary, browse to the directory in which you want to save the project.
+<li>Right-click the DeploymentCompApp node, and select Add JBI Module.
+<li>Navigate to the directory under which you created your DataIntegratorApp Project, select the folder DataIntegratorApp, and click the button Add Project JAR Files.
+<li>Right-click the DeploymentCompApp node, and select Deploy Project.
+</ul>
+<br><p>
+<b>Creating a BPEL Module to orchestrate Data Integrator Collaboration(s)</b><br>
+<ul>
+<li>Choose File > New Project.
+<li>Select SOA from Categories.
+<li>Select "BPEL Module" from Projects and click Next.
+<li>Input "BpelModule" for the Project Name and click Finish. If necessary, browse to the directory in which you want to save the project.
+<li>Under the "BpelModule", right click on "Process Files" and select "New WSDL Document...". Give a name for the WSDL document. This is the WSDL definition for the Business Process (BPEL) itself. Click Next.
+<li>In the next screen, provide "PortType Name, Operation Name... " etc. The "Input" and "Output" should map to the "Runtime Input Arguments" and "Runtime Output Arguments" of Data Integrator collaboration. Click Next.
+<li>Provide "Binding Name, Type, Service Name, ..." etc. Click Finish.
+<li>Copy the WSDL definition for the Data Integrator collaboration from "DataIntegratorApp" above to the "BpelModule->Process Files"
+<li>Right click on "Process Files" and select "New BPEL Process...". Provide a name for the BPEL and click "Finish".
+<li>On the BPEL Editor canvas, drag and drop the WSDL for BPEL (created in earlier step). This will create a partner link. Create one more partner link for Data Integrator WSDL (drag and drop).
+<li>Orchestrate the Business Process, using "Receive, Assign, invoke, Reply" activities.
+<li>BPEL Service Engine Reference: <a href="http://wiki.open-esb.java.net/Wiki.jsp?page=BPELSE">BPEL SE Wiki</a>
+</ul>
+<br><p>
+<b>Running the Composite App or BPEL Module</b><br>
+<ul>
+<li>Once you design a Data Integrator Collaboration and deploy the same as a part of a composite application, the DI service is available, in JBI environment, for invocation.
+<li>When you create a composite application with DI application added as a "JBI Module", an HTTP Soap binding endpoint is automatically activated. HTTP SOAP binding component is used to provide SOAP over HTTP connectivity to services deployed in the JBI environment (Data Integrator service is just one of them). Ref([http://wiki.open-esb.java.net/Wiki.jsp?page=HTTPBC])
+<li>User can alternately use BPEL module (described above) to invoke the Data Integrator Service.
+<li>BPEL module itself needs to be wrapped inside a composite application.
+</ul><br>
+<p><b>Summary</b><br>
+In this tutorial, you created a Data Integrator Module, created and deployed a Composite Application, and learnt couple of ways to invoke the deployed Data Integrator Module application.
+<p>
+
+ </body>
+</html>
