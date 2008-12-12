@@ -39,7 +39,7 @@ $TESTING = 0;
 #what is the release management codeline name?
 #warning - don't read this from the environment, as all
 #values in this file apply to a specific RE codeline.
-$CODELINE = "main";
+$CODELINE = "soarelease";
 
 #official name of the product. Same comments as above:
 $PRODUCT = "odmdi";
@@ -57,7 +57,7 @@ $PRODUCT = "odmdi";
 );
 
 %MINOR_VERSION = (
-    'odmdi', '1',
+    'odmdi', '1.2',
 );
 
 #this is the current release number:

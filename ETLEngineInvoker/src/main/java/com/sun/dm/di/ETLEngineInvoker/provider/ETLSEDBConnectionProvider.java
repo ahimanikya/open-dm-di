@@ -22,6 +22,7 @@
  */
 package com.sun.dm.di.ETLEngineInvoker.provider;
 
+import com.sun.etl.jdbc.DBConnectionParameters;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -30,7 +31,6 @@ import java.util.logging.Logger;
 import com.sun.etl.engine.spi.DBConnectionProvider;
 import com.sun.etl.exception.BaseException;
 import com.sun.etl.jdbc.DBConnectionFactory;
-import com.sun.etl.jdbc.DBConnectionParameters;
 
 /**
  * @author Sujit Biswas
